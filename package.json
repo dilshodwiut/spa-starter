@@ -15,15 +15,15 @@
   "lint-staged": {
     "src/*.tsx": [
       "yarn run eslint --report-unused-disable-directives --max-warnings 0",
-      "yarn run prettier --write --ignore-unknown src/*"
+      "yarn run prettier --write --ignore-unknown src/*.tsx"
     ],
     "src/*.ts": [
       "yarn run eslint --report-unused-disable-directives --max-warnings 0",
-      "yarn run prettier --write --ignore-unknown src/*"
+      "yarn run prettier --write --ignore-unknown src/*.ts"
     ],
     "src/*.css": [
       "yarn run stylelint",
-      "yarn run prettier --write --ignore-unknown"
+      "yarn run prettier --write --ignore-unknown src/*.css"
     ]
   },
   "dependencies": {
