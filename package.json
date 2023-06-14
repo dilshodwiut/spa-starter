@@ -16,6 +16,14 @@
     "src/*.tsx": [
       "yarn run eslint --report-unused-disable-directives --max-warnings 0",
       "yarn run prettier --write --ignore-unknown src/*"
+    ],
+    "src/*.ts": [
+      "yarn run eslint --report-unused-disable-directives --max-warnings 0",
+      "yarn run prettier --write --ignore-unknown src/*"
+    ],
+    "src/*.css": [
+      "yarn run stylelint",
+      "yarn run prettier --write --ignore-unknown"
     ]
   },
   "dependencies": {
