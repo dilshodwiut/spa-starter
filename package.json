@@ -22,7 +22,7 @@
       "yarn run prettier --write --ignore-unknown src/*.ts"
     ],
     "src/*.css": [
-      "yarn run stylelint",
+      "yarn run stylelint src/*.css",
       "yarn run prettier --write --ignore-unknown src/*.css"
     ]
   },
