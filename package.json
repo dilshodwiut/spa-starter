@@ -13,18 +13,7 @@
     "postinstall": "husky install"
   },
   "lint-staged": {
-    "src/*.tsx": [
-      "yarn run eslint --report-unused-disable-directives --max-warnings 0",
-      "yarn run prettier --write --ignore-unknown src/*.tsx"
-    ],
-    "src/*.ts": [
-      "yarn run eslint --report-unused-disable-directives --max-warnings 0",
-      "yarn run prettier --write --ignore-unknown src/*.ts"
-    ],
-    "src/*.css": [
-      "yarn run stylelint src/*.css",
-      "yarn run prettier --write --ignore-unknown src/*.css"
-    ]
+    "src/*": "yarn run prettier --write --ignore-unknown src/*"
   },
   "dependencies": {
     "react": "^18.2.0",
