@@ -13,7 +13,7 @@
     "postinstall": "husky install"
   },
   "lint-staged": {
-    "src/*.{ts, tsx}": [
+    "src/*.tsx": [
       "yarn run eslint --report-unused-disable-directives --max-warnings 0",
       "yarn run prettier --write --ignore-unknown src/*"
     ]
