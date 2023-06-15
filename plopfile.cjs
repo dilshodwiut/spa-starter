@@ -10,12 +10,12 @@ module.exports = (plop) => {
     actions: () => [
       {
         type: "add",
-        templateFile: "plop-templates/components/component.hbs",
+        templateFile: "src/plop-templates/components/component.hbs",
         path: "src/components/{{pascalCase name}}/{{pascalCase name}}.tsx",
       },
       {
         type: "add",
-        templateFile: "plop-templates/components/style.hbs",
+        templateFile: "src/plop-templates/components/style.hbs",
         path: "src/components/{{pascalCase name}}/{{pascalCase name}}.module.scss",
       },
     ],
