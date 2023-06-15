@@ -1,3 +1,11 @@
 {
-  "trailingComma": "all"
+  "trailingComma": "all",
+  "overrides": [
+    {
+      "files": "*.hbs",
+      "options": {
+        "parser": "babel-ts"
+      }
+    }
+  ]
 }
