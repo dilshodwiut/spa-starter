@@ -7,6 +7,7 @@
     "airbnb",
     "standard-with-typescript",
     "eslint:recommended",
+    "plugin:@tanstack/eslint-plugin-query/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
@@ -21,10 +22,10 @@
     "sourceType": "module",
     "project": "tsconfig.json"
   },
-  "plugins": ["react", "react-refresh"],
+  "plugins": ["react", "react-refresh", "@tanstack/query"],
   "rules": {
     "react-refresh/only-export-components": "warn",
-    "react/jsx-filename-extension": [1, { "extensions": [".jsx", ".tsx"] }],
+    "react/jsx-filename-extension": [1, { "extensions": [".tsx"] }],
     "import/extensions": [
       2,
       "ignorePackages",
@@ -34,16 +35,15 @@
         "tsx": "never"
       }
     ],
-    "import/no-absolute-path": "off",
-    "import/no-unresolved": [2, { "ignore": ["\\.svg$", "\\.webp$"] }]
+    "import/no-absolute-path": "off", // for vite public folder
+    "import/no-unresolved": [2, { "ignore": ["\\.svg$", "\\.webp$"] }],
+    "valid-jsdoc": "error",
+    "@typescript-eslint/triple-slash-reference": "off"
   },
   "settings": {
     "import/resolver": {
       "alias": {
-        "map": [
-          ["@", "./src"],
-          ["/", "./public"]
-        ],
+        "map": [["@", "./src"]],
         "extensions": [".ts", ".tsx", ".json"]
       }
     }
