@@ -34,3 +34,6 @@ dist-ssr
 
 # Yarn
 .yarn/*
+
+# Plop templates
+src/plop-templates
