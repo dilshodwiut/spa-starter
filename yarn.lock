@@ -3213,75 +3213,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"frontend-template@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "frontend-template@workspace:."
-  dependencies:
-    "@hookform/resolvers": ^3.1.1
-    "@tanstack/eslint-plugin-query": ^4.29.9
-    "@tanstack/react-query": ^4.29.13
-    "@tanstack/react-query-devtools": ^4.29.13
-    "@tanstack/react-table": ^8.9.2
-    "@testing-library/react": ^14.0.0
-    "@types/node": ^20.3.1
-    "@types/ramda": ^0.29.2
-    "@types/react": ^18.0.37
-    "@types/react-dom": ^18.0.11
-    "@typescript-eslint/eslint-plugin": ^5.50.0
-    "@typescript-eslint/parser": ^5.59.0
-    "@vitejs/plugin-react-swc": ^3.0.0
-    autoprefixer: ^10.4.14
-    axios: ^1.4.0
-    clsx: ^1.2.1
-    date-fns: ^2.30.0
-    eslint: ^8.0.1
-    eslint-config-airbnb: ^19.0.4
-    eslint-config-prettier: ^8.8.0
-    eslint-config-standard-with-typescript: ^35.0.0
-    eslint-import-resolver-alias: ^1.1.2
-    eslint-plugin-import: ^2.27.5
-    eslint-plugin-jsx-a11y: ^6.7.1
-    eslint-plugin-n: ^15.0.0
-    eslint-plugin-promise: ^6.0.0
-    eslint-plugin-react: ^7.32.2
-    eslint-plugin-react-hooks: ^4.6.0
-    eslint-plugin-react-refresh: ^0.3.4
-    happy-dom: ^9.20.3
-    husky: ^8.0.0
-    i18next: ^22.5.1
-    immer: ^10.0.2
-    immutable: ^4.3.0
-    jsdoc: ^4.0.2
-    lint-staged: ^13.2.2
-    plop: ^3.1.2
-    postcss: ^8.4.24
-    prettier: 2.8.8
-    prop-types: ^15.8.1
-    query-string: ^8.1.0
-    radash: ^10.8.1
-    ramda: ^0.29.0
-    react: ^18.2.0
-    react-dom: ^18.2.0
-    react-hook-form: ^7.44.3
-    react-i18next: ^12.3.1
-    react-router-dom: ^6.13.0
-    react-window: ^1.8.9
-    sass: ^1.63.4
-    stylelint: ^15.7.0
-    stylelint-config-prettier: ^9.0.5
-    stylelint-config-recommended: ^12.0.0
-    stylelint-config-standard: ^33.0.0
-    stylelint-config-standard-scss: ^9.0.0
-    tailwindcss: ^3.3.2
-    typescript: 5.0.4
-    vite: ^4.3.9
-    vite-tsconfig-paths: ^4.2.0
-    vitest: ^0.32.0
-    zod: ^3.21.4
-    zustand: ^4.3.8
-  languageName: unknown
-  linkType: soft
-
 "fs-minipass@npm:^2.0.0":
   version: 2.1.0
   resolution: "fs-minipass@npm:2.1.0"
@@ -6622,6 +6553,75 @@ __metadata:
   checksum: 59ce8640cf3f3124f64ac289012c2b8bd377c238e316fb323ea22fbfe83da07d81e000071d7242cad7a23cd91c7de98e4df8830ec3f133cb6133a5f6e9f67bc2
   languageName: node
   linkType: hard
+
+"spa-starter@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "spa-starter@workspace:."
+  dependencies:
+    "@hookform/resolvers": ^3.1.1
+    "@tanstack/eslint-plugin-query": ^4.29.9
+    "@tanstack/react-query": ^4.29.13
+    "@tanstack/react-query-devtools": ^4.29.13
+    "@tanstack/react-table": ^8.9.2
+    "@testing-library/react": ^14.0.0
+    "@types/node": ^20.3.1
+    "@types/ramda": ^0.29.2
+    "@types/react": ^18.0.37
+    "@types/react-dom": ^18.0.11
+    "@typescript-eslint/eslint-plugin": ^5.50.0
+    "@typescript-eslint/parser": ^5.59.0
+    "@vitejs/plugin-react-swc": ^3.0.0
+    autoprefixer: ^10.4.14
+    axios: ^1.4.0
+    clsx: ^1.2.1
+    date-fns: ^2.30.0
+    eslint: ^8.0.1
+    eslint-config-airbnb: ^19.0.4
+    eslint-config-prettier: ^8.8.0
+    eslint-config-standard-with-typescript: ^35.0.0
+    eslint-import-resolver-alias: ^1.1.2
+    eslint-plugin-import: ^2.27.5
+    eslint-plugin-jsx-a11y: ^6.7.1
+    eslint-plugin-n: ^15.0.0
+    eslint-plugin-promise: ^6.0.0
+    eslint-plugin-react: ^7.32.2
+    eslint-plugin-react-hooks: ^4.6.0
+    eslint-plugin-react-refresh: ^0.3.4
+    happy-dom: ^9.20.3
+    husky: ^8.0.0
+    i18next: ^22.5.1
+    immer: ^10.0.2
+    immutable: ^4.3.0
+    jsdoc: ^4.0.2
+    lint-staged: ^13.2.2
+    plop: ^3.1.2
+    postcss: ^8.4.24
+    prettier: 2.8.8
+    prop-types: ^15.8.1
+    query-string: ^8.1.0
+    radash: ^10.8.1
+    ramda: ^0.29.0
+    react: ^18.2.0
+    react-dom: ^18.2.0
+    react-hook-form: ^7.44.3
+    react-i18next: ^12.3.1
+    react-router-dom: ^6.13.0
+    react-window: ^1.8.9
+    sass: ^1.63.4
+    stylelint: ^15.7.0
+    stylelint-config-prettier: ^9.0.5
+    stylelint-config-recommended: ^12.0.0
+    stylelint-config-standard: ^33.0.0
+    stylelint-config-standard-scss: ^9.0.0
+    tailwindcss: ^3.3.2
+    typescript: 5.0.4
+    vite: ^4.3.9
+    vite-tsconfig-paths: ^4.2.0
+    vitest: ^0.32.0
+    zod: ^3.21.4
+    zustand: ^4.3.8
+  languageName: unknown
+  linkType: soft
 
 "spdx-correct@npm:^3.0.0":
   version: 3.2.0
