@@ -1,3 +1,9 @@
-export default function App(): JSX.Element {
-  return <h1>Vite + React</h1>;
+import { QueryProvider, RouteProvider as Routes } from "./providers";
+
+export default function App(): React.ReactElement {
+  return (
+    <QueryProvider>
+      <Routes />
+    </QueryProvider>
+  );
 }
