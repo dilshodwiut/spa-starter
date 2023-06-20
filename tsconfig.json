@@ -29,7 +29,7 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src", "*.ts", "*.js"],
-  "exclude": ["src/utils/worker.ts"],
+  "exclude": ["src/utils/worker.ts", "src/lib"],
   "references": [
     { "path": "./tsconfig.node.json" },
     { "path": "./tsconfig.worker.json" }
