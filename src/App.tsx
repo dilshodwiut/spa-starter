@@ -1,3 +1,5 @@
+import { Button } from "@chakra-ui/react";
+
 export default function App(): JSX.Element {
-  return <h1>Vite + React</h1>;
+  return <Button>Submit</Button>;
 }
