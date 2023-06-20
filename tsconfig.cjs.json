@@ -1,9 +1,10 @@
 {
-    "compilerOptions": {
-      "module": "commonjs",
-      "target": "es2021",
-      "esModuleInterop": true,
-      "allowJs": true
-    },
-    "include": ["plopfile.cjs"]
-  }
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "ES2020",
+    "lib": ["ES2020"],
+    "esModuleInterop": true,
+    "allowJs": true
+  },
+  "include": ["plopfile.cjs"]
+}

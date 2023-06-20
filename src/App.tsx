@@ -1,5 +1,9 @@
-import { Button } from "@chakra-ui/react";
+import { QueryProvider, RouteProvider as Routes } from "./providers";
 
-export default function App(): JSX.Element {
-  return <Button>Submit</Button>;
+export default function App(): React.ReactElement {
+  return (
+    <QueryProvider>
+      <Routes />
+    </QueryProvider>
+  );
 }
