@@ -43,7 +43,7 @@ const theme = extendTheme({
     heading: `"Lexend Deca", "Mulish", "Inter", "Lexend Deca", "Source Sans Pro", -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif`,
   },
   styles: {
-    global: (props: any) => ({
+    global: () => ({
       body: {
         // mode ("color for light mode (string)", "color for dark mode (string)")
         backgroundColor: `#F1F5F9`,
