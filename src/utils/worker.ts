@@ -1,5 +1,4 @@
 /* eslint-disable no-restricted-globals */
-/* eslint-disable no-console */
 
 interface Data {
   task: "upload-img" | "calc-total";

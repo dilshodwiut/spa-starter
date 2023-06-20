@@ -20,7 +20,7 @@
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module",
-    "project": ["tsconfig.json", "tsconfig.cjs.json"]
+    "project": ["tsconfig.json", "tsconfig.cjs.json", "tsconfig.worker.json"]
   },
   "plugins": ["react", "react-refresh", "@tanstack/query"],
   "rules": {
@@ -39,7 +39,8 @@
     "import/no-absolute-path": "off", // for vite public folder
     "import/no-unresolved": [2, { "ignore": ["\\.svg$", "\\.webp$"] }],
     "valid-jsdoc": "error",
-    "@typescript-eslint/triple-slash-reference": "off"
+    "@typescript-eslint/triple-slash-reference": "off",
+    "no-console": ["error", { "allow": ["error", "warn", "log"] }]
   },
   "settings": {
     "import/resolver": {

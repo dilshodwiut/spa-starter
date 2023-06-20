@@ -1,5 +1,3 @@
-/* eslint no-console: ["error", { allow: ["error"] }] */
-
 import axios from "axios";
 import type { AxiosError } from "axios";
 import settings from "@/config/settings";
