@@ -1,0 +1,32 @@
+import Button from "@/components/button/button";
+import use{{pascalCase name}}State from "./{{kebabCase name}}-state";
+
+export default function {{pascalCase name}}(): React.ReactElement {
+  const { count, increment, decrement } = use{{pascalCase name}}State();
+
+  return (
+    <>
+      <Header />
+      <Main />
+      <Button text="decrement" onClick={decrement} />
+      {`\t${count}\t`}
+      <Button text="increment" onClick={increment} />
+      <br />
+      <Footer />
+    </>
+  );
+}
+
+// in real case, we would be importing these components from other modules
+
+function Header(): React.ReactElement {
+  return <header>Header</header>;
+}
+
+function Main(): React.ReactElement {
+  return <main>Main</main>;
+}
+
+function Footer(): React.ReactElement {
+  return <footer>Spa starter</footer>;
+}

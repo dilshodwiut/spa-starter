@@ -1,6 +1,17 @@
-import type { RouteObject } from "react-router-dom";
+import type {
+  IndexRouteObject,
+  NonIndexRouteObject,
+  RouteObject,
+} from "react-router-dom";
 
-type CustomRoute = RouteObject & { title?: string };
+interface CustomNonIndexRouteObject extends NonIndexRouteObject {
+  children?: Array<RouteObject & { title?: string }>;
+}
+
+type CustomRoute = (IndexRouteObject | CustomNonIndexRouteObject) & {
+  title?: string;
+};
+
 type id = string;
 
 export type { CustomRoute, id };

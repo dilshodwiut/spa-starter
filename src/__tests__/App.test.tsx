@@ -1,5 +1,5 @@
 import { render, cleanup, fireEvent, screen } from "@testing-library/react";
-import App from "@/App";
+import App from "@/app";
 
 afterEach(() => {
   cleanup();

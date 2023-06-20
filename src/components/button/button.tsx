@@ -1,3 +1,14 @@
-export default function Button(): JSX.Element {
-  return <button type="button">Button</button>;
+interface Props {
+  onClick: (evt: React.MouseEvent<HTMLButtonElement>) => void;
+  text: string;
+}
+
+export default function Button(props: Props): JSX.Element {
+  const { onClick, text } = props;
+
+  return (
+    <button type="button" onClick={onClick}>
+      {text}
+    </button>
+  );
 }

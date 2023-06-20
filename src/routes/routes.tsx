@@ -1,6 +1,6 @@
 import type { CustomRoute } from "@/types";
 import { authRoutes, jobRoutes } from "@/features";
-import Root from "@/views/Root";
+import Root from "@/views/root";
 
 const routes: CustomRoute[] = [
   {
