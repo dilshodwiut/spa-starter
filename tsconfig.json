@@ -10,7 +10,7 @@
 
     "target": "ES2020",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable", "Webworker"],
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
 
@@ -29,5 +29,9 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src", "*.ts", "*.js"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "exclude": ["src/utils/worker.ts"],
+  "references": [
+    { "path": "./tsconfig.node.json" },
+    { "path": "./tsconfig.worker.json" }
+  ]
 }
