@@ -1,6 +1,6 @@
 # Frontend Template
 
-_Before running locally, make sure you have `volta` installed on your system_
+_Before running locally, make sure you have `volta` installed on your system and run the following command inside the root project folder from the command line: `yarn dlx @yarnpkg/sdks vscode`_
 
 ---
 
