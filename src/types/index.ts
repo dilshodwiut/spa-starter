@@ -3,15 +3,20 @@ import type {
   NonIndexRouteObject,
   RouteObject,
 } from "react-router-dom";
+import type { CustomIconComponentProps } from "@ant-design/icons/lib/components/Icon";
 
-interface CustomNonIndexRouteObject extends NonIndexRouteObject {
-  children?: Array<RouteObject & { title?: string }>;
+interface RouteExtensions {
+  title?: string;
+  Icon?: (props: Partial<CustomIconComponentProps>) => JSX.Element;
 }
 
-type CustomRoute = (IndexRouteObject | CustomNonIndexRouteObject) & {
-  title?: string;
-};
+interface CustomNonIndexRouteObject extends NonIndexRouteObject {
+  children?: Array<RouteObject & RouteExtensions>;
+}
 
-type id = string;
+type CustomRoute = (IndexRouteObject | CustomNonIndexRouteObject) &
+  RouteExtensions;
+
+type id = string | number;
 
 export type { CustomRoute, id };

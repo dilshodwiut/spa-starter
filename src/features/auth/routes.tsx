@@ -1,9 +1,9 @@
-import type { CustomRoute } from "@/types";
 import { Outlet } from "react-router-dom";
+import type { CustomRoute } from "@/types";
 
 // VIEW IMPORTS
 
-const routes: CustomRoute = {
+const authRoutes: CustomRoute = {
   id: "auth",
   title: "Auth",
   path: "auth",
@@ -18,4 +18,4 @@ const routes: CustomRoute = {
   ],
 };
 
-export default routes;
+export default authRoutes;
