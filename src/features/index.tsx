@@ -1,4 +1,6 @@
 import authRoutes from "./auth/routes";
-import jobRoutes from "./jobs/routes";
+import actsListRoutes from "./acts-list/routes";
+import statsRoutes from "./stats/routes";
+import notificationRoutes from "./notification/routes";
 
-export { authRoutes, jobRoutes };
+export { authRoutes, actsListRoutes, statsRoutes, notificationRoutes };

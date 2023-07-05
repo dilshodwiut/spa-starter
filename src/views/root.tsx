@@ -1,12 +1,19 @@
-import "@/lib/to-capital-case";
+import { Outlet } from "react-router-dom";
+import DefaultLayout from "@/layouts/default-layout";
+import type { CustomRoute } from "@/types";
 
-export default function Root(): React.ReactElement {
-  const mention = "spa starter".toCapitalCase();
+interface Props {
+  getRoutes: () => CustomRoute[];
+}
+
+export default function Root(props: Props): React.ReactElement {
+  const { getRoutes } = props;
+
+  const routes = getRoutes();
 
   return (
-    <>
-      <div>Root element</div>
-      <footer>{mention}</footer>
-    </>
+    <DefaultLayout sidebarRoutes={routes[0].children as CustomRoute[]}>
+      <Outlet />
+    </DefaultLayout>
   );
 }

@@ -1,16 +1,21 @@
 import type { CustomRoute } from "@/types";
-import { authRoutes, jobRoutes } from "@/features";
+import {
+  authRoutes,
+  actsListRoutes,
+  statsRoutes,
+  notificationRoutes,
+} from "@/features";
 import Root from "@/views/root";
 
 const routes: CustomRoute[] = [
   {
     id: "root",
-    title: "MVD",
+    title: "E-Dalolatnoma",
     path: "/",
-    element: <Root />,
+    element: <Root getRoutes={() => routes} />,
     loader: async () => null,
     errorElement: <div>Error element</div>,
-    children: [jobRoutes],
+    children: [statsRoutes, actsListRoutes, notificationRoutes],
   },
   authRoutes,
   {
