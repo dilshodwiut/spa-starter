@@ -26,6 +26,15 @@
   "rules": {
     "react-refresh/only-export-components": "warn",
     "react/jsx-filename-extension": [1, { "extensions": [".tsx"] }],
+    "import/no-absolute-path": "off", // for vite public folder
+    "import/no-unresolved": [2, { "ignore": ["\\.svg$", "\\.webp$"] }],
+    "valid-jsdoc": "error",
+    "@typescript-eslint/triple-slash-reference": "off",
+    "no-console": ["error", { "allow": ["error", "warn", "log"] }],
+    "react/jsx-props-no-spreading": [
+      "error",
+      { "html": "enforce", "custom": "ignore", "explicitSpread": "enforce" }
+    ],
     "import/extensions": [
       2,
       "ignorePackages",
@@ -35,12 +44,7 @@
         "tsx": "never",
         "cjs": "never"
       }
-    ],
-    "import/no-absolute-path": "off", // for vite public folder
-    "import/no-unresolved": [2, { "ignore": ["\\.svg$", "\\.webp$"] }],
-    "valid-jsdoc": "error",
-    "@typescript-eslint/triple-slash-reference": "off",
-    "no-console": ["error", { "allow": ["error", "warn", "log"] }]
+    ]
   },
   "settings": {
     "import/resolver": {

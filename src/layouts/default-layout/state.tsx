@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Layout, Typography } from "antd";
 import { colors } from "@/config/theme";
 import ruIcon from "@/assets/RU.svg";
-import type { ThemeConfig, MenuProps } from "antd";
+import type { ThemeConfig, MenuProps, SiderProps } from "antd";
 import type { CustomRoute } from "@/types";
 import type { ItemType } from "antd/es/menu/hooks/useItems";
 
@@ -27,6 +27,7 @@ interface DefaultLayoutState {
     value: string;
     label: JSX.Element;
   }>;
+  siderProps: SiderProps;
   handleChange: (value: string) => void;
   onToggleSider: () => void;
 }
@@ -48,8 +49,9 @@ export default function useDefaultLayoutState(
   };
 
   const items = useMemo(
-    (): MenuProps["items"] =>
-      sidebarRoutes.map(({ path, title, Icon }) => ({
+    // eslint-disable-next-line arrow-body-style
+    (): MenuProps["items"] => {
+      return sidebarRoutes.map(({ path, title, Icon }) => ({
         key: path as string,
         icon: typeof Icon === "function" ? <Icon /> : null,
         label: title,
@@ -63,7 +65,8 @@ export default function useDefaultLayoutState(
           fontSize: "15px",
           lineHeight: "18px",
         },
-      })),
+      }));
+    },
     [sidebarRoutes, navigate],
   );
 
@@ -89,6 +92,14 @@ export default function useDefaultLayoutState(
     [collapsed],
   );
 
+  const siderProps: SiderProps = {
+    width: 250,
+    trigger: null,
+    collapsible: true,
+    collapsed,
+    theme: "light",
+  };
+
   return {
     Sider,
     Text,
@@ -96,8 +107,9 @@ export default function useDefaultLayoutState(
     collapsed,
     pathname,
     items,
-    handleChange,
     languageOptions,
+    siderProps,
+    handleChange,
     onToggleSider,
   };
 }

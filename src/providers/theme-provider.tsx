@@ -1,5 +1,6 @@
 import { ConfigProvider } from "antd";
 import { colors } from "@/config/theme";
+import CustomEmpty from "@/components/empty";
 
 interface Props {
   children: React.ReactElement;
@@ -15,5 +16,9 @@ const theme = {
 export default function ThemeProvider(props: Props): React.ReactElement {
   const { children } = props;
 
-  return <ConfigProvider theme={theme}>{children}</ConfigProvider>;
+  return (
+    <ConfigProvider theme={theme} renderEmpty={CustomEmpty}>
+      {children}
+    </ConfigProvider>
+  );
 }
