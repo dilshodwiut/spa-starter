@@ -21,8 +21,9 @@ export default function DefaultLayout(props: Props): React.ReactElement {
     collapsed,
     pathname,
     items,
-    handleChange,
     languageOptions,
+    siderProps,
+    handleChange,
     onToggleSider,
   } = useDefaultLayoutState(sidebarRoutes);
 
@@ -30,26 +31,18 @@ export default function DefaultLayout(props: Props): React.ReactElement {
     <Layout hasSider>
       {/* Placeholder Sider */}
       <Sider
-        width={250}
-        trigger={null}
-        collapsible
-        collapsed={collapsed}
-        theme="light"
+        {...siderProps}
         style={{
           background: colors.bg_grey,
           height: "100vh",
         }}
       />
       <Sider
-        width={250}
-        trigger={null}
-        collapsible
-        collapsed={collapsed}
-        theme="light"
+        {...siderProps}
         style={{
           background: colors.bg_grey,
-          // overflow: "auto",
           height: "100vh",
+          // overflow: "auto",
           position: "fixed",
           left: 0,
           top: 0,

@@ -23,6 +23,5 @@ const noteSvg: React.FC = () => (
 export default function NoteIcon(
   props: Partial<CustomIconComponentProps>,
 ): React.ReactElement {
-  // eslint-disable-next-line react/jsx-props-no-spreading
   return <Icon component={noteSvg} {...props} />;
 }

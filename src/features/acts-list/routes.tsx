@@ -1,6 +1,6 @@
 import type { CustomRoute } from "@/types";
 import NoteIcon from "./components/note-icon";
-import ActsList from ".";
+import ActsList from "./views/acts-list";
 
 const actsListRoutes: CustomRoute = {
   id: "acts-list",
@@ -12,5 +12,3 @@ const actsListRoutes: CustomRoute = {
 };
 
 export default actsListRoutes;
-
-// <Icon component={HomeOutlined as React.ForwardRefExoticComponent<any>} />

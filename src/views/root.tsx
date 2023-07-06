@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import DefaultLayout from "@/layouts/default-layout";
 import type { CustomRoute } from "@/types";
+import "@/lib/to-capital-case";
 
 interface Props {
   getRoutes: () => CustomRoute[];
