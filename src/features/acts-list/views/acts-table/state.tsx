@@ -1,30 +1,19 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { random, shuffle } from "radash";
 import { clone } from "ramda";
 import { Layout, Tag, theme } from "antd";
 import type { DatePickerProps } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
 import type { CheckboxValueType } from "antd/es/checkbox/Group";
-
-type ViolationType = "administrative" | "criminal";
-type Status = "received" | number;
-
-interface DataType {
-  key: React.Key;
-  server_type: "government" | "power_industry";
-  serial_num: string;
-  date_of_registration: string;
-  region: string;
-  client_type: "legal_entity" | "individual" | "budget_organization";
-  violation: string;
-  amount: number;
-  violation_type: ViolationType;
-  status: Status;
-}
-
-type getColorFn = (
-  input: ViolationType | Status,
-) => "processing" | "green" | "default" | "orange" | "red" | "";
+import type {
+  ActStatus,
+  ActsListState,
+  ActType,
+  ViolationType,
+  getColorFn,
+} from "../../types";
+import { getAllActs } from "../../api";
 
 const getColor: getColorFn = (input) => {
   const map = {
@@ -42,7 +31,7 @@ const getColor: getColorFn = (input) => {
   return input in map ? map[input] : "";
 };
 
-const columns: ColumnsType<DataType> = [
+const columns: ColumnsType<ActType> = [
   {
     title: "Type",
     dataIndex: "server_type",
@@ -92,7 +81,7 @@ const columns: ColumnsType<DataType> = [
   {
     title: "Status",
     dataIndex: "status",
-    render: (value: Status) => (
+    render: (value: ActStatus) => (
       <Tag
         bordered={false}
         color={getColor(value)}
@@ -104,61 +93,12 @@ const columns: ColumnsType<DataType> = [
   },
 ];
 
-let data: DataType[] = [
-  {
-    key: "1",
-    server_type: "government",
-    serial_num: "BH 234872342348",
-    date_of_registration: "04.06.2023",
-    region: "Bukhara region, Shofirkon region",
-    client_type: "individual",
-    violation: "133, 1, 3",
-    amount: 2050000,
-    violation_type: "administrative",
-    status: 9,
-  },
-  {
-    key: "2",
-    server_type: "power_industry",
-    serial_num: "BH 348583475738",
-    date_of_registration: "04.06.2023",
-    region: "Bukhara region, Shofirkon region",
-    client_type: "legal_entity",
-    violation: "133, 1, 3",
-    amount: 1980000,
-    violation_type: "administrative",
-    status: 1,
-  },
-  {
-    key: "3",
-    server_type: "power_industry",
-    serial_num: "BH 4583453423",
-    date_of_registration: "04.06.2023",
-    region: "Bukhara region, Shofirkon region",
-    client_type: "budget_organization",
-    violation: "133, 1, 3",
-    amount: 2050000,
-    violation_type: "criminal",
-    status: "received",
-  },
-  {
-    key: "4",
-    server_type: "power_industry",
-    serial_num: "BH 5868222123",
-    date_of_registration: "04.06.2023",
-    region: "Bukhara region, Shofirkon region",
-    client_type: "legal_entity",
-    violation: "133, 1, 3",
-    amount: 850490,
-    violation_type: "criminal",
-    status: 1,
-  },
-];
+let data = await getAllActs();
 
 for (let i = 0; i < 177; i += 1) {
   const idx = shuffle([0, 1, 2, 3])[0];
   const clonedItem = clone(data[idx]);
-  clonedItem.key = random(5, 99999);
+  clonedItem.id = random(5, 99999).toString();
   data.push(clonedItem);
 }
 
@@ -186,7 +126,7 @@ const paginationProps = {
   },
 };
 
-const onPageChange: TableProps<DataType>["onChange"] = (
+const onPageChange: TableProps<ActType>["onChange"] = (
   pagination,
   filters,
   sorter,
@@ -195,32 +135,21 @@ const onPageChange: TableProps<DataType>["onChange"] = (
   console.log("params", pagination, filters, sorter, extra);
 };
 
-interface ActsListState {
-  Header: typeof Header;
-  Content: typeof Content;
-  data: typeof data;
-  columns: typeof columns;
-  colorBgContainer: string;
-  paginationProps: typeof paginationProps;
-  typeOptions: typeof typeOptions;
-  isDrawerOpen: boolean;
-  showDrawer: () => void;
-  handleChange: (value: string) => void;
-  onPageChange?: typeof onPageChange;
-  onDrawerClose: () => void;
-  onDateChange?: DatePickerProps["onChange"];
-  onTypeChange: (checkedValues: CheckboxValueType[]) => void;
-}
-
 export default function useActsListState(): ActsListState {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const navigate = useNavigate();
+
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
   const showDrawer = (): void => {
     setIsDrawerOpen(true);
+  };
+
+  const closeDrawer = (): void => {
+    setIsDrawerOpen(false);
   };
 
   const onDrawerClose = (): void => {
@@ -239,6 +168,15 @@ export default function useActsListState(): ActsListState {
     console.log("checked = ", checkedValues);
   };
 
+  const onTableRow: TableProps<ActType>["onRow"] = (record, rowIndex) => {
+    console.log(record, rowIndex);
+    return {
+      onClick: () => {
+        navigate(`${record.id}`);
+      },
+    };
+  };
+
   return {
     Header,
     Content,
@@ -249,11 +187,13 @@ export default function useActsListState(): ActsListState {
     typeOptions,
     isDrawerOpen,
     showDrawer,
+    closeDrawer,
     handleChange,
     onPageChange,
     onDrawerClose,
     onDateChange,
     onTypeChange,
+    onTableRow,
   };
 }
 

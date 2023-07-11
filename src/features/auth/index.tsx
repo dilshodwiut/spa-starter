@@ -1,3 +1,5 @@
-export default function Auth(): React.ReactElement {
-  return <div>auth</div>;
-}
+import authRoutes from "./routes";
+
+const somethingElse = null;
+
+export { authRoutes, somethingElse };

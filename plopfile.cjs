@@ -25,7 +25,7 @@ module.exports = (
   });
 
   plop.setGenerator("view", {
-    description: "Creating new pages",
+    description: "Creating new page",
     prompts: [
       {
         type: "input",
@@ -70,6 +70,50 @@ module.exports = (
         templateFile: "src/templates/views/import.hbs",
         path: "src/features/{{kebabCase feature}}/routes.tsx",
         pattern: /(\/\/ VIEW IMPORTS)/g,
+      },
+    ],
+  });
+
+  plop.setGenerator("feature", {
+    description: "Creating a new feature",
+    prompts: [
+      {
+        type: "input",
+        name: "name",
+      },
+    ],
+    actions: () => [
+      {
+        type: "add",
+        templateFile: "src/templates/features/icon.hbs",
+        path: "src/features/{{kebabCase name}}/components/some-icon.tsx",
+      },
+      {
+        type: "add",
+        templateFile: "src/templates/features/index.hbs",
+        path: "src/features/{{kebabCase name}}/index.tsx",
+      },
+      {
+        type: "add",
+        templateFile: "src/templates/features/routes.hbs",
+        path: "src/features/{{kebabCase name}}/routes.tsx",
+      },
+      {
+        type: "add",
+        templateFile: "src/templates/features/view.hbs",
+        path: "src/features/{{kebabCase name}}/views/{{kebabCase name}}.tsx",
+      },
+      {
+        type: "append",
+        templateFile: "src/templates/features/import.hbs",
+        path: "src/routes/routes.tsx",
+        pattern: /(\/\/ ROUTE IMPORTS)/g,
+      },
+      {
+        type: "append",
+        template: "{{camelCase name}}Routes,",
+        path: "src/routes/routes.tsx",
+        pattern: /(\/\/ ROUTES)/g,
       },
     ],
   });

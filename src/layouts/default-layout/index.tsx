@@ -19,7 +19,7 @@ export default function DefaultLayout(props: Props): React.ReactElement {
     Text,
     theme,
     collapsed,
-    pathname,
+    defaultMenuItemKeys,
     items,
     languageOptions,
     siderProps,
@@ -88,7 +88,7 @@ export default function DefaultLayout(props: Props): React.ReactElement {
           <ConfigProvider theme={theme}>
             <Menu
               mode="inline"
-              defaultSelectedKeys={[pathname]}
+              defaultSelectedKeys={defaultMenuItemKeys}
               items={items}
               style={{ borderRightWidth: 0 }}
               className="flex-grow px-2 bg-[#fafbfc]"
