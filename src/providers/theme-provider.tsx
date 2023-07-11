@@ -10,6 +10,9 @@ const theme: ThemeConfig = {
   token: {
     colorPrimary: colors.primary,
     colorPrimaryBg: colors.bg_primary,
+    colorTextPlaceholder: colors.placeholder,
+    colorBorder: colors.border,
+    // borderRadius: 12,
     // borderRadiusLG: 20,
   },
 };
