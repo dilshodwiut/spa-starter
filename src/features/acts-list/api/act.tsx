@@ -5,7 +5,7 @@ export async function getAllActs(): Promise<ActType[]> {
   const result = await new Promise<ActType[]>((resolve) => {
     setTimeout(() => {
       resolve(acts as ActType[]);
-    }, 1000);
+    }, 0);
   });
 
   return result;
