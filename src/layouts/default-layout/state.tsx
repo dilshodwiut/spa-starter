@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { compose, split, tail, take } from "ramda";
 import { Layout, Typography } from "antd";
 import { colors } from "@/config/theme";
 import ruIcon from "@/assets/RU.svg";
@@ -16,13 +17,21 @@ const theme = {
   },
 };
 
+// "/list-of-acts/9382" -> ["list-of-acts"]
+type getTopParentRouteFn = (str: string) => string[];
+const getTopParentRoute = compose(
+  take(1),
+  tail,
+  split("/"),
+) as getTopParentRouteFn;
+
 interface DefaultLayoutState {
   Sider: typeof Sider;
   Text: typeof Text;
   theme: ThemeConfig;
   items?: ItemType[];
   collapsed: boolean;
-  pathname: string;
+  defaultMenuItemKeys: string[];
   languageOptions: Array<{
     value: string;
     label: JSX.Element;
@@ -47,6 +56,8 @@ export default function useDefaultLayoutState(
   const onToggleSider = (): void => {
     setCollapsed(!collapsed);
   };
+
+  const defaultMenuItemKeys = getTopParentRoute(pathname);
 
   const items = useMemo(
     // eslint-disable-next-line arrow-body-style
@@ -105,7 +116,7 @@ export default function useDefaultLayoutState(
     Text,
     theme,
     collapsed,
-    pathname,
+    defaultMenuItemKeys,
     items,
     languageOptions,
     siderProps,

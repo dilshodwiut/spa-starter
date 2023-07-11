@@ -88,6 +88,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["stylelint-config-standard-scss", "virtual:888386864bbef588716a32e61cfeabcab6d23677fbe727cae928b0763f3d1444c6acbe8983de3ec3ab6a1e69115213e6053d916ab869833d7e871a2b6e720034#npm:9.0.0"],\
             ["tailwindcss", "npm:3.3.2"],\
             ["typescript", "patch:typescript@npm%3A5.0.4#~builtin<compat/typescript>::version=5.0.4&hash=b5f058"],\
+            ["usehooks-ts", "virtual:888386864bbef588716a32e61cfeabcab6d23677fbe727cae928b0763f3d1444c6acbe8983de3ec3ab6a1e69115213e6053d916ab869833d7e871a2b6e720034#npm:2.9.1"],\
             ["vite", "virtual:888386864bbef588716a32e61cfeabcab6d23677fbe727cae928b0763f3d1444c6acbe8983de3ec3ab6a1e69115213e6053d916ab869833d7e871a2b6e720034#npm:4.3.9"],\
             ["vite-tsconfig-paths", "virtual:888386864bbef588716a32e61cfeabcab6d23677fbe727cae928b0763f3d1444c6acbe8983de3ec3ab6a1e69115213e6053d916ab869833d7e871a2b6e720034#npm:4.2.0"],\
             ["vitest", "virtual:888386864bbef588716a32e61cfeabcab6d23677fbe727cae928b0763f3d1444c6acbe8983de3ec3ab6a1e69115213e6053d916ab869833d7e871a2b6e720034#npm:0.32.4"],\
@@ -3504,6 +3505,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["stylelint-config-standard-scss", "virtual:888386864bbef588716a32e61cfeabcab6d23677fbe727cae928b0763f3d1444c6acbe8983de3ec3ab6a1e69115213e6053d916ab869833d7e871a2b6e720034#npm:9.0.0"],\
             ["tailwindcss", "npm:3.3.2"],\
             ["typescript", "patch:typescript@npm%3A5.0.4#~builtin<compat/typescript>::version=5.0.4&hash=b5f058"],\
+            ["usehooks-ts", "virtual:888386864bbef588716a32e61cfeabcab6d23677fbe727cae928b0763f3d1444c6acbe8983de3ec3ab6a1e69115213e6053d916ab869833d7e871a2b6e720034#npm:2.9.1"],\
             ["vite", "virtual:888386864bbef588716a32e61cfeabcab6d23677fbe727cae928b0763f3d1444c6acbe8983de3ec3ab6a1e69115213e6053d916ab869833d7e871a2b6e720034#npm:4.3.9"],\
             ["vite-tsconfig-paths", "virtual:888386864bbef588716a32e61cfeabcab6d23677fbe727cae928b0763f3d1444c6acbe8983de3ec3ab6a1e69115213e6053d916ab869833d7e871a2b6e720034#npm:4.2.0"],\
             ["vitest", "virtual:888386864bbef588716a32e61cfeabcab6d23677fbe727cae928b0763f3d1444c6acbe8983de3ec3ab6a1e69115213e6053d916ab869833d7e871a2b6e720034#npm:0.32.4"],\
@@ -10926,6 +10928,32 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "packagePeers": [\
             "@types/react",\
+            "react"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["usehooks-ts", [\
+        ["npm:2.9.1", {\
+          "packageLocation": "./.yarn/cache/usehooks-ts-npm-2.9.1-14c625587f-36f1e4142c.zip/node_modules/usehooks-ts/",\
+          "packageDependencies": [\
+            ["usehooks-ts", "npm:2.9.1"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:888386864bbef588716a32e61cfeabcab6d23677fbe727cae928b0763f3d1444c6acbe8983de3ec3ab6a1e69115213e6053d916ab869833d7e871a2b6e720034#npm:2.9.1", {\
+          "packageLocation": "./.yarn/__virtual__/usehooks-ts-virtual-c9ba91ba72/0/cache/usehooks-ts-npm-2.9.1-14c625587f-36f1e4142c.zip/node_modules/usehooks-ts/",\
+          "packageDependencies": [\
+            ["usehooks-ts", "virtual:888386864bbef588716a32e61cfeabcab6d23677fbe727cae928b0763f3d1444c6acbe8983de3ec3ab6a1e69115213e6053d916ab869833d7e871a2b6e720034#npm:2.9.1"],\
+            ["@types/react", "npm:18.2.14"],\
+            ["@types/react-dom", "npm:18.2.6"],\
+            ["react", "npm:18.2.0"],\
+            ["react-dom", "virtual:888386864bbef588716a32e61cfeabcab6d23677fbe727cae928b0763f3d1444c6acbe8983de3ec3ab6a1e69115213e6053d916ab869833d7e871a2b6e720034#npm:18.2.0"]\
+          ],\
+          "packagePeers": [\
+            "@types/react-dom",\
+            "@types/react",\
+            "react-dom",\
             "react"\
           ],\
           "linkType": "HARD"\

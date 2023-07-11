@@ -4,6 +4,7 @@ const settings = {
   requestTimeout: 180000, // 3 mins
   idleTimeout: 3000, // 3 sec
   rowsPerPage: 10,
+  messageDuration: 3,
   defaultLanguage: "ru",
   project: {},
 } as const;

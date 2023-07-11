@@ -1,3 +1,5 @@
-export default function Notification(): React.ReactElement {
-  return <div>Notifications</div>;
-}
+import notificationRoutes from "./routes";
+
+const somethingElse = null;
+
+export { notificationRoutes, somethingElse };

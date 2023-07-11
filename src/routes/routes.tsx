@@ -1,11 +1,16 @@
 import type { CustomRoute } from "@/types";
-import {
-  authRoutes,
-  actsListRoutes,
-  statsRoutes,
-  notificationRoutes,
-} from "@/features";
+
+// ROUTE IMPORTS
+import { authRoutes } from "@/features/auth";
+import { actsListRoutes } from "@/features/acts-list";
+import { statsRoutes } from "@/features/stats";
+import { notificationRoutes } from "@/features/notification";
+import { inspectorsRoutes } from "@/features/inspectors";
+
+// Global Pages
 import Root from "@/views/root";
+import NotFound from "@/views/not-found";
+import Error from "@/views/error";
 
 const routes: CustomRoute[] = [
   {
@@ -14,15 +19,21 @@ const routes: CustomRoute[] = [
     path: "/",
     element: <Root getRoutes={() => routes} />,
     loader: async () => null,
-    errorElement: <div>Error element</div>,
-    children: [statsRoutes, actsListRoutes, notificationRoutes],
+    errorElement: <Error />,
+    children: [
+      // ROUTES
+      statsRoutes,
+      actsListRoutes,
+      notificationRoutes,
+      inspectorsRoutes,
+    ],
   },
   authRoutes,
   {
     id: "global-not-found",
     title: "Not found",
     path: "*",
-    element: <h1>404: Page not found</h1>,
+    element: <NotFound />,
   },
 ];
 

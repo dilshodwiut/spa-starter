@@ -1,3 +1,5 @@
-export default function Stats(): React.ReactElement {
-  return <div>Statistics</div>;
-}
+import statsRoutes from "./routes";
+
+const somethingElse = null;
+
+export { statsRoutes, somethingElse };

@@ -1,11 +1,11 @@
 import type { CustomRoute } from "@/types";
 import NotificationIcon from "./components/notification-icon";
-import Notification from ".";
+import Notification from "./views/notification";
 
 const notificationRoutes: CustomRoute = {
   id: "notification",
   title: "Notification",
-  path: "/notification",
+  path: "notification",
   element: <Notification />,
   Icon: NotificationIcon,
   children: [],
