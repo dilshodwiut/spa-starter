@@ -41,7 +41,7 @@ interface ActionBoxProps {
 interface CustomCardProps {
   children: React.ReactNode;
   className?: string;
-  title: CardProps["title"];
+  title?: CardProps["title"];
   // [T in keyof]: CardProps
 }
 

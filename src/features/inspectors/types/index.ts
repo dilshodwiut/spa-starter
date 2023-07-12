@@ -20,6 +20,9 @@ interface InspectorState {
   Form: typeof Form;
   Input: typeof Input;
   colorBgContainer: string;
+  goBack: () => void;
+  isModalOpen: boolean;
+  handleCancel: () => void;
 }
 
 interface InspectorType {

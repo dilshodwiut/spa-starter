@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Button, Col, DatePicker, Result, Row, Select } from "antd";
 import CustomModal from "@/components/modal";
 import backIcon from "@/assets/arrow-left.svg";
@@ -7,21 +5,16 @@ import tickIcon from "@/assets/tick-square.svg";
 import useInspectorState from "./inspector.state";
 
 export default function Inspector(): React.ReactElement {
-  const { Header, Content, Form, Input, colorBgContainer } =
-    useInspectorState();
-
-  const navigate = useNavigate();
-
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
-
-  const handleCancel = (): void => {
-    console.log("cancel");
-    setIsModalOpen(false);
-  };
-
-  const goBack = (): void => {
-    navigate(-1);
-  };
+  const {
+    Header,
+    Content,
+    Form,
+    Input,
+    colorBgContainer,
+    goBack,
+    isModalOpen,
+    handleCancel,
+  } = useInspectorState();
 
   return (
     <>
