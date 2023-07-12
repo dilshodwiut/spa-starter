@@ -17,4 +17,5 @@ export default function CustomCard(props: CustomCardProps): React.ReactElement {
 
 CustomCard.defaultProps = {
   className: "",
+  title: "",
 };

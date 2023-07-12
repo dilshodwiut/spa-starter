@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Layout, Form, Input, theme } from "antd";
 import type { InspectorState } from "../types";
 
@@ -8,5 +10,27 @@ export default function useInspectorState(): InspectorState {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  return { Header, Content, Form, Input, colorBgContainer };
+  const navigate = useNavigate();
+
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const handleCancel = (): void => {
+    console.log("cancel");
+    setIsModalOpen(false);
+  };
+
+  const goBack = (): void => {
+    navigate(-1);
+  };
+
+  return {
+    Header,
+    Content,
+    Form,
+    Input,
+    colorBgContainer,
+    goBack,
+    isModalOpen,
+    handleCancel,
+  };
 }
