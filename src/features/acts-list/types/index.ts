@@ -84,7 +84,7 @@ interface ActType {
   status: ActStatus;
 }
 
-interface ActsListState {
+interface ActsState {
   Header: typeof Layout.Header;
   Content: typeof Layout.Content;
   data: ActType[];
@@ -114,6 +114,6 @@ export type {
   CustomCardProps,
   InfoProps,
   ActState,
-  ActsListState,
+  ActsState,
   ActType,
 };

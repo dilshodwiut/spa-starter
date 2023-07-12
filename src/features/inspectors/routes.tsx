@@ -1,14 +1,28 @@
 import type { CustomRoute } from "@/types";
+import Inspector from "./views/inspector";
 import PeopleIcon from "./components/people-icon";
-import Inspectors from "./views/inspectors";
+import Container from "./views/container";
 
 const inspectorsRoutes: CustomRoute = {
   id: "inspectors",
   title: "Inspectors",
   path: "inspectors",
-  element: <Inspectors />,
+  element: <Container />,
   Icon: PeopleIcon,
-  children: [],
+  children: [
+    {
+      id: "create-inspector",
+      title: "Create New Inspector",
+      path: "create-inspector",
+      element: <Inspector />,
+    },
+    {
+      id: "update-inspector",
+      title: "Update Inspector Info",
+      path: ":inspectorId",
+      element: <Inspector />,
+    },
+  ],
 };
 
 export default inspectorsRoutes;

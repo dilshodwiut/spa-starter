@@ -8,7 +8,7 @@ import type { ColumnsType, TableProps } from "antd/es/table";
 import type { CheckboxValueType } from "antd/es/checkbox/Group";
 import type {
   ActStatus,
-  ActsListState,
+  ActsState,
   ActType,
   ViolationType,
   getColorFn,
@@ -135,7 +135,7 @@ const onPageChange: TableProps<ActType>["onChange"] = (
   console.log("params", pagination, filters, sorter, extra);
 };
 
-export default function useActsListState(): ActsListState {
+export default function useActsState(): ActsState {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const navigate = useNavigate();

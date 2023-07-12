@@ -58,9 +58,9 @@ export default function Login(): React.ReactElement {
             <Button
               type="primary"
               htmlType="submit"
-              className="w-full bg-[#40916C] rounded-xl h-12"
+              className="w-full bg-[#40916C] rounded-xl h-12 font-medium text-[15px]"
             >
-              <span className="font-medium text-[15px]">Submit</span>
+              Submit
             </Button>
           </Form.Item>
         </Form>
