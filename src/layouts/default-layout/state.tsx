@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { compose, split, tail, take } from "ramda";
 import { Layout, Typography } from "antd";
 import { colors } from "@/config/theme";
+import clsx from "clsx";
 import ruIcon from "@/assets/RU.svg";
 import type { ThemeConfig, MenuProps, SiderProps } from "antd";
 import type { CustomRoute } from "@/types";
@@ -64,8 +65,17 @@ export default function useDefaultLayoutState(
     (): MenuProps["items"] => {
       return sidebarRoutes.map(({ path, title, Icon }) => ({
         key: path as string,
-        icon: typeof Icon === "function" ? <Icon /> : null,
-        label: title,
+        label: (
+          <span
+            className={clsx(
+              "flex items-center h-full gap-6",
+              collapsed ? "-ml-1" : "",
+            )}
+          >
+            {typeof Icon === "function" ? <Icon /> : null}
+            {collapsed ? "" : title}
+          </span>
+        ),
         title,
         onClick: () => {
           navigate(path as string);
@@ -78,7 +88,7 @@ export default function useDefaultLayoutState(
         },
       }));
     },
-    [sidebarRoutes, navigate],
+    [sidebarRoutes, collapsed, navigate],
   );
 
   const languageOptions = useMemo(

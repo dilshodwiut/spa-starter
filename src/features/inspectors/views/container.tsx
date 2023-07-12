@@ -8,7 +8,7 @@ export default function Container(): React.ReactElement {
     "/inspectors/:inspectorId",
   ]);
 
-  if (match !== null) {
+  if (match) {
     return <Inspector />;
   }
 
