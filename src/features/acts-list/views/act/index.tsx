@@ -105,7 +105,7 @@ export default function Act(): React.ReactElement {
 
       <Header
         style={{ background: colorBgContainer }}
-        className="px-8 flex justify-between items-center"
+        className="px-8 pt-2 flex justify-between items-baseline"
       >
         <Title level={3} className="flex gap-6 items-center">
           Act Details BH {actId}
@@ -120,7 +120,7 @@ export default function Act(): React.ReactElement {
         </Title>
 
         {isInspector ? (
-          <Space>
+          <Space size="large">
             <Select
               placeholder="Choose city"
               defaultValue="tashkent_city"

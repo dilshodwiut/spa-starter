@@ -28,11 +28,11 @@ export default function Inspectors(): React.ReactElement {
     >
       <Header
         style={{ background: colorBgContainer }}
-        className="px-8 flex justify-between items-center"
+        className="px-8 pt-2 flex justify-between items-baseline"
       >
         <h1 className="font-semibold text-xl">Inspectors List</h1>
 
-        <Space>
+        <Space size="large">
           <Input
             size="large"
             placeholder="Search by full name"

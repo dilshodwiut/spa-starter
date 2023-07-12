@@ -20,7 +20,7 @@ export default function Inspector(): React.ReactElement {
     <>
       <Header
         style={{ background: colorBgContainer }}
-        className="px-8 flex items-center gap-4"
+        className="px-8 pt-2 flex items-center gap-4"
       >
         <button type="button" onClick={goBack}>
           <img src={backIcon} alt="back" width={24} height={24} />

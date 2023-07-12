@@ -50,7 +50,7 @@ export default function Acts(): React.ReactElement {
     >
       <Header
         style={{ background: colorBgContainer }}
-        className="px-8 flex justify-between items-center"
+        className="px-8 pt-2 flex justify-between items-baseline"
       >
         <div>
           <Segmented
@@ -60,7 +60,7 @@ export default function Acts(): React.ReactElement {
           />
         </div>
 
-        <Space>
+        <Space size="large">
           <Input
             size="large"
             placeholder="Search with serial number"
