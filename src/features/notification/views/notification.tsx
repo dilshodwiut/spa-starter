@@ -78,7 +78,7 @@ export default function Notification(): React.ReactElement {
     <>
       <Header
         style={{ background: colorBgContainer }}
-        className="px-8 flex justify-between items-center"
+        className="px-8 flex items-center"
       >
         <h1 className="font-semibold text-xl">Notification</h1>
       </Header>

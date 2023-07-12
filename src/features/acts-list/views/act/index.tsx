@@ -146,7 +146,7 @@ export default function Act(): React.ReactElement {
                 <Col span={19}>
                   <Row gutter={24}>
                     <Col span={24}>
-                      <Info of="Fullname" value="Norov Ilkhom Ibragimovich" />
+                      <Info of="Full name" value="Norov Ilkhom Ibragimovich" />
                     </Col>
                   </Row>
                   <br />

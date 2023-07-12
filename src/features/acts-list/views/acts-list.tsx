@@ -1,5 +1,5 @@
 import { Outlet, useMatch } from "react-router-dom";
-import ActsTable from "./acts-table";
+import Acts from "./acts";
 
 export default function ActsList(): React.ReactElement {
   const match = useMatch("/list-of-acts/:actId");
@@ -8,5 +8,5 @@ export default function ActsList(): React.ReactElement {
     return <Outlet />;
   }
 
-  return <ActsTable />;
+  return <Acts />;
 }

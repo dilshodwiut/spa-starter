@@ -1,7 +1,14 @@
 import { Empty } from "antd";
 import EmptyIcon from "@/assets/note.svg";
 
-export default function CustomEmpty(): React.ReactElement {
+interface Props {
+  title: string;
+  description: string;
+}
+
+export default function TableEmpty(props: Props): React.ReactElement {
+  const { title, description } = props;
+
   return (
     <Empty
       style={{ height: "calc(110vh - 370px)" }}
@@ -19,10 +26,8 @@ export default function CustomEmpty(): React.ReactElement {
       }
       description={
         <div className="w-96 m-auto">
-          <span className="font-medium text-base">Act list is empty</span>
-          <p className="text-sm text-[#62738C]">
-            This will display a list of all canceled acts in the recent past.
-          </p>
+          <span className="font-medium text-base">{title}</span>
+          <p className="text-sm text-[#62738C]">{description}</p>
         </div>
       }
     />

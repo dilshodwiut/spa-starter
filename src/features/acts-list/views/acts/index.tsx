@@ -13,13 +13,13 @@ import {
   ConfigProvider,
 } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
+import TableEmpty from "@/components/table-empty";
 import SearchIcon from "@/assets/search-normal.svg";
 import SettingsIcon from "../../components/settings-icon";
 import FilterIcon from "../../components/filter-icon";
-import useActsTableState from "./state";
-import CustomEmpty from "../../components/custom-empty";
+import useActsState from "./state";
 
-export default function ActsTable(): React.ReactElement {
+export default function Acts(): React.ReactElement {
   const {
     Header,
     Content,
@@ -37,10 +37,17 @@ export default function ActsTable(): React.ReactElement {
     onDateChange,
     onTypeChange,
     onTableRow,
-  } = useActsTableState();
+  } = useActsState();
 
   return (
-    <ConfigProvider renderEmpty={CustomEmpty}>
+    <ConfigProvider
+      renderEmpty={() => (
+        <TableEmpty
+          title="Act list is empty"
+          description="This will display a list of all canceled acts in the recent past."
+        />
+      )}
+    >
       <Header
         style={{ background: colorBgContainer }}
         className="px-8 flex justify-between items-center"
@@ -140,7 +147,7 @@ export default function ActsTable(): React.ReactElement {
               />
             </Form.Item>
 
-            <Form.Item name="area" label="Area">
+            <Form.Item name="district" label="District">
               <Select
                 placeholder="Choose from the list"
                 className="w-full"

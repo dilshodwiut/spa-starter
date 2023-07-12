@@ -17,6 +17,21 @@ interface CustomNonIndexRouteObject extends NonIndexRouteObject {
 type CustomRoute = (IndexRouteObject | CustomNonIndexRouteObject) &
   RouteExtensions;
 
-type id = string | number;
+type Region =
+  | "Andijan"
+  | "Bukhara"
+  | "Fergana"
+  | "Jizzakh"
+  | "Xorazm"
+  | "Namangan"
+  | "Navoiy"
+  | "Qashqadaryo"
+  | "Samarqand"
+  | "Sirdaryo"
+  | "Surxondaryo"
+  | "Karakalpakstan"
+  | "Tashkent";
 
-export type { CustomRoute, id };
+type JobTitle = "Inspector";
+
+export type { CustomRoute, Region, JobTitle };
