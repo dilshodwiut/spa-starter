@@ -1,22 +1,31 @@
-export async function login(data: object): Promise<Response> {
-  const res = await fetch(`${import.meta.env.VITE_AUTH_URL}/auth/login`, {
+import request from "@/utils/axios";
+import type { AxiosResponse } from "axios";
+
+interface Tokens {
+  access: string;
+  refresh: string;
+}
+
+export async function login(data: {
+  username: string;
+  password: string;
+}): Promise<AxiosResponse<Tokens>> {
+  const res = await request({
+    url: "account/me/",
     method: "post",
-    body: JSON.stringify(data),
-    headers: {
-      "Content-Type": "application/json",
-    },
+    data,
   });
 
   return res;
 }
 
-export async function register(data: object): Promise<Response> {
-  const res = await fetch(`${import.meta.env.VITE_AUTH_URL}/auth/register`, {
+export async function refreshToken(data: {
+  refresh_token: string;
+}): Promise<AxiosResponse<Tokens>> {
+  const res = await request({
+    url: "account/me/refresh/",
     method: "post",
-    body: JSON.stringify(data),
-    headers: {
-      "Content-Type": "application/json",
-    },
+    data,
   });
 
   return res;

@@ -1,7 +1,24 @@
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { Button, Form, Input, Layout } from "antd";
 import brandLogo from "@/assets/enjin-coin-(enj).svg";
+import { login } from "../api";
 
 export default function Login(): React.ReactElement {
+  const navigate = useNavigate();
+
+  const { mutate } = useMutation({
+    mutationFn: login,
+    onSuccess: (res) => {
+      // navigate(`/products/repricing/${res.id}`);
+      console.log(res);
+    },
+    onError: (error) => {
+      console.error(error);
+      // addToast({ title: error.data.error });
+    },
+  });
+
   return (
     <Layout style={{ background: "#fafbfc" }}>
       <main className="flex flex-col justify-center items-center gap-5 h-screen w-[360px] text-center m-auto">
@@ -21,20 +38,22 @@ export default function Login(): React.ReactElement {
           name="login-form"
           layout="vertical"
           className="w-full"
-          onFinish={() => {
-            //
-          }}
-          onFinishFailed={() => {
-            //
-          }}
+          onFinish={mutate}
           autoComplete="off"
         >
           <Form.Item
             label={
               <span className="font-medium text-sm text-[#62738C]">Login</span>
             }
-            name="login"
+            name="username"
             className="mb-6"
+            rules={[
+              {
+                required: true,
+                min: 1,
+                message: "Username cannot be less than 1 character",
+              },
+            ]}
           >
             <Input placeholder="Login" className="h-12 rounded-xl" />
           </Form.Item>
@@ -47,6 +66,13 @@ export default function Login(): React.ReactElement {
             }
             name="password"
             className="mb-6"
+            rules={[
+              {
+                required: true,
+                min: 1,
+                message: "Password cannot be less than 1 character",
+              },
+            ]}
           >
             <Input.Password
               placeholder="Password"
