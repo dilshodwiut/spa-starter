@@ -1,0 +1,15 @@
+stages:
+  - build
+
+build-job:
+  stage: build
+  only:
+    - main
+    #- merge_requests
+  tags:
+    - frontend-core
+  script:
+    - pwd
+    - whoami
+    - npm install
+    - npm run build
