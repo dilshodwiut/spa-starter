@@ -1,5 +1,6 @@
 import type { Layout, Form, Input } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
+import type { TFunction } from "i18next";
 import type { JobTitle, Region } from "@/types";
 
 interface InspectorsState {
@@ -12,6 +13,7 @@ interface InspectorsState {
   onPageChange: TableProps<InspectorType>["onChange"];
   onTableRow: TableProps<InspectorType>["onRow"];
   onAddClick: () => void;
+  t: TFunction;
 }
 
 interface InspectorState {
@@ -23,6 +25,7 @@ interface InspectorState {
   goBack: () => void;
   isModalOpen: boolean;
   handleCancel: () => void;
+  t: TFunction;
 }
 
 interface InspectorType {

@@ -62,6 +62,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["happy-dom", "npm:9.20.3"],\
             ["husky", "npm:8.0.3"],\
             ["i18next", "npm:22.5.1"],\
+            ["i18next-browser-languagedetector", "npm:7.1.0"],\
             ["immer", "npm:10.0.2"],\
             ["immutable", "npm:4.3.0"],\
             ["jsdoc", "npm:4.0.2"],\
@@ -3479,6 +3480,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["happy-dom", "npm:9.20.3"],\
             ["husky", "npm:8.0.3"],\
             ["i18next", "npm:22.5.1"],\
+            ["i18next-browser-languagedetector", "npm:7.1.0"],\
             ["immer", "npm:10.0.2"],\
             ["immutable", "npm:4.3.0"],\
             ["jsdoc", "npm:4.0.2"],\
@@ -5324,6 +5326,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/i18next-npm-22.5.1-9bf058e9a2-175f8ab7fa.zip/node_modules/i18next/",\
           "packageDependencies": [\
             ["i18next", "npm:22.5.1"],\
+            ["@babel/runtime", "npm:7.22.6"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["i18next-browser-languagedetector", [\
+        ["npm:7.1.0", {\
+          "packageLocation": "./.yarn/cache/i18next-browser-languagedetector-npm-7.1.0-1a79fe5d7c-36981b9a99.zip/node_modules/i18next-browser-languagedetector/",\
+          "packageDependencies": [\
+            ["i18next-browser-languagedetector", "npm:7.1.0"],\
             ["@babel/runtime", "npm:7.22.6"]\
           ],\
           "linkType": "HARD"\

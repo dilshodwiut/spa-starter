@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { compose, split, tail, take } from "ramda";
 import { Layout, Typography } from "antd";
 import { colors } from "@/config/theme";
+import { useTranslation } from "react-i18next";
 import clsx from "clsx";
 import ruIcon from "@/assets/RU.svg";
 import type { ThemeConfig, MenuProps, SiderProps } from "antd";
@@ -19,12 +20,9 @@ const theme = {
 };
 
 // "/list-of-acts/9382" -> ["list-of-acts"]
-type getTopParentRouteFn = (str: string) => string[];
-const getTopParentRoute = compose(
-  take(1),
-  tail,
-  split("/"),
-) as getTopParentRouteFn;
+type getTopRouteFn = (str: string) => string[];
+// getTopRoute :: string -> [string] -> [string] -> [string]
+const getTopRoute = compose(take(1), tail, split("/")) as getTopRouteFn;
 
 interface DefaultLayoutState {
   Sider: typeof Sider;
@@ -49,6 +47,7 @@ export default function useDefaultLayoutState(
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleChange = (value: string): void => {
     console.log(`selected ${value}`);
@@ -58,7 +57,7 @@ export default function useDefaultLayoutState(
     setCollapsed(!collapsed);
   };
 
-  const defaultMenuItemKeys = getTopParentRoute(pathname);
+  const defaultMenuItemKeys = getTopRoute(pathname);
 
   const items = useMemo(
     // eslint-disable-next-line arrow-body-style
@@ -73,7 +72,7 @@ export default function useDefaultLayoutState(
             )}
           >
             {typeof Icon === "function" ? <Icon /> : null}
-            {collapsed ? "" : title}
+            {collapsed ? "" : t(title ?? "")}
           </span>
         ),
         title,
@@ -88,7 +87,7 @@ export default function useDefaultLayoutState(
         },
       }));
     },
-    [sidebarRoutes, collapsed, navigate],
+    [sidebarRoutes, collapsed, navigate, t],
   );
 
   const languageOptions = useMemo(
@@ -102,10 +101,18 @@ export default function useDefaultLayoutState(
         ),
       },
       {
-        value: "en",
+        value: "uzCryllic",
         label: (
           <span className="flex items-center gap-2">
-            <img src={ruIcon} alt="english" /> {collapsed ? "" : "English"}
+            <img src={ruIcon} alt="uz cryllic" /> {collapsed ? "" : "Узбекча"}
+          </span>
+        ),
+      },
+      {
+        value: "uzLatin",
+        label: (
+          <span className="flex items-center gap-2">
+            <img src={ruIcon} alt="uz latin" /> {collapsed ? "" : "O'zbekcha"}
           </span>
         ),
       },

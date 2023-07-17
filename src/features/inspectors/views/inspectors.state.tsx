@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { random, shuffle } from "radash";
 import { clone } from "ramda";
-import { Layout, theme } from "antd";
+import { Button, Layout, theme } from "antd";
+import { t as T } from "@/utils/i18n";
 import type { ColumnsType, TableProps } from "antd/es/table";
 import type { InspectorsState, InspectorType } from "../types";
 import { getAllInspectors } from "../api";
@@ -14,35 +16,37 @@ const columns: ColumnsType<InspectorType> = [
     },
   },
   {
-    title: "Full name",
+    title: T("fullname"),
     dataIndex: "full_name",
     sorter: (a, b) => 1,
   },
   {
-    title: "Date of birth",
+    title: T("dob"),
     dataIndex: "dob",
   },
   {
-    title: "Passport",
+    title: T("passport"),
     dataIndex: "passport",
   },
   {
-    title: "PINFL",
+    title: T("pinfl"),
     dataIndex: "pinfl",
     sorter: (a, b) => 1,
   },
   {
-    title: "Job Title",
+    title: T("job-title"),
     dataIndex: "job_title",
   },
   {
-    title: "Region",
+    title: T("region"),
     dataIndex: "region",
   },
   {
-    title: "Action",
+    title: T("action"),
     render() {
-      return "a";
+      return (
+        <Button className="bg-[#D8F3DC] text-[#40916C]">{T("see")}</Button>
+      );
     },
   },
 ];
@@ -86,6 +90,8 @@ export default function useInspectorsState(): InspectorsState {
     token: { colorBgContainer },
   } = theme.useToken();
 
+  const { t } = useTranslation();
+
   const onTableRow: TableProps<InspectorType>["onRow"] = (record, rowIndex) => {
     console.log(record, rowIndex);
     return {
@@ -109,5 +115,6 @@ export default function useInspectorsState(): InspectorsState {
     onPageChange,
     onTableRow,
     onAddClick,
+    t,
   };
 }

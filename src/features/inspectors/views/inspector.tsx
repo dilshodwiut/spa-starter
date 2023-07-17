@@ -14,6 +14,7 @@ export default function Inspector(): React.ReactElement {
     goBack,
     isModalOpen,
     handleCancel,
+    t,
   } = useInspectorState();
 
   return (
@@ -26,7 +27,7 @@ export default function Inspector(): React.ReactElement {
           <img src={backIcon} alt="back" width={24} height={24} />
         </button>
 
-        <h1 className="font-semibold text-xl">Adding a new inspector</h1>
+        <h1 className="font-semibold text-xl">{t("adding-inspector")}</h1>
       </Header>
 
       <Content
@@ -48,60 +49,72 @@ export default function Inspector(): React.ReactElement {
           }}
           autoComplete="off"
         >
-          <Row gutter={24}>
+          <Row gutter={48}>
             <Col span={8}>
               <Form.Item
-                label="Last name"
+                label={t("last-name")}
                 name="last_name"
                 rules={[
-                  { required: true, message: "Please input your username!" },
+                  {
+                    required: true,
+                    type: "string",
+                    min: 1,
+                    whitespace: true,
+                    message: t("lastname-min-5") ?? "",
+                  },
                 ]}
               >
                 <Input size="large" />
               </Form.Item>
-              <Form.Item label="Passport" name="passport">
+              <Form.Item label={t("passport")} name="passport">
                 <Input size="large" />
               </Form.Item>
-              <Form.Item label="Phone number" name="phone">
+              <Form.Item label={t("phone")} name="phone">
                 <Input size="large" />
               </Form.Item>
-              <Form.Item label="Organization" name="organization">
+              <Form.Item label={t("organization")} name="organization">
                 <Input size="large" />
               </Form.Item>
-              <Form.Item label="Region" name="region">
+              <Form.Item label={t("region")} name="region">
                 <Select size="large" />
               </Form.Item>
-              <Form.Item label="Login" name="login">
+              <Form.Item label={t("login")} name="login">
                 <Input size="large" />
               </Form.Item>
             </Col>
 
             <Col span={8}>
               <Form.Item
-                label="First name"
+                label={t("first-name")}
                 name="first_name"
                 rules={[
-                  { required: true, message: "Please input your username!" },
+                  {
+                    required: true,
+                    type: "string",
+                    min: 1,
+                    whitespace: true,
+                    message: t("firstname-min-3") ?? "",
+                  },
                 ]}
               >
                 <Input size="large" />
               </Form.Item>
-              <Form.Item label="PINFL" name="pinfl">
+              <Form.Item label={t("pinfl")} name="pinfl">
                 <Input size="large" />
               </Form.Item>
-              <Form.Item label="City phone number" name="city_phone">
+              <Form.Item label={t("city-phone")} name="city_phone">
                 <Input size="large" />
               </Form.Item>
               <Form.Item
-                label="Organization division"
+                label={t("organization-division")}
                 name="organization_divison"
               >
                 <Input size="large" />
               </Form.Item>
-              <Form.Item label="District" name="district">
+              <Form.Item label={t("district")} name="district">
                 <Select size="large" />
               </Form.Item>
-              <Form.Item label="Password" name="password">
+              <Form.Item label={t("password")} name="password">
                 <Input.Password
                   placeholder="Password"
                   className="h-12 rounded-xl"
@@ -111,21 +124,31 @@ export default function Inspector(): React.ReactElement {
 
             <Col span={8}>
               <Form.Item
-                label="Patronymic"
+                label={t("patronymic")}
                 name="patronymic"
                 rules={[
-                  { required: true, message: "Please input your username!" },
+                  {
+                    required: true,
+                    type: "string",
+                    min: 1,
+                    whitespace: true,
+                    message: t("patronymic-min-5") ?? "",
+                  },
                 ]}
               >
                 <Input size="large" />
               </Form.Item>
-              <Form.Item label="Date of birth" name="dob">
-                <DatePicker size="large" className="w-full" />
+              <Form.Item label={t("dob")} name="dob">
+                <DatePicker
+                  size="large"
+                  className="w-full"
+                  placeholder={t("select-date") ?? ""}
+                />
               </Form.Item>
-              <Form.Item label="Address" name="address">
+              <Form.Item label={t("residence-address")} name="address">
                 <Input size="large" />
               </Form.Item>
-              <Form.Item label="Job title" name="job_title">
+              <Form.Item label={t("job-title")} name="job_title">
                 <Input size="large" />
               </Form.Item>
             </Col>
@@ -138,7 +161,7 @@ export default function Inspector(): React.ReactElement {
                 className="bg-gray-200 text-[#8498B4] font-medium text-[18px] h-14"
                 onClick={goBack}
               >
-                Cancel
+                {t("cancel")}
               </Button>
 
               <Button
@@ -146,7 +169,7 @@ export default function Inspector(): React.ReactElement {
                 htmlType="submit"
                 className="bg-green-200 text-black font-medium text-[18px] h-14"
               >
-                Create user
+                {t("create-user")}
               </Button>
             </div>
           </div>
@@ -174,7 +197,7 @@ export default function Inspector(): React.ReactElement {
               onClick={goBack}
               className="bg-[#D8F3DC] text-[#40916C] h-12 w-28 font-medium text-lg"
             >
-              Close
+              {t("close")}
             </Button>
           }
         />

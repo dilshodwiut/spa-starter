@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { random, shuffle } from "radash";
+import { isInt, random, shuffle } from "radash";
 import { clone } from "ramda";
 import { Layout, Tag, theme } from "antd";
+import { useTranslation } from "react-i18next";
+import { t as T } from "@/utils/i18n";
 import type { DatePickerProps } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
 import type { CheckboxValueType } from "antd/es/checkbox/Group";
@@ -33,39 +35,42 @@ const getColor: getColorFn = (input) => {
 
 const columns: ColumnsType<ActType> = [
   {
-    title: "Type",
+    title: T("type"),
     dataIndex: "server_type",
   },
   {
-    title: "Serial number",
+    title: T("serial-number"),
     dataIndex: "serial_num",
     sorter: (a, b) => 1,
   },
   {
-    title: "Date of Registration",
+    title: T("reg-date"),
     dataIndex: "date_of_registration",
     sorter: (a, b) => 1,
   },
   {
-    title: "Region",
+    title: T("region, district"),
     dataIndex: "region",
   },
   {
-    title: "Type",
+    title: T("type"),
     dataIndex: "client_type",
     sorter: (a, b) => 1,
+    render(value) {
+      return T(value);
+    },
   },
   {
-    title: "Violation",
+    title: T("violation"),
     dataIndex: "violation",
   },
   {
-    title: "Amount",
+    title: T("amount (som)"),
     dataIndex: "amount",
     sorter: (a, b) => a.amount - b.amount,
   },
   {
-    title: "Type",
+    title: T("type"),
     dataIndex: "violation_type",
     sorter: (a, b) => 1,
     render: (value: ViolationType) => (
@@ -74,12 +79,12 @@ const columns: ColumnsType<ActType> = [
         color={getColor(value)}
         className="p-1 w-full text-center"
       >
-        {`${value} days`}
+        {T(value)}
       </Tag>
     ),
   },
   {
-    title: "Status",
+    title: T("status"),
     dataIndex: "status",
     render: (value: ActStatus) => (
       <Tag
@@ -87,7 +92,7 @@ const columns: ColumnsType<ActType> = [
         color={getColor(value)}
         className="p-1 w-full text-center"
       >
-        {`${value} days`}
+        {isInt(value) ? `${value} days` : T(value)}
       </Tag>
     ),
   },
@@ -110,10 +115,10 @@ const { Header, Content } = Layout;
 
 const typeOptions = [
   {
-    label: "Regional electrical networks",
+    label: T("regional_electrical_networks"),
     value: "regional_electrical_networks",
   },
-  { label: "Uzenergyinspection", value: "uzeneryoinspection" },
+  { label: T("area_gas_supply"), value: "area_gas_supply" },
 ];
 
 const paginationProps = {
@@ -139,6 +144,7 @@ export default function useActsState(): ActsState {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const {
     token: { colorBgContainer },
@@ -194,13 +200,14 @@ export default function useActsState(): ActsState {
     onDateChange,
     onTypeChange,
     onTableRow,
+    t,
   };
 }
 
 function showTotal(total: number, range: [number, number]): React.ReactElement {
   return (
     <span className="text-[#8498B4]">
-      Acts are shown {range[0]}-{range[1]} out of {total}
+      {T("acts-shown")} {range[0]}-{range[1]} {T("out-of")} {total}
     </span>
   );
 }

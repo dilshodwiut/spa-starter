@@ -1,37 +1,43 @@
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { Button, Form, Input, Layout } from "antd";
+import { useTranslation } from "react-i18next";
+import { useAuthContext } from "@/contexts";
+import { Button, Form, Input, Layout, message } from "antd";
 import brandLogo from "@/assets/enjin-coin-(enj).svg";
 import { login } from "../api";
 
 export default function Login(): React.ReactElement {
   const navigate = useNavigate();
+  const { setIsAuth } = useAuthContext();
+  const [messageApi, contextHolder] = message.useMessage();
+  const { t } = useTranslation();
 
   const { mutate } = useMutation({
     mutationFn: login,
     onSuccess: (res) => {
-      // navigate(`/products/repricing/${res.id}`);
+      // localStorage.setItem("refresh_token", res.data.refresh);
+      // localStorage.setItem("access_token", res.data.access);
+      // setIsAuth(true);
+      // navigate("/");
       console.log(res);
     },
     onError: (error) => {
       console.error(error);
-      // addToast({ title: error.data.error });
     },
   });
 
   return (
     <Layout style={{ background: "#fafbfc" }}>
-      <main className="flex flex-col justify-center items-center gap-5 h-screen w-[360px] text-center m-auto">
+      {contextHolder}
+      <main className="flex flex-col justify-center items-center gap-5 h-screen w-[360px] m-auto">
         <header className="flex flex-col items-center gap-2">
           <img src={brandLogo} width={48} height={48} alt="brand logo" />
           <h1 className="font-semibold text-[28px]">E-Dalolatnoma</h1>
         </header>
 
-        <div className="flex flex-col items-center gap-2">
-          <h2 className="font-bold text-lg">Welcome</h2>
-          <p className="text-[#8498B4] text-[15px]">
-            Enter your username and password to login and get started
-          </p>
+        <div className="flex flex-col items-center gap-2 text-center">
+          <h2 className="font-bold text-lg">{t("welcome")}</h2>
+          <p className="text-[#8498B4] text-[15px]">{t("welcome-info")}</p>
         </div>
 
         <Form
@@ -40,42 +46,49 @@ export default function Login(): React.ReactElement {
           className="w-full"
           onFinish={mutate}
           autoComplete="off"
+          requiredMark="optional"
         >
           <Form.Item
             label={
-              <span className="font-medium text-sm text-[#62738C]">Login</span>
+              <span className="font-medium text-sm text-[#62738C]">
+                {t("login")}
+              </span>
             }
             name="username"
-            className="mb-6"
+            className="mb-10"
             rules={[
               {
                 required: true,
+                type: "string",
                 min: 1,
-                message: "Username cannot be less than 1 character",
+                whitespace: true,
+                message: t("username-min-3") ?? "",
               },
             ]}
           >
-            <Input placeholder="Login" className="h-12 rounded-xl" />
+            <Input placeholder={t("login") ?? ""} className="h-12 rounded-xl" />
           </Form.Item>
 
           <Form.Item
             label={
               <span className="font-medium text-sm text-[#62738C]">
-                Password
+                {t("password")}
               </span>
             }
             name="password"
-            className="mb-6"
+            className="mb-10"
             rules={[
               {
                 required: true,
+                type: "string",
                 min: 1,
-                message: "Password cannot be less than 1 character",
+                whitespace: true,
+                message: t("password-min-6") ?? "",
               },
             ]}
           >
             <Input.Password
-              placeholder="Password"
+              placeholder={t("password") ?? ""}
               className="h-12 rounded-xl"
             />
           </Form.Item>
@@ -86,14 +99,14 @@ export default function Login(): React.ReactElement {
               htmlType="submit"
               className="w-full bg-[#40916C] rounded-xl h-12 font-medium text-[15px]"
             >
-              Submit
+              {t("signin")}
             </Button>
           </Form.Item>
         </Form>
       </main>
 
       <p className="absolute bottom-6 ml-[50%] -translate-x-1/2 text-[#8498B4]">
-        © 2023 E-Dalolatnoma. Version 0.1
+        {t("login-footer")}
       </p>
     </Layout>
   );

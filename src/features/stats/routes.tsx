@@ -3,8 +3,8 @@ import ChartIcon from "./components/chart-icon";
 import Stats from "./views/stats";
 
 const statsRoutes: CustomRoute = {
-  id: "stats",
-  title: "Statistics",
+  id: "statistics",
+  title: "statistics",
   path: "statistics",
   element: <Stats />,
   Icon: ChartIcon,

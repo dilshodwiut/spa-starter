@@ -4,7 +4,7 @@ import Notification from "./views/notification";
 
 const notificationRoutes: CustomRoute = {
   id: "notification",
-  title: "Notification",
+  title: "notification",
   path: "notification",
   element: <Notification />,
   Icon: NotificationIcon,

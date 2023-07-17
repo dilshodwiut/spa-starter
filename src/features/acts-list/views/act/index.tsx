@@ -25,10 +25,10 @@ import SettingsIcon from "../../components/settings-icon";
 import ActionBox from "../../components/action-box";
 import Info from "../../components/info";
 import SendIcon from "../../components/send-icon";
-import useActState from "./state";
 import DownloadIcon from "../../components/download-icon";
+import useActState from "./state";
 
-const isInspector = true;
+const isInspector = false;
 
 export default function Act(): React.ReactElement {
   const {
@@ -45,6 +45,7 @@ export default function Act(): React.ReactElement {
     handleCancel,
     showModal,
     doSomeAction,
+    t,
   } = useActState();
 
   return (
@@ -54,7 +55,7 @@ export default function Act(): React.ReactElement {
         <CustomModal
           title={
             <>
-              <Title level={4}>Act annulment</Title>
+              <Title level={4}>{t("act-annulment")}</Title>
               <Divider className="mt-3" />
             </>
           }
@@ -65,8 +66,8 @@ export default function Act(): React.ReactElement {
             <>
               <Divider className="mb-3" />
               <div>
-                <Button onClick={handleCancel}>Cancel</Button>
-                <Button onClick={handleOk}>Approve</Button>
+                <Button onClick={handleCancel}>{t("cancel")}</Button>
+                <Button onClick={handleOk}>{t("approve")}</Button>
               </div>
             </>
           }
@@ -74,29 +75,32 @@ export default function Act(): React.ReactElement {
           <div className="flex">
             <Info
               rootClassName="flex-1"
-              of="Act serial number"
+              of={t("act-serial-number")}
               value="BH 122432234435"
             />
             <Info
               rootClassName="flex-1"
-              of="Date of registration"
+              of={t("reg-date")}
               value="04.06.2023"
             />
           </div>
           <Divider className="mt-3" />
 
-          <Info of="Choose annulment reason" className="flex flex-col gap-2">
-            <Select placeholder="Reason" />
-            <TextArea rows={4} placeholder="Note" />
+          <Info
+            of={t("choose-annulment-reason")}
+            className="flex flex-col gap-2"
+          >
+            <Select placeholder={t("reason")} />
+            <TextArea rows={4} placeholder={t("note") ?? ""} />
 
             <div className="flex items-center gap-4">
               <Upload {...uploadProps}>
-                <Button icon={<SendIcon />}>Click to Upload</Button>
+                <Button icon={<SendIcon />}>{t("upload-file")}</Button>
               </Upload>
 
               <div className="flex flex-col text-xs text-[#8498B4]">
-                <p>Maximum file size - 50MB</p>
-                <p>Maximum file count - 1</p>
+                <p>{t("max-file-size")}</p>
+                <p>{t("max-file-count")}</p>
               </div>
             </div>
           </Info>
@@ -108,13 +112,13 @@ export default function Act(): React.ReactElement {
         className="px-8 pt-2 flex justify-between items-baseline"
       >
         <Title level={3} className="flex gap-6 items-center">
-          Act Details BH {actId}
+          {t("act-details")} BH {actId}
           <div className="flex items-center gap-2">
             <Tag bordered={false} color="default" className="py-1 px-2">
-              <span style={{ color: "#62738C" }}>Not processed</span>
+              <span style={{ color: "#62738C" }}>{t("not-processed")}</span>
             </Tag>
             <Tag bordered={false} color="orange" className="py-1 px-2">
-              <span>Edited</span>
+              <span>{t("edited")}</span>
             </Tag>
           </div>
         </Title>
@@ -130,15 +134,15 @@ export default function Act(): React.ReactElement {
                 console.log(value);
               }}
               options={[
-                { value: "tashkent_city", label: "Tashkent city" },
-                { value: "fergana_city", label: "Fergana city" },
+                { value: "tashkent_city", label: t("tashkent-city") },
+                { value: "fergana_city", label: t("fergana-city") },
               ]}
             />
             <Button
               className="bg-[#d8f3dc] border-none font-bold flex items-center p-6 gap-1 rounded-xl"
               icon={<SettingsIcon className="text-[#40916c]" />}
             >
-              Filter
+              {t("filter")}
             </Button>
           </Space>
         ) : null}
@@ -154,7 +158,7 @@ export default function Act(): React.ReactElement {
         {isInspector ? (
           <Row gutter={24}>
             <Col span={12}>
-              <CustomCard title="Violator details">
+              <CustomCard title={t("violator-details")}>
                 <Row gutter={24}>
                   <Col span={5}>
                     <div>
@@ -165,7 +169,7 @@ export default function Act(): React.ReactElement {
                     <Row gutter={24}>
                       <Col span={24}>
                         <Info
-                          of="Full name"
+                          of={t("fullname")}
                           value="Norov Ilkhom Ibragimovich"
                         />
                       </Col>
@@ -173,10 +177,10 @@ export default function Act(): React.ReactElement {
                     <br />
                     <Row gutter={24}>
                       <Col span={12}>
-                        <Info of="Date of birth" value="27.09.1985" />
+                        <Info of={t("dob")} value="27.09.1985" />
                       </Col>
                       <Col span={12}>
-                        <Info of="Phone number" value="+998 (98) 180-00-62" />
+                        <Info of={t("phone")} value="+998 (98) 180-00-62" />
                       </Col>
                     </Row>
                   </Col>
@@ -185,7 +189,7 @@ export default function Act(): React.ReactElement {
                 <Row gutter={24}>
                   <Col span={24}>
                     <Info
-                      of="Place of birth"
+                      of={t("birthplace")}
                       value="The Republic of Uzbekistan, Bukhara region, Gijudvon district"
                       valueClassName="xl:w-2/4 lg:w-full"
                     />
@@ -194,25 +198,25 @@ export default function Act(): React.ReactElement {
                 <br />
                 <Row gutter={24}>
                   <Col span={8}>
-                    <Info of="Passport" value="AA 1475156" />
+                    <Info of={t("passport")} value="AA 1475156" />
                   </Col>
                   <Col span={8}>
-                    <Info of="Citizenship" value="Uzbekistan" />
+                    <Info of={t("citizenship")} value="Uzbekistan" />
                   </Col>
                   <Col span={8}>
-                    <Info of="Nationality" value="Uzbek" />
+                    <Info of={t("nationality")} value="Uzbek" />
                   </Col>
                 </Row>
               </CustomCard>
               <br />
-              <CustomCard title="Organization information">
+              <CustomCard title={t("organization-information")}>
                 <Row gutter={24}>
                   <Col span={12}>
-                    <Info of="Name" value="Buxoro neft baza MCHJ" />
+                    <Info of={t("name")} value="Buxoro neft baza MCHJ" />
                   </Col>
                   <Col span={12}>
                     <Info
-                      of="Kind of activity"
+                      of={t("activity-kind")}
                       value="Storage of petroleum products"
                     />
                   </Col>
@@ -220,20 +224,20 @@ export default function Act(): React.ReactElement {
                 <br />
                 <Row gutter={24}>
                   <Col span={7}>
-                    <Info of="INN" value="300 097 878" />
+                    <Info of={t("inn")} value="300 097 878" />
                   </Col>
                   <Col span={10}>
-                    <Info of="User number in the system" value="10070021321" />
+                    <Info of={t("user-number-in-system")} value="10070021321" />
                   </Col>
                   <Col span={7}>
-                    <Info of="Inventory number" value="12:34:56:7890" />
+                    <Info of={t("inventory-number")} value="12:34:56:7890" />
                   </Col>
                 </Row>
                 <br />
                 <Row gutter={24}>
                   <Col span={24}>
                     <Info
-                      of="Legal address"
+                      of={t("legal-address")}
                       value="The Republic of Uzbekistan, Tashkent city, Mirzo Ulugbek region, TTZ-2"
                     />
                   </Col>
@@ -242,26 +246,26 @@ export default function Act(): React.ReactElement {
                 <Row gutter={24}>
                   <Col span={12}>
                     <Info
-                      of="Director's full name"
+                      of={t("director's-fullname")}
                       value="Norov Ilkhom Ibragimovich"
                     />
                   </Col>
                   <Col span={12}>
-                    <Info of="Phone number" value="+998 (98) 180-00-62" />
+                    <Info of={t("phone")} value="+998 (98) 180-00-62" />
                   </Col>
                 </Row>
               </CustomCard>
             </Col>
             <Col span={12}>
-              <CustomCard title="Violator description">
+              <CustomCard title={t("violator-description")}>
                 <div className="flex gap-8">
                   <Info
-                    of="Article of infringement"
+                    of={t("infringement-article")}
                     value="133 Band 1, Qism 3, Kichik band"
                     valueClassName="font-semibold text-xl"
                   />
                   <Info
-                    of="Additional article"
+                    of={t("additional-article")}
                     value="No"
                     valueClassName="font-semibold text-xl"
                   />
@@ -269,7 +273,7 @@ export default function Act(): React.ReactElement {
 
                 <br />
                 <Info
-                  of="Pictures of violation"
+                  of={t("violation-pictures")}
                   value={
                     <div className="flex gap-4 mt-4">
                       <img
@@ -293,18 +297,18 @@ export default function Act(): React.ReactElement {
               </CustomCard>
               <br />
 
-              <CustomCard title="Organization that compiled the document (responsible officer)">
+              <CustomCard title={t("organization-compiled-document")}>
                 <Row gutter={24}>
                   <Col span={12}>
                     <Info
-                      of="Organization"
+                      of={t("organization")}
                       value="Energetika Vazirligi Huzuridagi O'ZENERGOINSPEKSIYA"
                       rootClassName="flex-1"
                     />
                   </Col>
                   <Col span={12}>
                     <Info
-                      of="Position"
+                      of={t("position")}
                       value="Director of organization"
                       rootClassName="flex-1"
                     />
@@ -314,14 +318,14 @@ export default function Act(): React.ReactElement {
                 <Row gutter={24}>
                   <Col span={12}>
                     <Info
-                      of="Full name"
+                      of={t("fullname")}
                       value="Khamroev Bekzod Khamzaevich"
                       rootClassName="flex-1"
                     />
                   </Col>
                   <Col span={12}>
                     <Info
-                      of="Certificate (serial number)"
+                      of={t("certificate")}
                       value="221"
                       rootClassName="flex-1"
                     />
@@ -329,10 +333,10 @@ export default function Act(): React.ReactElement {
                 </Row>
               </CustomCard>
               <br />
-              <CustomCard title="Calculation of gas volume on the illegal use of natural gas">
+              <CustomCard title={t("illegal-gas-usage-calculation")}>
                 <div className="flex gap-8">
-                  <Info of="Volume" value="12 450 m^2" />
-                  <Info of="Amount" value="2 050 000" />
+                  <Info of={t("volume")} value="12 450 m^2" />
+                  <Info of={t("amount")} value="2 050 000" />
                 </div>
               </CustomCard>
             </Col>
@@ -342,15 +346,15 @@ export default function Act(): React.ReactElement {
         {!isInspector ? (
           <Row gutter={24}>
             <Col span={18}>
-              <CustomCard title="Violator description">
+              <CustomCard title={t("violator-description")}>
                 <div className="flex gap-8">
                   <Info
-                    of="Article of infringement"
+                    of={t("infringement-article")}
                     value="133 Band 1, Qism 3, Kichik band"
                     valueClassName="font-semibold text-xl"
                   />
                   <Info
-                    of="Additional article"
+                    of={t("additional-article")}
                     value="No"
                     valueClassName="font-semibold text-xl"
                   />
@@ -358,7 +362,7 @@ export default function Act(): React.ReactElement {
 
                 <br />
                 <Info
-                  of="Pictures of violation"
+                  of={t("violation-pictures")}
                   value={
                     <div className="flex gap-4 mt-4">
                       <img
@@ -383,7 +387,7 @@ export default function Act(): React.ReactElement {
 
               <br />
 
-              <CustomCard title="Violator details">
+              <CustomCard title={t("violator-details")}>
                 <Row gutter={24}>
                   <Col span={5}>
                     <div>
@@ -394,7 +398,7 @@ export default function Act(): React.ReactElement {
                     <Row gutter={24}>
                       <Col span={24}>
                         <Info
-                          of="Full name"
+                          of={t("fullname")}
                           value="Norov Ilkhom Ibragimovich"
                         />
                       </Col>
@@ -402,10 +406,10 @@ export default function Act(): React.ReactElement {
                     <br />
                     <Row gutter={24}>
                       <Col span={12}>
-                        <Info of="Date of birth" value="27.09.1985" />
+                        <Info of={t("dob")} value="27.09.1985" />
                       </Col>
                       <Col span={12}>
-                        <Info of="Phone number" value="+998 (98) 180-00-62" />
+                        <Info of={t("phone")} value="+998 (98) 180-00-62" />
                       </Col>
                     </Row>
                   </Col>
@@ -414,7 +418,7 @@ export default function Act(): React.ReactElement {
                 <Row gutter={24}>
                   <Col span={24}>
                     <Info
-                      of="Place of birth"
+                      of={t("birthplace")}
                       value="The Republic of Uzbekistan, Bukhara region, Gijudvon district"
                       valueClassName="xl:w-2/4 lg:w-full"
                     />
@@ -423,27 +427,27 @@ export default function Act(): React.ReactElement {
                 <br />
                 <Row gutter={24}>
                   <Col span={8}>
-                    <Info of="Passport" value="AA 1475156" />
+                    <Info of={t("passport")} value="AA 1475156" />
                   </Col>
                   <Col span={8}>
-                    <Info of="Citizenship" value="Uzbekistan" />
+                    <Info of={t("citizenship")} value="Uzbekistan" />
                   </Col>
                   <Col span={8}>
-                    <Info of="Nationality" value="Uzbek" />
+                    <Info of={t("nationality")} value="Uzbek" />
                   </Col>
                 </Row>
               </CustomCard>
 
               <br />
 
-              <CustomCard title="Organization information">
+              <CustomCard title={t("organization-information")}>
                 <Row gutter={24}>
                   <Col span={12}>
-                    <Info of="Name" value="Buxoro neft baza MCHJ" />
+                    <Info of={t("name")} value="Buxoro neft baza MCHJ" />
                   </Col>
                   <Col span={12}>
                     <Info
-                      of="Kind of activity"
+                      of={t("activity-kind")}
                       value="Storage of petroleum products"
                     />
                   </Col>
@@ -451,20 +455,20 @@ export default function Act(): React.ReactElement {
                 <br />
                 <Row gutter={24}>
                   <Col span={7}>
-                    <Info of="INN" value="300 097 878" />
+                    <Info of={t("inn")} value="300 097 878" />
                   </Col>
                   <Col span={10}>
-                    <Info of="User number in the system" value="10070021321" />
+                    <Info of={t("user-number-in-system")} value="10070021321" />
                   </Col>
                   <Col span={7}>
-                    <Info of="Inventory number" value="12:34:56:7890" />
+                    <Info of={t("inventory-number")} value="12:34:56:7890" />
                   </Col>
                 </Row>
                 <br />
                 <Row gutter={24}>
                   <Col span={24}>
                     <Info
-                      of="Legal address"
+                      of={t("legal-address")}
                       value="The Republic of Uzbekistan, Tashkent city, Mirzo Ulugbek region, TTZ-2"
                     />
                   </Col>
@@ -473,30 +477,30 @@ export default function Act(): React.ReactElement {
                 <Row gutter={24}>
                   <Col span={12}>
                     <Info
-                      of="Director's full name"
+                      of={t("director's-fullname")}
                       value="Norov Ilkhom Ibragimovich"
                     />
                   </Col>
                   <Col span={12}>
-                    <Info of="Phone number" value="+998 (98) 180-00-62" />
+                    <Info of={t("phone")} value="+998 (98) 180-00-62" />
                   </Col>
                 </Row>
               </CustomCard>
 
               <br />
 
-              <CustomCard title="Organization that compiled the document (responsible officer)">
+              <CustomCard title={t("organization-compiled-document")}>
                 <Row gutter={24}>
                   <Col span={12}>
                     <Info
-                      of="Organization"
+                      of={t("organization")}
                       value="Energetika Vazirligi Huzuridagi O'ZENERGOINSPEKSIYA"
                       rootClassName="flex-1"
                     />
                   </Col>
                   <Col span={12}>
                     <Info
-                      of="Position"
+                      of={t("position")}
                       value="Director of organization"
                       rootClassName="flex-1"
                     />
@@ -506,14 +510,14 @@ export default function Act(): React.ReactElement {
                 <Row gutter={24}>
                   <Col span={12}>
                     <Info
-                      of="Full name"
+                      of={t("fullname")}
                       value="Khamroev Bekzod Khamzaevich"
                       rootClassName="flex-1"
                     />
                   </Col>
                   <Col span={12}>
                     <Info
-                      of="Certificate (serial number)"
+                      of={t("certificate")}
                       value="221"
                       rootClassName="flex-1"
                     />
@@ -523,7 +527,7 @@ export default function Act(): React.ReactElement {
 
               <br />
 
-              <CustomCard title="Story">
+              <CustomCard title={t("story")}>
                 <p className="font-medium text-[#62738C]">
                   01/01/2023 at 17:35 Norov Ilkhom Ibragimovich, born on
                   09/27/1985, committed an offense under article
@@ -536,7 +540,7 @@ export default function Act(): React.ReactElement {
 
               <br />
 
-              <CustomCard title="Explanatory note of the person who committed the violation">
+              <CustomCard title={t("violator's-explanatory-note")}>
                 <p className="font-medium text-[#62738C]">
                   01/01/2023 at 17:35, I am Norov Ilkhom Ibragimovich, born on
                   09/27/1985, Bukhara, Shofirkon district, committed an offense
@@ -549,21 +553,21 @@ export default function Act(): React.ReactElement {
 
               <br />
 
-              <CustomCard title="Calculation of gas volume on the illegal use of natural gas">
+              <CustomCard title={t("illegal-gas-usage-calculation")}>
                 <div className="flex gap-8">
-                  <Info of="Volume" value="12 450 m^2" />
-                  <Info of="Amount" value="2 050 000" />
+                  <Info of={t("volume")} value="12 450 m^2" />
+                  <Info of={t("amount")} value="2 050 000" />
                 </div>
               </CustomCard>
             </Col>
             <Col span={6}>
               <CustomCard>
                 <div className="flex flex-col gap-4">
-                  <Info of="Series" value="BH" />
-                  <Info of="Number" value="2323455656732" />
-                  <Info of="Date of registration" value="04.06.2023" />
+                  <Info of={t("series")} value="BH" />
+                  <Info of={t("number")} value="2323455656732" />
+                  <Info of={t("dob")} value="04.06.2023" />
                   <Info
-                    of="Region, district"
+                    of={t("region, district")}
                     value="Bukhara region, Shofirkon district"
                   />
 
@@ -575,7 +579,7 @@ export default function Act(): React.ReactElement {
                     className="bg-[#d8f3dc] border-none font-medium text-[15px] flex justify-center items-center p-6 gap-1 rounded-xl h-12"
                     icon={<DownloadIcon className="text-[#40916c]" />}
                   >
-                    Download Document
+                    {t("download-doc")}
                   </Button>
                 </div>
               </CustomCard>
@@ -594,12 +598,14 @@ export default function Act(): React.ReactElement {
                 Icon={CheckCircleFilled}
                 onDispatchAction={() => {
                   void doSomeAction(
-                    "Act BH 2240106381566 Confirmed Administrative violation",
+                    `${t("act")} BH 2240106381566 ${t(
+                      "confirmed-admin-violation",
+                    )}`,
                     "success",
                   );
                 }}
               >
-                Approve Administrative Offense
+                {t("approve-admin-violation")}
               </ActionBox>
               <ActionBox
                 color="green"
@@ -608,12 +614,14 @@ export default function Act(): React.ReactElement {
                 Icon={CheckCircleFilled}
                 onDispatchAction={() => {
                   void doSomeAction(
-                    "Act BH 2240106381566 Confirmed Criminal offense",
+                    `${t("act")} BH 2240106381566 ${t(
+                      "confirmed-criminal-violation",
+                    )}`,
                     "success",
                   );
                 }}
               >
-                Approve Criminal Offense
+                {t("approve-criminal-violation")}
               </ActionBox>
               <ActionBox
                 color="grey"
@@ -621,10 +629,10 @@ export default function Act(): React.ReactElement {
                 actionKey="F7"
                 Icon={FileTextFilled}
                 onDispatchAction={() => {
-                  void doSomeAction("PDf downloaded", "success");
+                  void doSomeAction(t("pdf-downloaded"), "success");
                 }}
               >
-                Download PDF
+                {t("download-pdf")}
               </ActionBox>
               <ActionBox
                 color="red"
@@ -633,7 +641,7 @@ export default function Act(): React.ReactElement {
                 Icon={CloseCircleFilled}
                 onDispatchAction={showModal}
               >
-                Cancel Act
+                {t("cancel-act")}
               </ActionBox>
               <ActionBox
                 color="green"
@@ -645,7 +653,7 @@ export default function Act(): React.ReactElement {
                   // void doSomeAction();
                 }}
               >
-                Next
+                {t("next")}
               </ActionBox>
             </div>
           </>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Layout, Form, Input, theme } from "antd";
 import type { InspectorState } from "../types";
 
@@ -11,6 +12,7 @@ export default function useInspectorState(): InspectorState {
   } = theme.useToken();
 
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
@@ -32,5 +34,6 @@ export default function useInspectorState(): InspectorState {
     goBack,
     isModalOpen,
     handleCancel,
+    t,
   };
 }

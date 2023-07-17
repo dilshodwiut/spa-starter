@@ -30,6 +30,7 @@
     "clsx": "^1.2.1",
     "date-fns": "^2.30.0",
     "i18next": "^22.5.1",
+    "i18next-browser-languagedetector": "^7.1.0",
     "immer": "^10.0.2",
     "immutable": "^4.3.0",
     "plop": "^3.1.2",

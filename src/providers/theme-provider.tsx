@@ -1,5 +1,5 @@
-import { ConfigProvider } from "antd";
 import { colors } from "@/config/theme";
+import { ConfigProvider } from "antd";
 import type { ThemeConfig } from "antd";
 
 interface Props {

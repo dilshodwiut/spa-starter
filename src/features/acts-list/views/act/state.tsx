@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Layout, Typography, Input, theme, message } from "antd";
 import type { UploadProps } from "antd";
 import type { NoticeType } from "antd/es/message/interface";
@@ -30,6 +31,7 @@ const uploadProps: UploadProps = {
 
 export default function useActState(): ActState {
   const { actId } = useParams();
+  const { t } = useTranslation();
 
   const {
     token: { colorBgContainer },
@@ -58,7 +60,7 @@ export default function useActState(): ActState {
     void messageApi.open({
       key: "custom",
       type: "loading",
-      content: "Action in progress...",
+      content: t("action-in-progress"),
     });
 
     try {
@@ -74,7 +76,7 @@ export default function useActState(): ActState {
       void messageApi.open({
         key: "custom",
         type: "error",
-        content: "Error",
+        content: t("error"),
         duration: 2.5,
       });
     }
@@ -94,6 +96,7 @@ export default function useActState(): ActState {
     handleCancel,
     showModal,
     doSomeAction,
+    t,
   };
 }
 

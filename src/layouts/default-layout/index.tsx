@@ -1,5 +1,6 @@
 import { Layout, Menu, Button, Select, ConfigProvider, Popover } from "antd";
 import { colors } from "@/config/theme";
+import { useTranslation } from "react-i18next";
 import clsx from "clsx";
 import brandLogo from "@/assets/enjin-coin-(enj).svg";
 import downIcon from "@/assets/arrow-down.svg";
@@ -37,6 +38,8 @@ export default function DefaultLayout(props: Props): React.ReactElement {
     handleChange,
     onToggleSider,
   } = useDefaultLayoutState(sidebarRoutes);
+
+  const { t } = useTranslation();
 
   return (
     <Layout hasSider>
@@ -151,7 +154,9 @@ export default function DefaultLayout(props: Props): React.ReactElement {
                   <span className="font-medium text-[15px]">
                     Davron Kulikov
                   </span>
-                  <span className="text-[12px] text-[#8498B4]">Inspector</span>
+                  <span className="text-[12px] text-[#8498B4]">
+                    {t("inspector")}
+                  </span>
                 </div>
 
                 <Popover

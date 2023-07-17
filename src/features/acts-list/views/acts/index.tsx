@@ -37,14 +37,15 @@ export default function Acts(): React.ReactElement {
     onDateChange,
     onTypeChange,
     onTableRow,
+    t,
   } = useActsState();
 
   return (
     <ConfigProvider
       renderEmpty={() => (
         <TableEmpty
-          title="Act list is empty"
-          description="This will display a list of all canceled acts in the recent past."
+          title={t("act-list-empty")}
+          description={t("act-list-empty-info")}
         />
       )}
     >
@@ -55,7 +56,12 @@ export default function Acts(): React.ReactElement {
         <div>
           <Segmented
             size="large"
-            options={["Processed", "Non-processed", "Cancelled", "Overdued"]}
+            options={[
+              t("processed") ?? "",
+              t("non-processed") ?? "",
+              t("cancelled") ?? "",
+              t("overdued") ?? "",
+            ]}
             className="text-[#62738C]"
           />
         </div>
@@ -63,7 +69,7 @@ export default function Acts(): React.ReactElement {
         <Space size="large">
           <Input
             size="large"
-            placeholder="Search with serial number"
+            placeholder={t("search-by-serial-number") ?? ""}
             suffix={<img src={SearchIcon} alt="search" />}
           />
 
@@ -72,7 +78,7 @@ export default function Acts(): React.ReactElement {
             icon={<SettingsIcon className="text-[#40916c]" />}
             onClick={showDrawer}
           >
-            Filter
+            {t("filter")}
           </Button>
         </Space>
       </Header>
@@ -100,7 +106,7 @@ export default function Acts(): React.ReactElement {
         ) : null}
 
         <Drawer
-          title="Filter"
+          title={t("filter")}
           placement="right"
           open={isDrawerOpen}
           onClose={closeDrawer}
@@ -112,7 +118,7 @@ export default function Acts(): React.ReactElement {
               className="bg-[#8498B41A] text-black border-none"
               onClick={onDrawerClose}
             >
-              Close
+              {t("close")}
             </Button>
           }
         >
@@ -121,21 +127,22 @@ export default function Acts(): React.ReactElement {
             layout="vertical"
             initialValues={{ type: "regional_electrical_networks" }}
           >
-            <Form.Item name="type" label="Type">
+            <Form.Item name="type" label={t("type")}>
               <Checkbox.Group options={typeOptions} onChange={onTypeChange} />
             </Form.Item>
 
-            <Form.Item name="violation_date" label="Violation date">
+            <Form.Item name="violation_date" label={t("violation-date")}>
               <DatePicker
                 className="w-full"
                 size="large"
+                placeholder={t("select-date") ?? ""}
                 onChange={onDateChange}
               />
             </Form.Item>
 
-            <Form.Item name="region" label="Region">
+            <Form.Item name="region" label={t("region")}>
               <Select
-                placeholder="Choose from the list"
+                placeholder={t("choose-from-list")}
                 className="w-full"
                 size="large"
                 onChange={handleChange}
@@ -147,9 +154,9 @@ export default function Acts(): React.ReactElement {
               />
             </Form.Item>
 
-            <Form.Item name="district" label="District">
+            <Form.Item name="district" label={t("district")}>
               <Select
-                placeholder="Choose from the list"
+                placeholder={t("choose-from-list")}
                 className="w-full"
                 size="large"
                 onChange={handleChange}
@@ -163,10 +170,10 @@ export default function Acts(): React.ReactElement {
 
             <Form.Item
               name="infringement_article"
-              label="Article of infringement"
+              label={t("infringement-article")}
             >
               <Select
-                placeholder="Choose from the list"
+                placeholder={t("choose-from-list")}
                 className="w-full"
                 size="large"
                 onChange={handleChange}
@@ -178,10 +185,10 @@ export default function Acts(): React.ReactElement {
               />
             </Form.Item>
 
-            <Form.Item name="offender_type" label="Offender type">
+            <Form.Item name="offender_type" label={t("offender-type")}>
               <Select
                 id="sdf"
-                placeholder="Choose from the list"
+                placeholder={t("choose-from-list")}
                 className="w-full"
                 size="large"
                 onChange={handleChange}
@@ -199,7 +206,7 @@ export default function Acts(): React.ReactElement {
                 type="primary"
                 className="flex justify-center items-center bg-[#40916c] text-white w-full h-10 rounded-xl"
               >
-                Apply
+                {t("apply")}
               </Button>
             </Form.Item>
           </Form>

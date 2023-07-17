@@ -5,7 +5,7 @@ import Container from "./views/container";
 
 const inspectorsRoutes: CustomRoute = {
   id: "inspectors",
-  title: "Inspectors",
+  title: "inspectors",
   path: "inspectors",
   element: <Container />,
   Icon: PeopleIcon,

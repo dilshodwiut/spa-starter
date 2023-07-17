@@ -15,14 +15,15 @@ export default function Inspectors(): React.ReactElement {
     onPageChange,
     onTableRow,
     onAddClick,
+    t,
   } = useInspectorsState();
 
   return (
     <ConfigProvider
       renderEmpty={() => (
         <TableEmpty
-          title="Inspectors list is empty"
-          description="This will display a list of all inspectors in the recent past."
+          title={t("inspectors-list-empty")}
+          description={t("inspectors-list-empty-info")}
         />
       )}
     >
@@ -30,12 +31,12 @@ export default function Inspectors(): React.ReactElement {
         style={{ background: colorBgContainer }}
         className="px-8 pt-2 flex justify-between items-baseline"
       >
-        <h1 className="font-semibold text-xl">Inspectors List</h1>
+        <h1 className="font-semibold text-xl">{t("inspectors-list")}</h1>
 
         <Space size="large">
           <Input
             size="large"
-            placeholder="Search by full name"
+            placeholder={t("search-fullname") ?? ""}
             suffix={<img src={SearchIcon} alt="search" />}
           />
 
@@ -44,7 +45,7 @@ export default function Inspectors(): React.ReactElement {
             icon={<AddIcon className="text-[#40916c]" />}
             onClick={onAddClick}
           >
-            Add inspector
+            {t("add-inspector")}
           </Button>
         </Space>
       </Header>

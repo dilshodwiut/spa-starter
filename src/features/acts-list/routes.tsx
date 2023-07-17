@@ -5,7 +5,7 @@ import Act from "./views/act";
 
 const actsListRoutes: CustomRoute = {
   id: "acts-list",
-  title: "List of Acts",
+  title: "acts-list",
   path: "list-of-acts",
   element: <ActsList />,
   Icon: NoteIcon,

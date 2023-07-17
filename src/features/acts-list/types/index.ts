@@ -12,6 +12,7 @@ import type {
   CheckboxValueType,
 } from "antd/es/checkbox/Group";
 import type { NoticeType } from "antd/es/message/interface";
+import type { TFunction } from "i18next";
 
 type ViolationType = "administrative" | "criminal";
 type ActStatus = "received" | number;
@@ -69,6 +70,7 @@ interface ActState {
   handleCancel: () => void;
   showModal: () => void;
   doSomeAction: (successMessage: string, type: NoticeType) => Promise<void>;
+  t: TFunction;
 }
 
 interface ActType {
@@ -101,6 +103,7 @@ interface ActsState {
   onDateChange: DatePickerProps["onChange"];
   onTableRow: TableProps<ActType>["onRow"];
   onTypeChange: (checkedValues: CheckboxValueType[]) => void;
+  t: TFunction;
 }
 
 export type {
