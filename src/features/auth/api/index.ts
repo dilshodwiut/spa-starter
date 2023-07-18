@@ -1,7 +1,7 @@
 import request from "@/utils/axios";
 import type { AxiosResponse } from "axios";
 
-interface Tokens {
+interface AuthResponse {
   access: string;
   refresh: string;
 }
@@ -9,8 +9,8 @@ interface Tokens {
 export async function login(data: {
   username: string;
   password: string;
-}): Promise<AxiosResponse<Tokens>> {
-  const res = await request({
+}): Promise<AuthResponse> {
+  const res: AuthResponse = await request({
     url: "account/me/",
     method: "post",
     data,
@@ -21,7 +21,7 @@ export async function login(data: {
 
 export async function refreshToken(data: {
   refresh_token: string;
-}): Promise<AxiosResponse<Tokens>> {
+}): Promise<AxiosResponse<AuthResponse>> {
   const res = await request({
     url: "account/me/refresh/",
     method: "post",

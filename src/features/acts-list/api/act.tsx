@@ -1,22 +1,26 @@
-import acts from "./acts.json";
-import type { ActType } from "../types";
+import request from "@/utils/axios";
+import type { ActType, ActsParams, Response } from "../types";
 
-export async function getAllActs(): Promise<ActType[]> {
-  const result = await new Promise<ActType[]>((resolve) => {
-    setTimeout(() => {
-      resolve(acts as ActType[]);
-    }, 0);
+export async function getAllActs(
+  params: ActsParams = {},
+): Promise<Response<ActType[]>> {
+  const result: Response<ActType[]> = await request({
+    url: "/violations/",
+    method: "get",
+    params,
   });
 
   return result;
 }
 
-export async function getAct(id: string): Promise<ActType | undefined> {
-  const result = await new Promise<ActType | undefined>((resolve) => {
-    setTimeout(() => {
-      const foundAct = acts.find((act) => act.id === id);
-      resolve(foundAct as ActType);
-    }, 1000);
+export async function getAct(
+  id: string,
+  params: ActsParams = {},
+): Promise<ActType> {
+  const result: ActType = await request({
+    url: `/violations/${id}`,
+    method: "get",
+    params,
   });
 
   return result;

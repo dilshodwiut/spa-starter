@@ -24,11 +24,16 @@ export default function Acts(): React.ReactElement {
     Header,
     Content,
     data,
+    isLoading,
+    isPreviousData,
+    isPlaceholderData,
     columns,
     colorBgContainer,
     paginationProps,
     typeOptions,
     isDrawerOpen,
+    regions,
+    contextHolder,
     showDrawer,
     closeDrawer,
     handleChange,
@@ -37,6 +42,8 @@ export default function Acts(): React.ReactElement {
     onDateChange,
     onTypeChange,
     onTableRow,
+    onSegmentChange,
+    onSearchChange,
     t,
   } = useActsState();
 
@@ -49,6 +56,7 @@ export default function Acts(): React.ReactElement {
         />
       )}
     >
+      {contextHolder}
       <Header
         style={{ background: colorBgContainer }}
         className="px-8 pt-2 flex justify-between items-baseline"
@@ -57,12 +65,13 @@ export default function Acts(): React.ReactElement {
           <Segmented
             size="large"
             options={[
-              t("processed") ?? "",
-              t("non-processed") ?? "",
-              t("cancelled") ?? "",
-              t("overdued") ?? "",
+              { label: t("processed"), value: "processed" },
+              { label: t("non-processed"), value: "non-processed" },
+              { label: t("cancelled"), value: "cancelled" },
+              { label: t("overdued"), value: "overdued" },
             ]}
             className="text-[#62738C]"
+            onChange={onSegmentChange}
           />
         </div>
 
@@ -71,6 +80,7 @@ export default function Acts(): React.ReactElement {
             size="large"
             placeholder={t("search-by-serial-number") ?? ""}
             suffix={<img src={SearchIcon} alt="search" />}
+            onChange={onSearchChange}
           />
 
           <Button
@@ -90,15 +100,16 @@ export default function Acts(): React.ReactElement {
         }}
       >
         <Table
+          loading={isLoading || isPreviousData || isPlaceholderData}
           onRow={onTableRow}
           rowKey={(record) => record.id}
           columns={columns}
-          dataSource={data}
+          dataSource={data?.results}
           onChange={onPageChange}
           pagination={paginationProps}
           rowClassName="cursor-pointer"
         />
-        {data.length === 0 ? (
+        {data?.count === 0 ? (
           <>
             <br />
             <Pagination className="text-right" {...paginationProps} />
@@ -122,11 +133,7 @@ export default function Acts(): React.ReactElement {
             </Button>
           }
         >
-          <Form
-            name="filter"
-            layout="vertical"
-            initialValues={{ type: "regional_electrical_networks" }}
-          >
+          <Form name="filter" layout="vertical">
             <Form.Item name="type" label={t("type")}>
               <Checkbox.Group options={typeOptions} onChange={onTypeChange} />
             </Form.Item>

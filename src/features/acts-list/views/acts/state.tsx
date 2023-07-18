@@ -1,87 +1,95 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { isInt, random, shuffle } from "radash";
-import { clone } from "ramda";
-import { Layout, Tag, theme } from "antd";
+import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
+import { isInt } from "radash";
+import { useDebounce } from "usehooks-ts";
+import { compareAsc } from "date-fns";
 import { t as T } from "@/utils/i18n";
-import type { DatePickerProps } from "antd";
+import showTotal from "@/helpers/showTotal";
+import { Layout, Tag, message, theme } from "antd";
+import type { DatePickerProps, SegmentedProps } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
 import type { CheckboxValueType } from "antd/es/checkbox/Group";
+import getColor from "../../helpers/getColor";
+import { getAllActs, getRegions } from "../../api";
 import type {
   ActStatus,
   ActsState,
   ActType,
   ViolationType,
-  getColorFn,
+  ActsStatus,
 } from "../../types";
-import { getAllActs } from "../../api";
-
-const getColor: getColorFn = (input) => {
-  const map = {
-    administrative: "processing",
-    criminal: "green",
-    received: "default",
-  } as const;
-
-  if (typeof input === "number") {
-    if (input > 3) return "green";
-    if (input > 1) return "orange";
-    return "red";
-  }
-
-  return input in map ? map[input] : "";
-};
 
 const columns: ColumnsType<ActType> = [
-  {
-    title: T("type"),
-    dataIndex: "server_type",
-  },
+  // {
+  //   title: T("type"),
+  //   dataIndex: "server_type",
+  // },
+
   {
     title: T("serial-number"),
-    dataIndex: "serial_num",
-    sorter: (a, b) => 1,
-  },
-  {
-    title: T("reg-date"),
-    dataIndex: "date_of_registration",
-    sorter: (a, b) => 1,
-  },
-  {
-    title: T("region, district"),
-    dataIndex: "region",
-  },
-  {
-    title: T("type"),
-    dataIndex: "client_type",
-    sorter: (a, b) => 1,
-    render(value) {
-      return T(value);
+    dataIndex: "act_series",
+    render(value, record) {
+      if (typeof value === "string") {
+        return `${value} ${record.act_number}`;
+      }
+      return "";
+    },
+    sorter: (a, b) => {
+      const aWhole = `${a.act_series} ${a.act_number}`;
+      const bWhole = `${b.act_series} ${b.act_number}`;
+      return aWhole.localeCompare(bWhole);
     },
   },
   {
-    title: T("violation"),
-    dataIndex: "violation",
+    title: T("reg-date"),
+    dataIndex: "act_date",
+    sorter: (a, b) => compareAsc(new Date(a.act_date), new Date(b.act_date)),
   },
   {
-    title: T("amount (som)"),
-    dataIndex: "amount",
-    sorter: (a, b) => a.amount - b.amount,
+    title: T("region, district"),
+    dataIndex: "address",
   },
+
+  // {
+  //   title: T("type"),
+  //   dataIndex: "client_type",
+  //   sorter: (a, b) => 1,
+  //   render(value) {
+  //     return T(value);
+  //   },
+  // },
+  // {
+  //   title: T("violation"),
+  //   dataIndex: "violation",
+  // },
+  // {
+  //   title: T("amount (som)"),
+  //   dataIndex: "amount",
+  //   sorter: (a, b) => a.amount - b.amount,
+  // },
+
   {
     title: T("type"),
     dataIndex: "violation_type",
-    sorter: (a, b) => 1,
-    render: (value: ViolationType) => (
-      <Tag
-        bordered={false}
-        color={getColor(value)}
-        className="p-1 w-full text-center"
-      >
-        {T(value)}
-      </Tag>
-    ),
+    sorter: (a, b) => {
+      if (a.violation_type !== null && b.violation_type !== null) {
+        return 1;
+      }
+
+      return 0;
+    },
+    render: (value: ViolationType | null) =>
+      value !== null ? (
+        <Tag
+          bordered={false}
+          color={getColor(value)}
+          className="p-1 w-full text-center"
+        >
+          {T(value ?? "")}
+        </Tag>
+      ) : null,
   },
   {
     title: T("status"),
@@ -98,19 +106,6 @@ const columns: ColumnsType<ActType> = [
   },
 ];
 
-let data = await getAllActs();
-
-for (let i = 0; i < 177; i += 1) {
-  const idx = shuffle([0, 1, 2, 3])[0];
-  const clonedItem = clone(data[idx]);
-  clonedItem.id = random(5, 99999).toString();
-  data.push(clonedItem);
-}
-
-data = shuffle(data);
-
-// data = [];
-
 const { Header, Content } = Layout;
 
 const typeOptions = [
@@ -121,27 +116,41 @@ const typeOptions = [
   { label: T("area_gas_supply"), value: "area_gas_supply" },
 ];
 
-const paginationProps = {
-  defaultPageSize: 20,
-  total: data.length,
-  showSizeChanger: true,
-  showTotal,
-  onShowSizeChange(current: number, size: number): void {
-    console.log(current, size);
-  },
-};
-
-const onPageChange: TableProps<ActType>["onChange"] = (
-  pagination,
-  filters,
-  sorter,
-  extra,
-) => {
-  console.log("params", pagination, filters, sorter, extra);
-};
-
 export default function useActsState(): ActsState {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [{ page, pageSize }, setPagination] = useState<{
+    page: number;
+    pageSize: number;
+  }>({ page: 1, pageSize: 20 });
+
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [status, setStatus] = useState<ActsStatus>("processed");
+  const [search, setSearch] = useState<string>("");
+
+  const debouncedSearch = useDebounce<string>(search);
+
+  const { data, isLoading, isPreviousData, isPlaceholderData, error } =
+    useQuery({
+      queryKey: ["acts", { page, pageSize, status, debouncedSearch }],
+      queryFn: async () => {
+        const res = await getAllActs({
+          page,
+          page_size: pageSize,
+          status,
+          // search: debouncedSearch,
+        });
+        return res;
+      },
+      keepPreviousData: true,
+      placeholderData: { count: 0, next: "", previous: "", results: [] },
+    });
+
+  const { data: regions } = useQuery({
+    queryKey: ["regions"],
+    queryFn: getRegions,
+    placeholderData: { count: 0, next: "", previous: "", results: [] },
+  });
+
+  console.log("regions", regions);
 
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -149,6 +158,8 @@ export default function useActsState(): ActsState {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  const [messageApi, contextHolder] = message.useMessage();
 
   const showDrawer = (): void => {
     setIsDrawerOpen(true);
@@ -174,24 +185,67 @@ export default function useActsState(): ActsState {
     console.log("checked = ", checkedValues);
   };
 
-  const onTableRow: TableProps<ActType>["onRow"] = (record, rowIndex) => {
-    console.log(record, rowIndex);
-    return {
-      onClick: () => {
-        navigate(`${record.id}`);
-      },
-    };
+  const onSegmentChange = (val: SegmentedProps["value"]): void => {
+    setStatus(val as ActsStatus);
   };
+
+  const onTableRow: TableProps<ActType>["onRow"] = (record) => ({
+    onClick: () => {
+      navigate(`${record.id}`);
+    },
+  });
+
+  const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setSearch(e.target.value);
+  };
+
+  const onPageChange: TableProps<ActType>["onChange"] = (
+    pagination,
+    filters,
+    sorter,
+    extra,
+  ) => {
+    setPagination({
+      page: pagination.current ?? 1,
+      pageSize: pagination.pageSize ?? 20,
+    });
+    console.log("params", pagination, filters, sorter, extra);
+  };
+
+  const paginationProps = {
+    defaultPageSize: 20,
+    total: data?.count,
+    showSizeChanger: true,
+    showTotal,
+    onShowSizeChange(current: number, size: number): void {
+      console.log(current, size);
+    },
+  };
+
+  useEffect(() => {
+    if (error !== null) {
+      // console.log(error?.statusText);
+      void messageApi.error({
+        key: "acts-error",
+        content: error?.statusText,
+      });
+    }
+  }, [error, messageApi]);
 
   return {
     Header,
     Content,
     data,
+    isLoading,
+    isPreviousData,
+    isPlaceholderData,
     columns,
     colorBgContainer,
     paginationProps,
     typeOptions,
     isDrawerOpen,
+    regions,
+    contextHolder,
     showDrawer,
     closeDrawer,
     handleChange,
@@ -200,14 +254,8 @@ export default function useActsState(): ActsState {
     onDateChange,
     onTypeChange,
     onTableRow,
+    onSegmentChange,
+    onSearchChange,
     t,
   };
-}
-
-function showTotal(total: number, range: [number, number]): React.ReactElement {
-  return (
-    <span className="text-[#8498B4]">
-      {T("acts-shown")} {range[0]}-{range[1]} {T("out-of")} {total}
-    </span>
-  );
 }

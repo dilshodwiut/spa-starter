@@ -17,20 +17,20 @@ interface CustomNonIndexRouteObject extends NonIndexRouteObject {
 type CustomRoute = (IndexRouteObject | CustomNonIndexRouteObject) &
   RouteExtensions;
 
-type Region =
-  | "Andijan"
-  | "Bukhara"
-  | "Fergana"
-  | "Jizzakh"
-  | "Xorazm"
-  | "Namangan"
-  | "Navoiy"
-  | "Qashqadaryo"
-  | "Samarqand"
-  | "Sirdaryo"
-  | "Surxondaryo"
-  | "Karakalpakstan"
-  | "Tashkent";
+interface District {
+  id: number;
+  name: string;
+  code: string;
+}
+
+interface Region {
+  id: number;
+  name: string;
+  code: string;
+  serial: string;
+  parent: number;
+  districts: District[];
+}
 
 type JobTitle = "Inspector";
 

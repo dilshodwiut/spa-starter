@@ -1,3 +1,5 @@
+import type { ChangeEventHandler } from "react";
+import type { Region } from "@/types";
 import type {
   Layout,
   Typography,
@@ -5,6 +7,7 @@ import type {
   DatePickerProps,
   Input,
   UploadProps,
+  SegmentedProps,
 } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
 import type {
@@ -15,7 +18,8 @@ import type { NoticeType } from "antd/es/message/interface";
 import type { TFunction } from "i18next";
 
 type ViolationType = "administrative" | "criminal";
-type ActStatus = "received" | number;
+type ActStatus = "received" | "new" | number;
+type ActsStatus = "processed" | "non-processed" | "cancelled" | "overdued";
 
 type getColorFn = (
   input: ViolationType | ActStatus,
@@ -43,7 +47,6 @@ interface CustomCardProps {
   children: React.ReactNode;
   className?: string;
   title?: CardProps["title"];
-  // [T in keyof]: CardProps
 }
 
 interface InfoProps {
@@ -75,26 +78,48 @@ interface ActState {
 
 interface ActType {
   id: string;
+  status: ActStatus;
+  act_series: string;
+  act_number: string;
+  act_date: string;
+  address: string;
+
+  violation_type: ViolationType;
+
   server_type: "government" | "power_industry";
-  serial_num: string;
-  date_of_registration: string;
-  region: string;
   client_type: "legal_entity" | "individual" | "budget_organization";
   violation: string;
   amount: number;
-  violation_type: ViolationType;
-  status: ActStatus;
+}
+
+interface Response<T> {
+  count: number;
+  next: string;
+  previous: string;
+  results: T;
+}
+
+interface ActsParams {
+  page?: number;
+  page_size?: number;
+  status?: ActsStatus;
+  search?: string;
 }
 
 interface ActsState {
   Header: typeof Layout.Header;
   Content: typeof Layout.Content;
-  data: ActType[];
+  data: Response<ActType[]> | undefined;
+  isLoading: boolean;
+  isPreviousData: boolean;
+  isPlaceholderData: boolean;
   columns: ColumnsType<ActType>;
   colorBgContainer: string;
   paginationProps: TableProps<ActType>["pagination"];
   typeOptions: AbstractCheckboxGroupProps["options"];
   isDrawerOpen: boolean;
+  regions: Response<Region[]> | undefined;
+  contextHolder: React.ReactElement;
   showDrawer: () => void;
   closeDrawer: () => void;
   onDrawerClose: () => void;
@@ -103,6 +128,8 @@ interface ActsState {
   onDateChange: DatePickerProps["onChange"];
   onTableRow: TableProps<ActType>["onRow"];
   onTypeChange: (checkedValues: CheckboxValueType[]) => void;
+  onSegmentChange: SegmentedProps["onChange"];
+  onSearchChange: ChangeEventHandler<HTMLInputElement>;
   t: TFunction;
 }
 
@@ -119,4 +146,7 @@ export type {
   ActState,
   ActsState,
   ActType,
+  ActsParams,
+  ActsStatus,
+  Response,
 };

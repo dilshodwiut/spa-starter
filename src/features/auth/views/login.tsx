@@ -1,5 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { useAuthContext } from "@/contexts";
 import { Button, Form, Input, Layout, message } from "antd";
@@ -12,17 +12,18 @@ export default function Login(): React.ReactElement {
   const [messageApi, contextHolder] = message.useMessage();
   const { t } = useTranslation();
 
-  const { mutate } = useMutation({
+  const { mutate, isLoading } = useMutation({
     mutationFn: login,
     onSuccess: (res) => {
-      // localStorage.setItem("refresh_token", res.data.refresh);
-      // localStorage.setItem("access_token", res.data.access);
-      // setIsAuth(true);
-      // navigate("/");
-      console.log(res);
+      localStorage.setItem("refresh_token", res.refresh);
+      localStorage.setItem("access_token", res.access);
+      setIsAuth(true);
+      navigate("/");
     },
-    onError: (error) => {
-      console.error(error);
+    onError: (error: { data: { detail: string } }) => {
+      void messageApi.error({
+        content: error.data.detail,
+      });
     },
   });
 
@@ -98,6 +99,7 @@ export default function Login(): React.ReactElement {
               type="primary"
               htmlType="submit"
               className="w-full bg-[#40916C] rounded-xl h-12 font-medium text-[15px]"
+              loading={isLoading}
             >
               {t("signin")}
             </Button>

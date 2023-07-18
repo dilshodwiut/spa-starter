@@ -28,9 +28,8 @@ export async function errorHandler(
 ): Promise<PromiseRejectedResult> {
   if (error.response !== null) {
     // server responded with a status code that falls out of the range of 2xx
-
     // @ts-expect-error: Nested code property may not exist in response object
-    if (error.response?.data?.code === 401) {
+    if (error.response.status === 403) {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const refresh_token = localStorage.getItem("refresh_token");
 
@@ -40,7 +39,9 @@ export async function errorHandler(
           const { refresh, access } = res.data;
           localStorage.setItem("refresh_token", refresh);
           localStorage.setItem("access-token", access);
+          window.location.reload();
         } catch (err) {
+          localStorage.setItem("refresh_token_error", JSON.stringify(err));
           localStorage.removeItem("refresh_token");
           localStorage.removeItem("access_token");
           window.location.replace("/auth/login");
