@@ -35,7 +35,7 @@ interface InspectorType {
   passport: string;
   pinfl: string;
   job_title: JobTitle;
-  region: Region;
+  region: string;
 }
 
 export type { InspectorsState, InspectorType, InspectorState };
