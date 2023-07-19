@@ -1,4 +1,5 @@
 import type { ChangeEventHandler } from "react";
+import type { BaseEntity, BaseParams, ListResponse } from "@/types";
 import type {
   Layout,
   Typography,
@@ -7,6 +8,7 @@ import type {
   UploadProps,
   SegmentedProps,
   SelectProps,
+  FormProps,
 } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
 import type { AbstractCheckboxGroupProps } from "antd/es/checkbox/Group";
@@ -88,24 +90,44 @@ interface ActType {
   amount: number;
 }
 
-interface Response<T> {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: T;
+interface FormFilters {
+  doc_type_id: number[] | null;
+  date: string | null;
+  region_id: number | null;
+  district_id: number | null;
+  violation_type: number | null;
 }
 
-interface ActsParams {
-  page?: number;
-  page_size?: number;
+interface ActsParams extends Partial<FormFilters>, BaseParams {
   status?: ActsStatus;
   search?: string;
 }
 
+interface FilterForm {
+  district: number | undefined;
+  doc_type: number[] | undefined;
+  infringement_article: number | undefined;
+  region: number | undefined;
+  violation_type: number | undefined;
+  violation_date: { $d: Date } | null;
+}
+
+interface Article {
+  id: number;
+  clause: string;
+  small_clause: string;
+  description: string;
+  part: string;
+}
+
+interface ViolationDoc extends BaseEntity {}
+
+interface Violation extends ViolationDoc {}
+
 interface ActsState {
   Header: typeof Layout.Header;
   Content: typeof Layout.Content;
-  data: Response<ActType[]> | undefined;
+  data: ListResponse<ActType[]> | undefined;
   isLoading: boolean;
   isPreviousData: boolean;
   isPlaceholderData: boolean;
@@ -117,6 +139,7 @@ interface ActsState {
   districts: SelectProps["options"];
   articles: SelectProps["options"];
   docs: AbstractCheckboxGroupProps["options"];
+  violationTypes: SelectProps["options"];
   selectedRegion: number | undefined;
   contextHolder: React.ReactElement;
   showDrawer: () => void;
@@ -127,6 +150,7 @@ interface ActsState {
   onTableRow: TableProps<ActType>["onRow"];
   onSegmentChange: SegmentedProps["onChange"];
   onSearchChange: ChangeEventHandler<HTMLInputElement>;
+  onFiltersApply: FormProps["onFinish"];
   t: TFunction;
 }
 
@@ -145,5 +169,9 @@ export type {
   ActType,
   ActsParams,
   ActsStatus,
-  Response,
+  FormFilters,
+  FilterForm,
+  Article,
+  Violation,
+  ViolationDoc,
 };

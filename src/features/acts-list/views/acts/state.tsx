@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { isInt } from "radash";
 import { useDebounce } from "usehooks-ts";
-import { compareAsc } from "date-fns";
+import { compareAsc, lightFormat } from "date-fns";
 import { t as T } from "@/utils/i18n";
 import showTotal from "@/helpers/showTotal";
 import { Layout, Tag, message, theme } from "antd";
@@ -18,6 +18,8 @@ import type {
   ActType,
   ViolationType,
   ActsStatus,
+  FormFilters,
+  FilterForm,
 } from "../../types";
 
 const columns: ColumnsType<ActType> = [
@@ -121,18 +123,33 @@ export default function useActsState(): ActsState {
   const [status, setStatus] = useState<ActsStatus>("created");
   const [search, setSearch] = useState<string>("");
   const [selectedRegion, setSelectedRegion] = useState<number>();
+  const [filters, setFilters] = useState<FormFilters>({
+    doc_type_id: null,
+    date: null,
+    region_id: null,
+    district_id: null,
+    violation_type: null,
+  });
 
   const debouncedSearch = useDebounce<string>(search);
 
   const { data, isLoading, isPreviousData, isPlaceholderData, error } =
     useQuery({
-      queryKey: ["acts", { page, pageSize, status, debouncedSearch }],
+      queryKey: [
+        "acts",
+        { page, pageSize, status, debouncedSearch, ...filters },
+      ],
       queryFn: async () => {
         const res = await getAllActs({
           page,
           page_size: pageSize,
           status,
-          // search: debouncedSearch,
+          search: debouncedSearch,
+          doc_type_id: filters.doc_type_id,
+          date: filters.date,
+          region_id: filters.region_id,
+          district_id: filters.district_id,
+          violation_type: filters.violation_type,
         });
         return res;
       },
@@ -142,7 +159,10 @@ export default function useActsState(): ActsState {
 
   const { data: locations } = useQuery({
     queryKey: ["regions"],
-    queryFn: getRegions,
+    queryFn: async () => {
+      const res = await getRegions();
+      return res;
+    },
     placeholderData: { count: 0, next: null, previous: null, results: [] },
   });
 
@@ -169,7 +189,10 @@ export default function useActsState(): ActsState {
 
   const { data: articlesData } = useQuery({
     queryKey: ["articles"],
-    queryFn: getArticles,
+    queryFn: async () => {
+      const res = await getArticles();
+      return res;
+    },
     placeholderData: { count: 0, next: null, previous: null, results: [] },
   });
 
@@ -181,7 +204,10 @@ export default function useActsState(): ActsState {
 
   const { data: violationDocs } = useQuery({
     queryKey: ["violation-docs"],
-    queryFn: getDocTypes,
+    queryFn: async () => {
+      const res = await getDocTypes();
+      return res;
+    },
     placeholderData: { count: 0, next: null, previous: null, results: [] },
   });
 
@@ -190,6 +216,21 @@ export default function useActsState(): ActsState {
     value: id,
   }));
   docs ??= [];
+
+  const { data: violationsData } = useQuery({
+    queryKey: ["violation-types"],
+    queryFn: async () => {
+      const res = await getDocTypes({});
+      return res;
+    },
+    placeholderData: { count: 0, next: null, previous: null, results: [] },
+  });
+
+  let violationTypes = violationsData?.results.map(({ id, name }) => ({
+    label: name,
+    value: id,
+  }));
+  violationTypes ??= [];
 
   const {
     token: { colorBgContainer },
@@ -227,7 +268,7 @@ export default function useActsState(): ActsState {
 
   const onPageChange: TableProps<ActType>["onChange"] = (
     pagination,
-    filters,
+    _filters,
     sorter,
     extra,
   ) => {
@@ -235,7 +276,46 @@ export default function useActsState(): ActsState {
       page: pagination.current ?? 1,
       pageSize: pagination.pageSize ?? 20,
     });
-    console.log("params", pagination, filters, sorter, extra);
+    console.log("params", pagination, _filters, sorter, extra);
+  };
+
+  const onFiltersApply = (values: FilterForm): void => {
+    console.log(values);
+
+    const draft: FormFilters = {
+      doc_type_id: null,
+      date: null,
+      region_id: null,
+      district_id: null,
+      violation_type: null,
+    };
+
+    if (typeof values.doc_type !== "undefined") {
+      draft.doc_type_id = values.doc_type;
+    }
+
+    if (values.violation_date !== null) {
+      draft.date = lightFormat(values.violation_date.$d, "yyyy-MM-dd");
+    }
+
+    if (typeof values.region !== "undefined") {
+      draft.region_id = values.region;
+    }
+
+    if (typeof values.district !== "undefined") {
+      draft.district_id = values.district;
+    }
+
+    if (typeof values.infringement_article !== "undefined") {
+      // draft. = values.infringement_article;
+    }
+
+    if (typeof values.violation_type !== "undefined") {
+      draft.violation_type = values.violation_type;
+    }
+
+    setFilters(draft);
+    closeDrawer();
   };
 
   const paginationProps = {
@@ -246,13 +326,14 @@ export default function useActsState(): ActsState {
     onShowSizeChange(current: number, size: number): void {
       console.log(current, size);
     },
+    locale: { items_per_page: "" },
   };
 
   useEffect(() => {
     if (error !== null) {
-      // console.log(error?.statusText);
       void messageApi.error({
         key: "acts-error",
+        // @ts-expect-error error type is unknown but it will get Response type and object from axios
         content: error?.statusText,
       });
     }
@@ -273,6 +354,7 @@ export default function useActsState(): ActsState {
     districts,
     articles,
     docs,
+    violationTypes,
     selectedRegion,
     contextHolder,
     showDrawer,
@@ -283,6 +365,7 @@ export default function useActsState(): ActsState {
     onTableRow,
     onSegmentChange,
     onSearchChange,
+    onFiltersApply,
     t,
   };
 }

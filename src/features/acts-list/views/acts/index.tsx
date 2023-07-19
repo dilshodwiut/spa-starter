@@ -35,6 +35,7 @@ export default function Acts(): React.ReactElement {
     districts,
     articles,
     docs,
+    violationTypes,
     selectedRegion,
     contextHolder,
     showDrawer,
@@ -45,6 +46,7 @@ export default function Acts(): React.ReactElement {
     onTableRow,
     onSegmentChange,
     onSearchChange,
+    onFiltersApply,
     t,
   } = useActsState();
 
@@ -135,8 +137,13 @@ export default function Acts(): React.ReactElement {
             </Button>
           }
         >
-          <Form name="filter" layout="vertical">
-            <Form.Item name="type" label={t("doc-type")}>
+          <Form
+            name="filter"
+            layout="vertical"
+            onFinish={onFiltersApply}
+            initialValues={{ doc_type: [], violation_date: null }}
+          >
+            <Form.Item name="doc_type" label={t("doc-type")}>
               <Checkbox.Group options={docs} />
             </Form.Item>
 
@@ -155,6 +162,7 @@ export default function Acts(): React.ReactElement {
                 size="large"
                 onChange={handleRegionChange}
                 options={regions}
+                allowClear
               />
             </Form.Item>
 
@@ -165,6 +173,7 @@ export default function Acts(): React.ReactElement {
                   className="w-full"
                   size="large"
                   options={districts}
+                  allowClear
                 />
               </Form.Item>
             )}
@@ -178,20 +187,18 @@ export default function Acts(): React.ReactElement {
                 className="w-full"
                 size="large"
                 options={articles}
+                allowClear
               />
             </Form.Item>
 
-            <Form.Item name="offender_type" label={t("offender-type")}>
+            <Form.Item name="violation_type" label={t("offender-type")}>
               <Select
                 id="sdf"
                 placeholder={t("choose-from-list")}
                 className="w-full"
                 size="large"
-                options={[
-                  { value: "jack", label: "Jack" },
-                  { value: "lucy", label: "Lucy" },
-                  { value: "Yiminghe", label: "yiminghe" },
-                ]}
+                options={violationTypes}
+                allowClear
               />
             </Form.Item>
 
@@ -199,6 +206,7 @@ export default function Acts(): React.ReactElement {
               <Button
                 icon={<FilterIcon />}
                 type="primary"
+                htmlType="submit"
                 className="flex justify-center items-center bg-[#40916c] text-white w-full h-10 rounded-xl"
               >
                 {t("apply")}

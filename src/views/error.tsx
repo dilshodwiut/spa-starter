@@ -13,6 +13,7 @@ export default function Error(): React.ReactElement {
         <Button
           type="primary"
           key="console"
+          className="bg-[#40916C]"
           onClick={() => {
             navigate("/");
           }}

@@ -11,14 +11,20 @@ export default function Inspector(): React.ReactElement {
     Form,
     Input,
     colorBgContainer,
-    goBack,
     isModalOpen,
+    inspectorId,
+    form,
+    isLoading,
+    contextHolder,
+    goBack,
     handleCancel,
+    submitHandler,
     t,
   } = useInspectorState();
 
   return (
     <>
+      {contextHolder}
       <Header
         style={{ background: colorBgContainer }}
         className="px-8 pt-2 flex items-center gap-4"
@@ -27,7 +33,11 @@ export default function Inspector(): React.ReactElement {
           <img src={backIcon} alt="back" width={24} height={24} />
         </button>
 
-        <h1 className="font-semibold text-xl">{t("adding-inspector")}</h1>
+        <h1 className="font-semibold text-xl">
+          {typeof inspectorId === "string"
+            ? t("updating-inspector")
+            : t("adding-inspector")}
+        </h1>
       </Header>
 
       <Content
@@ -40,14 +50,10 @@ export default function Inspector(): React.ReactElement {
         <Form
           name="create-inspector-form"
           layout="vertical"
-          initialValues={{}}
-          onFinish={() => {
-            //
-          }}
-          onFinishFailed={() => {
-            //
-          }}
+          // initialValues={initialValues}
+          onFinish={submitHandler}
           autoComplete="off"
+          form={form}
         >
           <Row gutter={48}>
             <Col span={8}>
@@ -66,7 +72,7 @@ export default function Inspector(): React.ReactElement {
               >
                 <Input size="large" />
               </Form.Item>
-              <Form.Item label={t("passport")} name="passport">
+              <Form.Item label={t("passport")} name="passport_series">
                 <Input size="large" />
               </Form.Item>
               <Form.Item label={t("phone")} name="phone">
@@ -78,7 +84,7 @@ export default function Inspector(): React.ReactElement {
               <Form.Item label={t("region")} name="region">
                 <Select size="large" />
               </Form.Item>
-              <Form.Item label={t("login")} name="login">
+              <Form.Item label={t("login")} name="username">
                 <Input size="large" />
               </Form.Item>
             </Col>
@@ -138,7 +144,7 @@ export default function Inspector(): React.ReactElement {
               >
                 <Input size="large" />
               </Form.Item>
-              <Form.Item label={t("dob")} name="dob">
+              <Form.Item label={t("dob")} name="birth_date">
                 <DatePicker
                   size="large"
                   className="w-full"
@@ -148,7 +154,7 @@ export default function Inspector(): React.ReactElement {
               <Form.Item label={t("residence-address")} name="address">
                 <Input size="large" />
               </Form.Item>
-              <Form.Item label={t("job-title")} name="job_title">
+              <Form.Item label={t("job-title")} name="position">
                 <Input size="large" />
               </Form.Item>
             </Col>
@@ -168,8 +174,11 @@ export default function Inspector(): React.ReactElement {
                 type="primary"
                 htmlType="submit"
                 className="bg-green-200 text-black font-medium text-[18px] h-14"
+                loading={isLoading}
               >
-                {t("create-user")}
+                {typeof inspectorId === "string"
+                  ? t("update-user")
+                  : t("create-user")}
               </Button>
             </div>
           </div>

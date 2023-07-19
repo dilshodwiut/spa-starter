@@ -1,10 +1,11 @@
 import request from "@/utils/axios";
-import type { ActType, ActsParams, Response } from "../types";
+import type { ListResponse } from "@/types";
+import type { ActType, ActsParams } from "../types";
 
 export async function getAllActs(
   params: ActsParams = {},
-): Promise<Response<ActType[]>> {
-  const result: Response<ActType[]> = await request({
+): Promise<ListResponse<ActType[]>> {
+  const result: ListResponse<ActType[]> = await request({
     url: "/violations/",
     method: "get",
     params,

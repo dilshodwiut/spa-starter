@@ -1,17 +1,20 @@
-import type { Layout, Form, Input } from "antd";
+import type { Layout, Form, Input, FormInstance } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
 import type { TFunction } from "i18next";
-import type { JobTitle, Region } from "@/types";
+import type { BaseEntity, ListResponse } from "@/types";
 
 interface InspectorsState {
   Header: typeof Layout.Header;
   Content: typeof Layout.Content;
-  data: InspectorType[];
+  data: ListResponse<InspectorType[]> | undefined;
   columns: ColumnsType<InspectorType>;
   colorBgContainer: string;
   paginationProps: TableProps<InspectorType>["pagination"];
+  isLoading: boolean;
+  isPreviousData: boolean;
+  isPlaceholderData: boolean;
+  contextHolder: React.ReactElement;
   onPageChange: TableProps<InspectorType>["onChange"];
-  onTableRow: TableProps<InspectorType>["onRow"];
   onAddClick: () => void;
   t: TFunction;
 }
@@ -22,20 +25,48 @@ interface InspectorState {
   Form: typeof Form;
   Input: typeof Input;
   colorBgContainer: string;
-  goBack: () => void;
   isModalOpen: boolean;
+  inspectorId: string | undefined;
+  form: FormInstance;
+  isLoading: boolean;
+  contextHolder: React.ReactElement;
+  goBack: () => void;
   handleCancel: () => void;
+  submitHandler: (values: FormValues) => void;
   t: TFunction;
 }
 
+type FormValues = Partial<InspectorType>;
+
 interface InspectorType {
-  id: string;
-  full_name: string;
-  dob: string;
-  passport: string;
+  id: number;
+  last_login: string;
+  is_superuser: boolean;
+  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  avatar: string;
+  phone: string;
   pinfl: string;
-  job_title: JobTitle;
+  passport_series: string;
+  position: string;
+  address: string;
+  is_staff: boolean;
+  is_active: boolean;
+  date_joined: string;
+  groups: BaseEntity;
   region: string;
+  district: string;
+  user_permissions: number[];
+  password: string;
+  deleted: string;
+  deleted_by_cascade: boolean;
+  middle_name: string;
+  birth_date: string;
+  gender: "man" | "woman";
+  created_at: string;
+  updated_at: string;
 }
 
-export type { InspectorsState, InspectorType, InspectorState };
+export type { InspectorsState, InspectorType, InspectorState, FormValues };

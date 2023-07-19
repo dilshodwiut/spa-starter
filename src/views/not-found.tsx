@@ -12,6 +12,7 @@ export default function NotFound(): React.ReactElement {
       extra={
         <Button
           type="primary"
+          className="bg-[#40916C]"
           onClick={() => {
             navigate("/");
           }}

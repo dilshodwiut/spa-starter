@@ -12,8 +12,11 @@ export default function Inspectors(): React.ReactElement {
     columns,
     colorBgContainer,
     paginationProps,
+    isLoading,
+    isPreviousData,
+    isPlaceholderData,
+    contextHolder,
     onPageChange,
-    onTableRow,
     onAddClick,
     t,
   } = useInspectorsState();
@@ -27,6 +30,7 @@ export default function Inspectors(): React.ReactElement {
         />
       )}
     >
+      {contextHolder}
       <Header
         style={{ background: colorBgContainer }}
         className="px-8 pt-2 flex justify-between items-baseline"
@@ -36,7 +40,7 @@ export default function Inspectors(): React.ReactElement {
         <Space size="large">
           <Input
             size="large"
-            placeholder={t("search-fullname") ?? ""}
+            placeholder={t("search-by-fullname") ?? ""}
             suffix={<img src={SearchIcon} alt="search" />}
           />
 
@@ -57,15 +61,14 @@ export default function Inspectors(): React.ReactElement {
         }}
       >
         <Table
-          onRow={onTableRow}
           rowKey={(record) => record.id}
           columns={columns}
-          dataSource={data}
+          dataSource={data?.results}
           onChange={onPageChange}
           pagination={paginationProps}
-          rowClassName="cursor-pointer"
+          loading={isLoading || isPreviousData || isPlaceholderData}
         />
-        {data.length === 0 ? (
+        {data?.count === 0 ? (
           <>
             <br />
             <Pagination className="text-right" {...paginationProps} />

@@ -32,19 +32,28 @@ interface Region {
   districts: District[];
 }
 
-interface Article {
-  id: number;
-  clause: string;
-  small_clause: string;
-  description: string;
-  part: string;
-}
-
-interface ViolationDoc {
+interface BaseEntity {
   id: number;
   name: string;
 }
 
-type JobTitle = "Inspector";
+interface BaseParams {
+  page?: number;
+  page_size?: number;
+}
 
-export type { CustomRoute, Region, District, Article, ViolationDoc, JobTitle };
+interface ListResponse<T> {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T;
+}
+
+export type {
+  CustomRoute,
+  Region,
+  District,
+  BaseEntity,
+  BaseParams,
+  ListResponse,
+};
