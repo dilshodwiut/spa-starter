@@ -60,6 +60,5 @@ export default function ActionBox(props: ActionBoxProps): React.ReactElement {
 
 ActionBox.defaultProps = {
   className: "",
-  Icon: undefined,
   iconPosition: "left",
 };

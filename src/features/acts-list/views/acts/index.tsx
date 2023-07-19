@@ -30,17 +30,18 @@ export default function Acts(): React.ReactElement {
     columns,
     colorBgContainer,
     paginationProps,
-    typeOptions,
     isDrawerOpen,
     regions,
+    districts,
+    articles,
+    docs,
+    selectedRegion,
     contextHolder,
     showDrawer,
     closeDrawer,
-    handleChange,
+    handleRegionChange,
     onPageChange,
     onDrawerClose,
-    onDateChange,
-    onTypeChange,
     onTableRow,
     onSegmentChange,
     onSearchChange,
@@ -65,10 +66,11 @@ export default function Acts(): React.ReactElement {
           <Segmented
             size="large"
             options={[
-              { label: t("processed"), value: "processed" },
-              { label: t("non-processed"), value: "non-processed" },
-              { label: t("cancelled"), value: "cancelled" },
-              { label: t("overdued"), value: "overdued" },
+              { label: t("non-processed"), value: "created" },
+              { label: t("processed"), value: "defined" },
+              { label: t("sent"), value: "sent" },
+              { label: t("cancelled"), value: "rejected" },
+              { label: t("overdued"), value: "performed" },
             ]}
             className="text-[#62738C]"
             onChange={onSegmentChange}
@@ -134,8 +136,8 @@ export default function Acts(): React.ReactElement {
           }
         >
           <Form name="filter" layout="vertical">
-            <Form.Item name="type" label={t("type")}>
-              <Checkbox.Group options={typeOptions} onChange={onTypeChange} />
+            <Form.Item name="type" label={t("doc-type")}>
+              <Checkbox.Group options={docs} />
             </Form.Item>
 
             <Form.Item name="violation_date" label={t("violation-date")}>
@@ -143,7 +145,6 @@ export default function Acts(): React.ReactElement {
                 className="w-full"
                 size="large"
                 placeholder={t("select-date") ?? ""}
-                onChange={onDateChange}
               />
             </Form.Item>
 
@@ -152,28 +153,21 @@ export default function Acts(): React.ReactElement {
                 placeholder={t("choose-from-list")}
                 className="w-full"
                 size="large"
-                onChange={handleChange}
-                options={[
-                  { value: "jack", label: "Jack" },
-                  { value: "lucy", label: "Lucy" },
-                  { value: "Yiminghe", label: "yiminghe" },
-                ]}
+                onChange={handleRegionChange}
+                options={regions}
               />
             </Form.Item>
 
-            <Form.Item name="district" label={t("district")}>
-              <Select
-                placeholder={t("choose-from-list")}
-                className="w-full"
-                size="large"
-                onChange={handleChange}
-                options={[
-                  { value: "jack", label: "Jack" },
-                  { value: "lucy", label: "Lucy" },
-                  { value: "Yiminghe", label: "yiminghe" },
-                ]}
-              />
-            </Form.Item>
+            {typeof selectedRegion !== "undefined" && (
+              <Form.Item name="district" label={t("district")}>
+                <Select
+                  placeholder={t("choose-from-list")}
+                  className="w-full"
+                  size="large"
+                  options={districts}
+                />
+              </Form.Item>
+            )}
 
             <Form.Item
               name="infringement_article"
@@ -183,12 +177,7 @@ export default function Acts(): React.ReactElement {
                 placeholder={t("choose-from-list")}
                 className="w-full"
                 size="large"
-                onChange={handleChange}
-                options={[
-                  { value: "jack", label: "Jack" },
-                  { value: "lucy", label: "Lucy" },
-                  { value: "Yiminghe", label: "yiminghe" },
-                ]}
+                options={articles}
               />
             </Form.Item>
 
@@ -198,7 +187,6 @@ export default function Acts(): React.ReactElement {
                 placeholder={t("choose-from-list")}
                 className="w-full"
                 size="large"
-                onChange={handleChange}
                 options={[
                   { value: "jack", label: "Jack" },
                   { value: "lucy", label: "Lucy" },

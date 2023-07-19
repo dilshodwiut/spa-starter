@@ -51,9 +51,9 @@ const columns: ColumnsType<InspectorType> = [
   },
 ];
 
-// let data = await getAllInspectors();
+let data = getAllInspectors();
 
-let data = [];
+// let data = [];
 
 for (let i = 0; i < 180; i += 1) {
   const clonedItem = clone(data[0]);

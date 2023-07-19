@@ -32,6 +32,19 @@ interface Region {
   districts: District[];
 }
 
+interface Article {
+  id: number;
+  clause: string;
+  small_clause: string;
+  description: string;
+  part: string;
+}
+
+interface ViolationDoc {
+  id: number;
+  name: string;
+}
+
 type JobTitle = "Inspector";
 
-export type { CustomRoute, Region, JobTitle };
+export type { CustomRoute, Region, District, Article, ViolationDoc, JobTitle };

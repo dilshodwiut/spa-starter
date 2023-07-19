@@ -1,25 +1,21 @@
 import type { ChangeEventHandler } from "react";
-import type { Region } from "@/types";
 import type {
   Layout,
   Typography,
   CardProps,
-  DatePickerProps,
   Input,
   UploadProps,
   SegmentedProps,
+  SelectProps,
 } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
-import type {
-  AbstractCheckboxGroupProps,
-  CheckboxValueType,
-} from "antd/es/checkbox/Group";
+import type { AbstractCheckboxGroupProps } from "antd/es/checkbox/Group";
 import type { NoticeType } from "antd/es/message/interface";
 import type { TFunction } from "i18next";
 
 type ViolationType = "administrative" | "criminal";
 type ActStatus = "received" | "new" | number;
-type ActsStatus = "processed" | "non-processed" | "cancelled" | "overdued";
+type ActsStatus = "created" | "defined" | "sent" | "rejected" | "performed";
 
 type getColorFn = (
   input: ViolationType | ActStatus,
@@ -94,8 +90,8 @@ interface ActType {
 
 interface Response<T> {
   count: number;
-  next: string;
-  previous: string;
+  next: string | null;
+  previous: string | null;
   results: T;
 }
 
@@ -116,18 +112,19 @@ interface ActsState {
   columns: ColumnsType<ActType>;
   colorBgContainer: string;
   paginationProps: TableProps<ActType>["pagination"];
-  typeOptions: AbstractCheckboxGroupProps["options"];
   isDrawerOpen: boolean;
-  regions: Response<Region[]> | undefined;
+  regions: SelectProps["options"];
+  districts: SelectProps["options"];
+  articles: SelectProps["options"];
+  docs: AbstractCheckboxGroupProps["options"];
+  selectedRegion: number | undefined;
   contextHolder: React.ReactElement;
   showDrawer: () => void;
   closeDrawer: () => void;
   onDrawerClose: () => void;
-  handleChange: (value: string) => void;
+  handleRegionChange: (value: number) => void;
   onPageChange: TableProps<ActType>["onChange"];
-  onDateChange: DatePickerProps["onChange"];
   onTableRow: TableProps<ActType>["onRow"];
-  onTypeChange: (checkedValues: CheckboxValueType[]) => void;
   onSegmentChange: SegmentedProps["onChange"];
   onSearchChange: ChangeEventHandler<HTMLInputElement>;
   t: TFunction;

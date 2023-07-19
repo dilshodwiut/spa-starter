@@ -1,10 +1,6 @@
 import request from "@/utils/axios";
 import type { AxiosResponse } from "axios";
-
-interface AuthResponse {
-  access: string;
-  refresh: string;
-}
+import type { AuthResponse } from "../types";
 
 export async function login(data: {
   username: string;

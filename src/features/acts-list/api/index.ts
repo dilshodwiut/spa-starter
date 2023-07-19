@@ -1,2 +1,2 @@
 export * from "./act";
-export * from "./others";
+export * from "./misc";

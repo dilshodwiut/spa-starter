@@ -14,11 +14,13 @@
 
   "processed": "Обработанные",
   "non-processed": "Не обработанные",
+  "sent": "Отправлено",
   "cancelled": "Отменено",
   "overdued": "Просрочено",
   "search-by-serial-number": "Поиск по Серийному номеру",
   "filter": "Фильтр",
   "type": "Тип",
+  "doc-type": "Тип документа",
   "serial-number": "Серийный номер",
   "reg-date": "Дата регистрации",
   "region, district": "Область, район",

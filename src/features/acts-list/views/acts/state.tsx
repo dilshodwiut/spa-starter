@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -8,11 +8,10 @@ import { compareAsc } from "date-fns";
 import { t as T } from "@/utils/i18n";
 import showTotal from "@/helpers/showTotal";
 import { Layout, Tag, message, theme } from "antd";
-import type { DatePickerProps, SegmentedProps } from "antd";
+import type { SegmentedProps } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
-import type { CheckboxValueType } from "antd/es/checkbox/Group";
 import getColor from "../../helpers/getColor";
-import { getAllActs, getRegions } from "../../api";
+import { getAllActs, getArticles, getDocTypes, getRegions } from "../../api";
 import type {
   ActStatus,
   ActsState,
@@ -108,23 +107,20 @@ const columns: ColumnsType<ActType> = [
 
 const { Header, Content } = Layout;
 
-const typeOptions = [
-  {
-    label: T("regional_electrical_networks"),
-    value: "regional_electrical_networks",
-  },
-  { label: T("area_gas_supply"), value: "area_gas_supply" },
-];
-
 export default function useActsState(): ActsState {
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+  const [messageApi, contextHolder] = message.useMessage();
+
   const [{ page, pageSize }, setPagination] = useState<{
     page: number;
     pageSize: number;
   }>({ page: 1, pageSize: 20 });
 
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
-  const [status, setStatus] = useState<ActsStatus>("processed");
+  const [status, setStatus] = useState<ActsStatus>("created");
   const [search, setSearch] = useState<string>("");
+  const [selectedRegion, setSelectedRegion] = useState<number>();
 
   const debouncedSearch = useDebounce<string>(search);
 
@@ -141,25 +137,63 @@ export default function useActsState(): ActsState {
         return res;
       },
       keepPreviousData: true,
-      placeholderData: { count: 0, next: "", previous: "", results: [] },
+      placeholderData: { count: 0, next: null, previous: null, results: [] },
     });
 
-  const { data: regions } = useQuery({
+  const { data: locations } = useQuery({
     queryKey: ["regions"],
     queryFn: getRegions,
-    placeholderData: { count: 0, next: "", previous: "", results: [] },
+    placeholderData: { count: 0, next: null, previous: null, results: [] },
   });
 
-  console.log("regions", regions);
+  let regions = locations?.results.map(({ id, name }) => ({
+    value: id,
+    label: name,
+  }));
+  regions ??= [];
 
-  const navigate = useNavigate();
-  const { t } = useTranslation();
+  const districts = useMemo(() => {
+    const location = locations?.results.find(
+      (loc) => loc.id === selectedRegion,
+    );
+
+    if (typeof location !== "undefined") {
+      return location?.districts.map(({ id, name }) => ({
+        value: id,
+        label: name,
+      }));
+    }
+
+    return [];
+  }, [selectedRegion, locations?.results]);
+
+  const { data: articlesData } = useQuery({
+    queryKey: ["articles"],
+    queryFn: getArticles,
+    placeholderData: { count: 0, next: null, previous: null, results: [] },
+  });
+
+  let articles = articlesData?.results.map(({ id, clause }) => ({
+    label: clause,
+    value: id,
+  }));
+  articles ??= [];
+
+  const { data: violationDocs } = useQuery({
+    queryKey: ["violation-docs"],
+    queryFn: getDocTypes,
+    placeholderData: { count: 0, next: null, previous: null, results: [] },
+  });
+
+  let docs = violationDocs?.results.map(({ id, name }) => ({
+    label: name,
+    value: id,
+  }));
+  docs ??= [];
 
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-
-  const [messageApi, contextHolder] = message.useMessage();
 
   const showDrawer = (): void => {
     setIsDrawerOpen(true);
@@ -173,16 +207,8 @@ export default function useActsState(): ActsState {
     setIsDrawerOpen(false);
   };
 
-  const handleChange = (value: string): void => {
-    console.log(`selected ${value}`);
-  };
-
-  const onDateChange: DatePickerProps["onChange"] = (date, dateString) => {
-    console.log(date, dateString);
-  };
-
-  const onTypeChange = (checkedValues: CheckboxValueType[]): void => {
-    console.log("checked = ", checkedValues);
+  const handleRegionChange = (value: number): void => {
+    setSelectedRegion(value);
   };
 
   const onSegmentChange = (val: SegmentedProps["value"]): void => {
@@ -242,17 +268,18 @@ export default function useActsState(): ActsState {
     columns,
     colorBgContainer,
     paginationProps,
-    typeOptions,
     isDrawerOpen,
     regions,
+    districts,
+    articles,
+    docs,
+    selectedRegion,
     contextHolder,
     showDrawer,
     closeDrawer,
-    handleChange,
+    handleRegionChange,
     onPageChange,
     onDrawerClose,
-    onDateChange,
-    onTypeChange,
     onTableRow,
     onSegmentChange,
     onSearchChange,

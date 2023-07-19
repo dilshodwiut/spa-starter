@@ -13,14 +13,10 @@ export async function getAllActs(
   return result;
 }
 
-export async function getAct(
-  id: string,
-  params: ActsParams = {},
-): Promise<ActType> {
+export async function getAct(id: string): Promise<ActType> {
   const result: ActType = await request({
     url: `/violations/${id}`,
     method: "get",
-    params,
   });
 
   return result;

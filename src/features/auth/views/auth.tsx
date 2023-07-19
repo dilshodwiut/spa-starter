@@ -1,7 +1,7 @@
 import { Navigate, Outlet, useMatch } from "react-router-dom";
 import { useAuthContext } from "@/contexts";
 
-export default function Auth(): React.ReactElement {
+const Auth: React.FC = function Auth() {
   const match = useMatch("/auth/login");
   const { isAuth } = useAuthContext();
 
@@ -13,5 +13,7 @@ export default function Auth(): React.ReactElement {
     return <Outlet />;
   }
 
-  return <> </>;
-}
+  return null;
+};
+
+export default Auth;
