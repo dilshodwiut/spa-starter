@@ -8,6 +8,7 @@ import arrowLeftIcon from "@/assets/arrow-left.svg";
 import moreIcon from "@/assets/more.svg";
 import personIcon from "@/assets/person.svg";
 import ruIcon from "@/assets/RU.svg";
+import uzIcon from "@/assets/UZ.png";
 import type { CustomRoute } from "@/types";
 import useDefaultLayoutState from "./state";
 
@@ -18,8 +19,8 @@ interface Props {
 
 const content = (
   <div>
-    <p>Content</p>
-    <p>Content</p>
+    <div>Content 1</div>
+    <div>Content 2</div>
   </div>
 );
 
@@ -35,7 +36,7 @@ export default function DefaultLayout(props: Props): React.ReactElement {
     items,
     languageOptions,
     siderProps,
-    handleChange,
+    handleLanguageChange,
     onToggleSider,
   } = useDefaultLayoutState(sidebarRoutes);
 
@@ -113,7 +114,42 @@ export default function DefaultLayout(props: Props): React.ReactElement {
 
           <div className="flex flex-col gap-2 px-2 pb-2 mb-2">
             {collapsed ? (
-              <Popover arrow={false} content={content} title="" trigger="click">
+              <Popover
+                arrow={false}
+                content={
+                  <div className="flex flex-col gap-2">
+                    <div
+                      onClick={() => {
+                        handleLanguageChange("ru");
+                      }}
+                      className="flex justify-center items-center bg-white rounded-xl p-[11px] border border-[#f5f5f5] w-12 h-12 m-auto cursor-pointer hover:shadow-lg transition-shadow"
+                      aria-hidden
+                    >
+                      <img src={ruIcon} alt="russian" />
+                    </div>
+                    <div
+                      onClick={() => {
+                        handleLanguageChange("uzCryllic");
+                      }}
+                      className="flex justify-center items-center bg-white rounded-xl p-[11px] border border-[#f5f5f5] w-12 h-12 m-auto cursor-pointer hover:shadow-lg transition-shadow"
+                      aria-hidden
+                    >
+                      <img src={uzIcon} alt="uz cryllic" />
+                    </div>
+                    <div
+                      onClick={() => {
+                        handleLanguageChange("uzLatin");
+                      }}
+                      className="flex justify-center items-center bg-white rounded-xl p-[11px] border border-[#f5f5f5] w-12 h-12 m-auto cursor-pointer hover:shadow-lg transition-shadow"
+                      aria-hidden
+                    >
+                      <img src={uzIcon} alt="uz latin" />
+                    </div>
+                  </div>
+                }
+                title=""
+                trigger="click"
+              >
                 <div className="flex justify-center items-center bg-white rounded-xl p-[11px] border border-[#f5f5f5] w-12 h-12 m-auto cursor-pointer">
                   <img src={ruIcon} alt="russian" />
                 </div>
@@ -123,7 +159,7 @@ export default function DefaultLayout(props: Props): React.ReactElement {
                 defaultValue="ru"
                 className="w-full"
                 size="large"
-                onChange={handleChange}
+                onChange={handleLanguageChange}
                 options={languageOptions}
                 suffixIcon={
                   !collapsed ? <img src={downIcon} alt="arrow down" /> : null

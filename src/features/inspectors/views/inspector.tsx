@@ -33,7 +33,7 @@ export default function Inspector(): React.ReactElement {
           <img src={backIcon} alt="back" width={24} height={24} />
         </button>
 
-        <h1 className="font-semibold text-xl">
+        <h1 className="font-semibold text-2xl">
           {typeof inspectorId === "string"
             ? t("updating-inspector")
             : t("adding-inspector")}

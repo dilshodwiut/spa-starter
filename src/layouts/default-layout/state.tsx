@@ -6,6 +6,7 @@ import { colors } from "@/config/theme";
 import { useTranslation } from "react-i18next";
 import clsx from "clsx";
 import ruIcon from "@/assets/RU.svg";
+import uzIcon from "@/assets/UZ.png";
 import type { ThemeConfig, MenuProps, SiderProps } from "antd";
 import type { CustomRoute } from "@/types";
 import type { ItemType } from "antd/es/menu/hooks/useItems";
@@ -36,7 +37,7 @@ interface DefaultLayoutState {
     label: JSX.Element;
   }>;
   siderProps: SiderProps;
-  handleChange: (value: string) => void;
+  handleLanguageChange: (value: string) => void;
   onToggleSider: () => void;
 }
 
@@ -47,10 +48,10 @@ export default function useDefaultLayoutState(
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
-  const handleChange = (value: string): void => {
-    console.log(`selected ${value}`);
+  const handleLanguageChange = (value: string): void => {
+    void i18n.changeLanguage(value);
   };
 
   const onToggleSider = (): void => {
@@ -104,7 +105,8 @@ export default function useDefaultLayoutState(
         value: "uzCryllic",
         label: (
           <span className="flex items-center gap-2">
-            <img src={ruIcon} alt="uz cryllic" /> {collapsed ? "" : "Узбекча"}
+            <img src={uzIcon} alt="uz cryllic" width={28} height={20} />{" "}
+            {collapsed ? "" : "Узбекча"}
           </span>
         ),
       },
@@ -112,7 +114,8 @@ export default function useDefaultLayoutState(
         value: "uzLatin",
         label: (
           <span className="flex items-center gap-2">
-            <img src={ruIcon} alt="uz latin" /> {collapsed ? "" : "O'zbekcha"}
+            <img src={uzIcon} alt="uz latin" width={28} height={20} />{" "}
+            {collapsed ? "" : "O'zbekcha"}
           </span>
         ),
       },
@@ -137,7 +140,7 @@ export default function useDefaultLayoutState(
     items,
     languageOptions,
     siderProps,
-    handleChange,
+    handleLanguageChange,
     onToggleSider,
   };
 }

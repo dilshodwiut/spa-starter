@@ -67,15 +67,17 @@ interface ActState {
   actId: string | undefined;
   uploadProps: UploadProps;
   isModalOpen: boolean;
+  data: ActType | undefined;
   handleOk: () => void;
   handleCancel: () => void;
   showModal: () => void;
   doSomeAction: (successMessage: string, type: NoticeType) => Promise<void>;
+  goBack: () => void;
   t: TFunction;
 }
 
 interface ActType {
-  id: string;
+  id: number;
   status: ActStatus;
   act_series: string;
   act_number: string;
@@ -88,6 +90,44 @@ interface ActType {
   client_type: "legal_entity" | "individual" | "budget_organization";
   violation: string;
   amount: number;
+
+  logo: string;
+  is_juridic: string;
+  total_sum: number;
+  total_volume: number;
+
+  employee: {
+    certificate: string;
+    first_name: string;
+    last_name: string;
+    middle_name: string;
+    position: string;
+    organization: BaseEntity;
+  };
+
+  violation_person: {
+    phone: string;
+    last_name: string;
+    first_name: string;
+    birth_date: string;
+    middle_name: string;
+    citizenship: string;
+    nationality: string;
+    place_of_birth: string;
+    document_series: string;
+    document_number: string;
+  };
+
+  violation_organization: {
+    subscriber_number: string;
+    cadastral_number: string;
+    director_fio: string;
+    address: string;
+    name: string;
+    type: string;
+    stir: string;
+    phone: string;
+  };
 }
 
 interface FormFilters {

@@ -1,14 +1,15 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { Layout, Typography, Input, theme, message } from "antd";
 import type { UploadProps } from "antd";
 import type { NoticeType } from "antd/es/message/interface";
 import type { ActState } from "../../types";
+import { getAct } from "../../api";
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
-
 const { TextArea } = Input;
 
 const uploadProps: UploadProps = {
@@ -32,14 +33,23 @@ const uploadProps: UploadProps = {
 export default function useActState(): ActState {
   const { actId } = useParams();
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  const [messageApi, contextHolder] = message.useMessage();
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { data, error } = useQuery({
+    queryKey: ["act", actId],
+    queryFn: async () => {
+      const res = await getAct(actId!);
+      return res;
+    },
+    enabled: Boolean(actId),
+  });
 
   const showModal = (): void => {
     setIsModalOpen(true);
@@ -51,6 +61,10 @@ export default function useActState(): ActState {
 
   const handleCancel = (): void => {
     setIsModalOpen(false);
+  };
+
+  const goBack = (): void => {
+    navigate(-1);
   };
 
   const doSomeAction = async (
@@ -82,6 +96,16 @@ export default function useActState(): ActState {
     }
   };
 
+  useEffect(() => {
+    if (error !== null) {
+      void messageApi.error({
+        key: "acts-error",
+        // @ts-expect-error error type is unknown but it will get Response type and object from axios
+        content: error?.statusText,
+      });
+    }
+  }, [error, messageApi]);
+
   return {
     Header,
     Content,
@@ -92,10 +116,12 @@ export default function useActState(): ActState {
     actId,
     uploadProps,
     isModalOpen,
+    data,
     handleOk,
     handleCancel,
     showModal,
     doSomeAction,
+    goBack,
     t,
   };
 }

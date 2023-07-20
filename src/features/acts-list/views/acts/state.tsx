@@ -6,6 +6,8 @@ import { isInt } from "radash";
 import { useDebounce } from "usehooks-ts";
 import { compareAsc, lightFormat } from "date-fns";
 import { t as T } from "@/utils/i18n";
+import formatDate from "@/helpers/formatDate";
+import formatAmount from "@/helpers/formatAmount";
 import showTotal from "@/helpers/showTotal";
 import { Layout, Tag, message, theme } from "antd";
 import type { SegmentedProps } from "antd";
@@ -23,11 +25,18 @@ import type {
 } from "../../types";
 
 const columns: ColumnsType<ActType> = [
-  // {
-  //   title: T("type"),
-  //   dataIndex: "server_type",
-  // },
-
+  {
+    title: T("type"),
+    dataIndex: "logo",
+    render(value: string) {
+      return (
+        <img
+          src={`${import.meta.env.VITE_CDN_URL}${value}`}
+          alt="server type"
+        />
+      );
+    },
+  },
   {
     title: T("serial-number"),
     dataIndex: "act_series",
@@ -46,6 +55,9 @@ const columns: ColumnsType<ActType> = [
   {
     title: T("reg-date"),
     dataIndex: "act_date",
+    render(value: string) {
+      return formatDate(value);
+    },
     sorter: (a, b) => compareAsc(new Date(a.act_date), new Date(b.act_date)),
   },
   {
@@ -53,23 +65,29 @@ const columns: ColumnsType<ActType> = [
     dataIndex: "address",
   },
 
-  // {
-  //   title: T("type"),
-  //   dataIndex: "client_type",
-  //   sorter: (a, b) => 1,
-  //   render(value) {
-  //     return T(value);
-  //   },
-  // },
-  // {
-  //   title: T("violation"),
-  //   dataIndex: "violation",
-  // },
-  // {
-  //   title: T("amount (som)"),
-  //   dataIndex: "amount",
-  //   sorter: (a, b) => a.amount - b.amount,
-  // },
+  {
+    title: T("type"),
+    dataIndex: "is_juridic",
+    sorter: (a, b) => +a.is_juridic - +b.is_juridic,
+    render(isJuridic: boolean) {
+      if (isJuridic) {
+        return T("legal_entity");
+      }
+      return T("individual");
+    },
+  },
+  {
+    title: T("violation"),
+    dataIndex: "violation_type",
+  },
+  {
+    title: T("amount (som)"),
+    dataIndex: "total_sum",
+    sorter: (a, b) => a.total_sum - b.total_sum,
+    render(sum: number) {
+      return formatAmount(sum);
+    },
+  },
 
   {
     title: T("type"),
@@ -218,7 +236,7 @@ export default function useActsState(): ActsState {
   docs ??= [];
 
   const { data: violationsData } = useQuery({
-    queryKey: ["violation-types"],
+    queryKey: ["violation-docs"],
     queryFn: async () => {
       const res = await getDocTypes({});
       return res;
