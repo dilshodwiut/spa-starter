@@ -36,6 +36,7 @@ export default function DefaultLayout(props: Props): React.ReactElement {
     items,
     languageOptions,
     siderProps,
+    defaultLanguage,
     handleLanguageChange,
     onToggleSider,
   } = useDefaultLayoutState(sidebarRoutes);
@@ -156,7 +157,7 @@ export default function DefaultLayout(props: Props): React.ReactElement {
               </Popover>
             ) : (
               <Select
-                defaultValue="ru"
+                defaultValue={defaultLanguage}
                 className="w-full"
                 size="large"
                 onChange={handleLanguageChange}

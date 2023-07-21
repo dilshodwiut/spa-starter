@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/promise-function-async */
+import { lazy } from "react";
 import type { CustomRoute } from "@/types";
-import Auth from "./views/auth";
-import Login from "./views/login";
+
+const Auth = lazy(() => import("./views/auth"));
+const Login = lazy(() => import("./views/login"));
 
 const authRoutes: CustomRoute = {
   id: "auth",

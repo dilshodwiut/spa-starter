@@ -1,13 +1,17 @@
+/* eslint-disable @typescript-eslint/promise-function-async */
+import { lazy } from "react";
 import type { CustomRoute } from "@/types";
-import Inspector from "./views/inspector";
-import PeopleIcon from "./components/people-icon";
-import Container from "./views/container";
+
+const Container = lazy(() => import("./views/container"));
+const Inspectors = lazy(() => import("./views/inspectors"));
+const Inspector = lazy(() => import("./views/inspector"));
+const PeopleIcon = lazy(() => import("./components/people-icon"));
 
 const inspectorsRoutes: CustomRoute = {
   id: "inspectors",
   title: "inspectors",
   path: "inspectors",
-  element: <Container />,
+  element: <Container of={<Inspectors />} />,
   Icon: PeopleIcon,
   children: [
     {

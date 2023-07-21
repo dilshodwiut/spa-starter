@@ -1,10 +1,11 @@
 import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
-import translations from "@/locales";
 import settings from "@/config/settings";
+import translations from "@/locales";
+import type { AppLang } from "@/types";
 
-const resources = {
+const resources: { [T in AppLang]: { translation: object } } = {
   uzLatin: {
     translation: translations.uzLatin,
   },
@@ -32,9 +33,3 @@ i18n
   .catch((err) => {
     console.error(err);
   });
-
-export default i18n;
-
-const { t } = i18n;
-
-export { t };

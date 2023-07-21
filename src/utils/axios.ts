@@ -34,10 +34,10 @@ export async function errorHandler(
 
       if (refresh_token !== null) {
         try {
-          const res = await refreshToken({ refresh_token });
+          const res = await refreshToken({ refresh: refresh_token });
           const { refresh, access } = res.data;
           localStorage.setItem("refresh_token", refresh);
-          localStorage.setItem("access-token", access);
+          localStorage.setItem("access_token", access);
           window.location.reload();
         } catch (err) {
           localStorage.setItem("refresh_token_error", JSON.stringify(err));

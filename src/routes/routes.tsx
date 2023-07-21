@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/promise-function-async */
+import { lazy } from "react";
 import type { CustomRoute } from "@/types";
 
 // ROUTE IMPORTS
@@ -8,9 +10,9 @@ import { notificationRoutes } from "@/features/notification";
 import { inspectorsRoutes } from "@/features/inspectors";
 
 // Global Pages
-import Root from "@/views/root";
-import NotFound from "@/views/not-found";
-import Error from "@/views/error";
+const Root = lazy(() => import("@/views/root"));
+const NotFound = lazy(() => import("@/views/not-found"));
+const Error = lazy(() => import("@/views/error"));
 
 const routes: CustomRoute[] = [
   {

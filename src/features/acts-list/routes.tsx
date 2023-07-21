@@ -1,13 +1,17 @@
+/* eslint-disable @typescript-eslint/promise-function-async */
+import { lazy } from "react";
 import type { CustomRoute } from "@/types";
-import NoteIcon from "./components/note-icon";
-import ActsList from "./views/acts-list";
-import Act from "./views/act";
+
+const Container = lazy(() => import("./views/container"));
+const Acts = lazy(() => import("./views/acts"));
+const Act = lazy(() => import("./views/act"));
+const NoteIcon = lazy(() => import("./components/note-icon"));
 
 const actsListRoutes: CustomRoute = {
   id: "acts-list",
   title: "acts-list",
   path: "list-of-acts",
-  element: <ActsList />,
+  element: <Container of={<Acts />} />,
   Icon: NoteIcon,
   children: [{ id: "act", title: "Act", path: ":actId", element: <Act /> }],
 };

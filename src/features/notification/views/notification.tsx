@@ -1,7 +1,7 @@
 import { Button, Layout, Table, theme } from "antd";
 import { useTranslation } from "react-i18next";
-import { t as T } from "@/utils/i18n";
 import type { ColumnsType } from "antd/es/table";
+import { useMemo } from "react";
 
 const { Header, Content } = Layout;
 
@@ -11,74 +11,80 @@ interface NotificationType {
   description: React.ReactNode;
 }
 
-const columns: ColumnsType<NotificationType> = [
-  {
-    title: T("datetime"),
-    dataIndex: "datetime",
-  },
-  {
-    title: T("description"),
-    dataIndex: "description",
-  },
-  {
-    title: T("action"),
-    render() {
-      return (
-        <Button className="bg-[#D8F3DC] text-[#40916C]">{T("see")}</Button>
-      );
-    },
-  },
-];
-
-const data: NotificationType[] = [
-  {
-    id: "1",
-    datetime: "18.11.2022 - 05:39:19",
-    description: (
-      <>
-        {T("act-processing-time-expires")}{" "}
-        <span className="font-semibold">BH 2240106381566</span>
-      </>
-    ),
-  },
-  {
-    id: "2",
-    datetime: "18.11.2022 - 05:39:19",
-    description: (
-      <>
-        {T("act-processing-time-expires")}{" "}
-        <span className="font-semibold">BH 2240106381566</span>
-      </>
-    ),
-  },
-  {
-    id: "3",
-    datetime: "18.11.2022 - 05:39:19",
-    description: (
-      <>
-        {T("act-processing-time-expires")}{" "}
-        <span className="font-semibold">BH 2240106381566</span>
-      </>
-    ),
-  },
-  {
-    id: "4",
-    datetime: "18.11.2022 - 05:39:19",
-    description: (
-      <>
-        {T("act-processing-time-expires")}{" "}
-        <span className="font-semibold">BH 2240106381566</span>
-      </>
-    ),
-  },
-];
-
 export default function Notification(): React.ReactElement {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
   const { t } = useTranslation();
+
+  const columns: ColumnsType<NotificationType> = useMemo(
+    () => [
+      {
+        title: t("datetime"),
+        dataIndex: "datetime",
+      },
+      {
+        title: t("description"),
+        dataIndex: "description",
+      },
+      {
+        title: t("action"),
+        render() {
+          return (
+            <Button className="bg-[#D8F3DC] text-[#40916C]">{t("see")}</Button>
+          );
+        },
+      },
+    ],
+    [t],
+  );
+
+  const data: NotificationType[] = useMemo(
+    () => [
+      {
+        id: "1",
+        datetime: "18.11.2022 - 05:39:19",
+        description: (
+          <>
+            {t("act-processing-time-expires")}{" "}
+            <span className="font-semibold">BH 2240106381566</span>
+          </>
+        ),
+      },
+      {
+        id: "2",
+        datetime: "18.11.2022 - 05:39:19",
+        description: (
+          <>
+            {t("act-processing-time-expires")}{" "}
+            <span className="font-semibold">BH 2240106381566</span>
+          </>
+        ),
+      },
+      {
+        id: "3",
+        datetime: "18.11.2022 - 05:39:19",
+        description: (
+          <>
+            {t("act-processing-time-expires")}{" "}
+            <span className="font-semibold">BH 2240106381566</span>
+          </>
+        ),
+      },
+      {
+        id: "4",
+        datetime: "18.11.2022 - 05:39:19",
+        description: (
+          <>
+            {t("act-processing-time-expires")}{" "}
+            <span className="font-semibold">BH 2240106381566</span>
+          </>
+        ),
+      },
+    ],
+    [t],
+  );
 
   return (
     <>

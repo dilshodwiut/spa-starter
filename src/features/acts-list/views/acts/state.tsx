@@ -5,10 +5,9 @@ import { useTranslation } from "react-i18next";
 import { isInt } from "radash";
 import { useDebounce } from "usehooks-ts";
 import { compareAsc, lightFormat } from "date-fns";
-import { t as T } from "@/utils/i18n";
 import formatDate from "@/helpers/formatDate";
 import formatAmount from "@/helpers/formatAmount";
-import showTotal from "@/helpers/showTotal";
+import ShowTotal from "@/components/show-total";
 import { Layout, Tag, message, theme } from "antd";
 import type { SegmentedProps } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
@@ -23,107 +22,6 @@ import type {
   FormFilters,
   FilterForm,
 } from "../../types";
-
-const columns: ColumnsType<ActType> = [
-  {
-    title: T("type"),
-    dataIndex: "logo",
-    render(value: string) {
-      return (
-        <img
-          src={`${import.meta.env.VITE_CDN_URL}${value}`}
-          alt="server type"
-        />
-      );
-    },
-  },
-  {
-    title: T("serial-number"),
-    dataIndex: "act_series",
-    render(value, record) {
-      if (typeof value === "string") {
-        return `${value} ${record.act_number}`;
-      }
-      return "";
-    },
-    sorter: (a, b) => {
-      const aWhole = `${a.act_series} ${a.act_number}`;
-      const bWhole = `${b.act_series} ${b.act_number}`;
-      return aWhole.localeCompare(bWhole);
-    },
-  },
-  {
-    title: T("reg-date"),
-    dataIndex: "act_date",
-    render(value: string) {
-      return formatDate(value);
-    },
-    sorter: (a, b) => compareAsc(new Date(a.act_date), new Date(b.act_date)),
-  },
-  {
-    title: T("region, district"),
-    dataIndex: "address",
-  },
-
-  {
-    title: T("type"),
-    dataIndex: "is_juridic",
-    sorter: (a, b) => +a.is_juridic - +b.is_juridic,
-    render(isJuridic: boolean) {
-      if (isJuridic) {
-        return T("legal_entity");
-      }
-      return T("individual");
-    },
-  },
-  {
-    title: T("violation"),
-    dataIndex: "violation_type",
-  },
-  {
-    title: T("amount (som)"),
-    dataIndex: "total_sum",
-    sorter: (a, b) => a.total_sum - b.total_sum,
-    render(sum: number) {
-      return formatAmount(sum);
-    },
-  },
-
-  {
-    title: T("type"),
-    dataIndex: "violation_type",
-    sorter: (a, b) => {
-      if (a.violation_type !== null && b.violation_type !== null) {
-        return 1;
-      }
-
-      return 0;
-    },
-    render: (value: ViolationType | null) =>
-      value !== null ? (
-        <Tag
-          bordered={false}
-          color={getColor(value)}
-          className="p-1 w-full text-center"
-        >
-          {T(value ?? "")}
-        </Tag>
-      ) : null,
-  },
-  {
-    title: T("status"),
-    dataIndex: "status",
-    render: (value: ActStatus) => (
-      <Tag
-        bordered={false}
-        color={getColor(value)}
-        className="p-1 w-full text-center"
-      >
-        {isInt(value) ? `${value} days` : T(value)}
-      </Tag>
-    ),
-  },
-];
 
 const { Header, Content } = Layout;
 
@@ -340,12 +238,119 @@ export default function useActsState(): ActsState {
     defaultPageSize: 20,
     total: data?.count,
     showSizeChanger: true,
-    showTotal,
+    showTotal(total: number, range: [number, number]) {
+      return <ShowTotal total={total} range={range} />;
+    },
     onShowSizeChange(current: number, size: number): void {
       console.log(current, size);
     },
     locale: { items_per_page: "" },
   };
+
+  const columns: ColumnsType<ActType> = useMemo(
+    () => [
+      {
+        title: t("type"),
+        dataIndex: "logo",
+        render(value: string) {
+          return (
+            <img
+              src={`${import.meta.env.VITE_CDN_URL}${value}`}
+              alt="server type"
+            />
+          );
+        },
+      },
+      {
+        title: t("serial-number"),
+        dataIndex: "act_series",
+        render(value, record) {
+          if (typeof value === "string") {
+            return `${value} ${record.act_number}`;
+          }
+          return "";
+        },
+        sorter: (a, b) => {
+          const aWhole = `${a.act_series} ${a.act_number}`;
+          const bWhole = `${b.act_series} ${b.act_number}`;
+          return aWhole.localeCompare(bWhole);
+        },
+      },
+      {
+        title: t("reg-date"),
+        dataIndex: "act_date",
+        render(value: string) {
+          return formatDate(value);
+        },
+        sorter: (a, b) =>
+          compareAsc(new Date(a.act_date), new Date(b.act_date)),
+      },
+      {
+        title: t("region, district"),
+        dataIndex: "address",
+      },
+
+      {
+        title: t("type"),
+        dataIndex: "is_juridic",
+        sorter: (a, b) => +a.is_juridic - +b.is_juridic,
+        render(isJuridic: boolean) {
+          if (isJuridic) {
+            return t("legal_entity");
+          }
+          return t("individual");
+        },
+      },
+      {
+        title: t("violation"),
+        dataIndex: "violation_type",
+      },
+      {
+        title: t("amount (som)"),
+        dataIndex: "total_sum",
+        sorter: (a, b) => a.total_sum - b.total_sum,
+        render(sum: number) {
+          return formatAmount(sum);
+        },
+      },
+
+      {
+        title: t("type"),
+        dataIndex: "violation_type",
+        sorter: (a, b) => {
+          if (a.violation_type !== null && b.violation_type !== null) {
+            return 1;
+          }
+
+          return 0;
+        },
+        render: (value: ViolationType | null) =>
+          value !== null ? (
+            <Tag
+              bordered={false}
+              color={getColor(value)}
+              className="p-1 w-full text-center"
+            >
+              {t(value ?? "")}
+            </Tag>
+          ) : null,
+      },
+      {
+        title: t("status"),
+        dataIndex: "status",
+        render: (value: ActStatus) => (
+          <Tag
+            bordered={false}
+            color={getColor(value)}
+            className="p-1 w-full text-center"
+          >
+            {isInt(value) ? `${value} days` : t(value)}
+          </Tag>
+        ),
+      },
+    ],
+    [t],
+  );
 
   useEffect(() => {
     if (error !== null) {

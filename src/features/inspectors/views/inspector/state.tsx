@@ -4,8 +4,8 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { clone } from "ramda";
 import { Layout, Form, Input, theme, message } from "antd";
-import type { FormValues, InspectorState } from "../types";
-import { createInspector, getInspector, updateInspector } from "../api";
+import type { FormValues, InspectorState } from "../../types";
+import { createInspector, getInspector, updateInspector } from "../../api";
 
 const { Header, Content } = Layout;
 

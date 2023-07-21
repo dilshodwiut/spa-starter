@@ -1,8 +1,8 @@
 import { Table, Input, Button, Space, Pagination, ConfigProvider } from "antd";
 import TableEmpty from "@/components/table-empty";
 import SearchIcon from "@/assets/search-normal.svg";
-import AddIcon from "../components/add-icon";
-import useInspectorsState from "./inspectors.state";
+import AddIcon from "../../components/add-icon";
+import useInspectorsState from "./state";
 
 export default function Inspectors(): React.ReactElement {
   const {

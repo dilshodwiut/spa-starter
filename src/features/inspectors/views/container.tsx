@@ -1,16 +1,21 @@
+import { Outlet } from "react-router-dom";
 import useMatchEither from "@/hooks/useMatchEither";
-import Inspector from "./inspector";
-import Inspectors from "./inspectors";
 
-export default function Container(): React.ReactElement {
+interface Props {
+  of: React.ReactElement;
+}
+
+export default function Container(props: Props): React.ReactElement {
+  const { of } = props;
+
   const match = useMatchEither([
     "/inspectors/create-inspector",
     "/inspectors/:inspectorId",
   ]);
 
   if (match) {
-    return <Inspector />;
+    return <Outlet />;
   }
 
-  return <Inspectors />;
+  return of;
 }

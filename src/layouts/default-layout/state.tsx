@@ -2,14 +2,15 @@ import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { compose, split, tail, take } from "ramda";
 import { Layout, Typography } from "antd";
-import { colors } from "@/config/theme";
 import { useTranslation } from "react-i18next";
+import { colors } from "@/config/theme";
+import settings from "@/config/settings";
 import clsx from "clsx";
 import ruIcon from "@/assets/RU.svg";
 import uzIcon from "@/assets/UZ.png";
 import type { ThemeConfig, MenuProps, SiderProps } from "antd";
-import type { CustomRoute } from "@/types";
 import type { ItemType } from "antd/es/menu/hooks/useItems";
+import type { AppLang, CustomRoute } from "@/types";
 
 const { Sider } = Layout;
 const { Text } = Typography;
@@ -37,7 +38,8 @@ interface DefaultLayoutState {
     label: JSX.Element;
   }>;
   siderProps: SiderProps;
-  handleLanguageChange: (value: string) => void;
+  defaultLanguage: AppLang;
+  handleLanguageChange: (value: AppLang) => void;
   onToggleSider: () => void;
 }
 
@@ -50,7 +52,7 @@ export default function useDefaultLayoutState(
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
 
-  const handleLanguageChange = (value: string): void => {
+  const handleLanguageChange = (value: AppLang): void => {
     void i18n.changeLanguage(value);
   };
 
@@ -72,7 +74,7 @@ export default function useDefaultLayoutState(
               collapsed ? "-ml-1" : "",
             )}
           >
-            {typeof Icon === "function" ? <Icon /> : null}
+            {typeof Icon !== "undefined" && Icon !== null ? <Icon /> : null}
             {collapsed ? "" : t(title ?? "")}
           </span>
         ),
@@ -131,6 +133,9 @@ export default function useDefaultLayoutState(
     theme: "light",
   };
 
+  const defaultLanguage = (localStorage.getItem("i18nextLng") ??
+    settings.defaultLanguage) as AppLang;
+
   return {
     Sider,
     Text,
@@ -140,6 +145,7 @@ export default function useDefaultLayoutState(
     items,
     languageOptions,
     siderProps,
+    defaultLanguage,
     handleLanguageChange,
     onToggleSider,
   };

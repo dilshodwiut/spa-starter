@@ -5,9 +5,13 @@ import type {
 } from "react-router-dom";
 import type { CustomIconComponentProps } from "@ant-design/icons/lib/components/Icon";
 
+type AppLang = "ru" | "uzLatin" | "uzCryllic";
+
 interface RouteExtensions {
   title?: string;
-  Icon?: (props: Partial<CustomIconComponentProps>) => JSX.Element;
+  Icon?: (
+    props: Partial<CustomIconComponentProps>,
+  ) => React.ReactElement | null;
 }
 
 interface CustomNonIndexRouteObject extends NonIndexRouteObject {
@@ -56,4 +60,5 @@ export type {
   BaseEntity,
   BaseParams,
   ListResponse,
+  AppLang,
 };

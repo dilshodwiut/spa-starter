@@ -16,7 +16,7 @@ export async function login(data: {
 }
 
 export async function refreshToken(data: {
-  refresh_token: string;
+  refresh: string;
 }): Promise<AxiosResponse<AuthResponse>> {
   const res = await request({
     url: "/account/me/refresh/",

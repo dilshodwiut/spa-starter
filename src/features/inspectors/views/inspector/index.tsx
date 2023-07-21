@@ -2,7 +2,7 @@ import { Button, Col, DatePicker, Result, Row, Select } from "antd";
 import CustomModal from "@/components/modal";
 import backIcon from "@/assets/arrow-left.svg";
 import tickIcon from "@/assets/tick-square.svg";
-import useInspectorState from "./inspector.state";
+import useInspectorState from "./state";
 
 export default function Inspector(): React.ReactElement {
   const {
