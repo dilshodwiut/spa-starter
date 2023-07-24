@@ -51,14 +51,7 @@ export default function Acts(): React.ReactElement {
   } = useActsState();
 
   return (
-    <ConfigProvider
-      renderEmpty={() => (
-        <TableEmpty
-          title={t("act-list-empty")}
-          description={t("act-list-empty-info")}
-        />
-      )}
-    >
+    <>
       {contextHolder}
       <Header
         style={{ background: colorBgContainer }}
@@ -96,125 +89,139 @@ export default function Acts(): React.ReactElement {
           </Button>
         </Space>
       </Header>
-      <Content
-        className="p-8"
-        style={{
-          overflow: "initial",
-          background: colorBgContainer,
-        }}
+
+      <ConfigProvider
+        renderEmpty={() => (
+          <TableEmpty
+            title={t("act-list-empty")}
+            description={t("act-list-empty-info")}
+          />
+        )}
       >
-        <Table
-          loading={isLoading || isPreviousData || isPlaceholderData}
-          onRow={onTableRow}
-          rowKey={(record) => record.id}
-          columns={columns}
-          dataSource={data?.results}
-          onChange={onPageChange}
-          pagination={paginationProps}
-          rowClassName="cursor-pointer"
-        />
-        {data?.count === 0 ? (
-          <>
-            <br />
-            <Pagination className="text-right" {...paginationProps} />
-          </>
-        ) : null}
-
-        <Drawer
-          title={t("filter")}
-          placement="right"
-          open={isDrawerOpen}
-          onClose={closeDrawer}
-          closeIcon={null}
-          extra={
-            <Button
-              icon={<CloseOutlined />}
-              style={{ color: "black" }}
-              className="bg-[#8498B41A] text-black border-none"
-              onClick={onDrawerClose}
-            >
-              {t("close")}
-            </Button>
-          }
+        <Content
+          className="p-8"
+          style={{
+            overflow: "initial",
+            background: colorBgContainer,
+          }}
         >
-          <Form
-            name="filter"
-            layout="vertical"
-            onFinish={onFiltersApply}
-            initialValues={{ doc_type: [], violation_date: null }}
+          <Table
+            loading={isLoading || isPreviousData || isPlaceholderData}
+            onRow={onTableRow}
+            rowKey={(record) => record.id}
+            columns={columns}
+            dataSource={data?.results}
+            onChange={onPageChange}
+            pagination={paginationProps}
+            rowClassName="cursor-pointer"
+            locale={{
+              triggerDesc: t("sort_descending") ?? "",
+              triggerAsc: t("sort_ascending") ?? "",
+              cancelSort: t("sort_cancel") ?? "",
+            }}
+          />
+          {data?.count === 0 ? (
+            <>
+              <br />
+              <Pagination className="text-right" {...paginationProps} />
+            </>
+          ) : null}
+        </Content>
+      </ConfigProvider>
+      <Drawer
+        title={t("filter")}
+        placement="right"
+        open={isDrawerOpen}
+        onClose={closeDrawer}
+        closeIcon={null}
+        extra={
+          <Button
+            icon={<CloseOutlined />}
+            style={{ color: "black" }}
+            className="bg-[#8498B41A] text-black border-none"
+            onClick={onDrawerClose}
           >
-            <Form.Item name="doc_type" label={t("doc-type")}>
-              <Checkbox.Group options={docs} />
-            </Form.Item>
+            {t("close")}
+          </Button>
+        }
+      >
+        <Form
+          name="filter"
+          layout="vertical"
+          onFinish={onFiltersApply}
+          initialValues={{ doc_type: [], violation_date: null }}
+        >
+          <Form.Item name="doc_type" label={t("doc-type")}>
+            <Checkbox.Group options={docs} />
+          </Form.Item>
 
-            <Form.Item name="violation_date" label={t("violation-date")}>
-              <DatePicker
-                className="w-full"
-                size="large"
-                placeholder={t("select-date") ?? ""}
-              />
-            </Form.Item>
+          <Form.Item name="violation_date" label={t("violation-date")}>
+            <DatePicker
+              className="w-full"
+              size="large"
+              placeholder={t("select-date") ?? ""}
+            />
+          </Form.Item>
 
-            <Form.Item name="region" label={t("region")}>
+          <Form.Item name="region" label={t("region")}>
+            <Select
+              placeholder={t("choose-from-list")}
+              className="w-full"
+              size="large"
+              onChange={handleRegionChange}
+              options={regions}
+              allowClear
+            />
+          </Form.Item>
+
+          {typeof selectedRegion !== "undefined" && (
+            <Form.Item name="district" label={t("district")}>
               <Select
                 placeholder={t("choose-from-list")}
                 className="w-full"
                 size="large"
-                onChange={handleRegionChange}
-                options={regions}
+                options={districts}
                 allowClear
               />
             </Form.Item>
+          )}
 
-            {typeof selectedRegion !== "undefined" && (
-              <Form.Item name="district" label={t("district")}>
-                <Select
-                  placeholder={t("choose-from-list")}
-                  className="w-full"
-                  size="large"
-                  options={districts}
-                  allowClear
-                />
-              </Form.Item>
-            )}
+          <Form.Item
+            name="infringement_article"
+            label={t("infringement-article")}
+          >
+            <Select
+              placeholder={t("choose-from-list")}
+              className="w-full"
+              size="large"
+              options={articles}
+              allowClear
+            />
+          </Form.Item>
 
-            <Form.Item
-              name="infringement_article"
-              label={t("infringement-article")}
+          <Form.Item name="violation_type" label={t("offender-type")}>
+            <Select
+              id="sdf"
+              placeholder={t("choose-from-list")}
+              className="w-full"
+              size="large"
+              options={violationTypes}
+              allowClear
+            />
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              icon={<FilterIcon />}
+              type="primary"
+              htmlType="submit"
+              className="flex justify-center items-center bg-[#40916c] text-white w-full h-10 rounded-xl"
             >
-              <Select
-                placeholder={t("choose-from-list")}
-                className="w-full"
-                size="large"
-                options={articles}
-                allowClear
-              />
-            </Form.Item>
-
-            <Form.Item name="violation_type" label={t("offender-type")}>
-              <Select
-                id="sdf"
-                placeholder={t("choose-from-list")}
-                className="w-full"
-                size="large"
-                options={violationTypes}
-                allowClear
-              />
-            </Form.Item>
-
-            <Form.Item>
-              <Button
-                icon={<FilterIcon />}
-                type="primary"
-                htmlType="submit"
-                className="flex justify-center items-center bg-[#40916c] text-white w-full h-10 rounded-xl"
-              >
-                {t("apply")}
-              </Button>
-            </Form.Item>
-          </Form>
-        </Drawer>
-      </Content>
-    </ConfigProvider>
+              {t("apply")}
+            </Button>
+          </Form.Item>
+        </Form>
+      </Drawer>
+    </>
   );
 }

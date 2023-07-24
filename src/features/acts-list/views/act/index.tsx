@@ -40,8 +40,6 @@ export default function Act(): React.ReactElement {
     t,
   } = useActState();
 
-  console.log("single act data: ", data);
-
   return (
     <>
       {contextHolder}

@@ -1,4 +1,8 @@
 {
+  "sort_ascending": "O'sish bo'yicha saralash uchun bosing",
+  "sort_descending": "Kamayish bo'yicha saralash uchun bosing",
+  "sort_cancel": "Saralashni bekor qilish uchun bosing",
+
   "welcome": "Xush kelibsiz",
   "welcome-info": "Kirish va boshlash uchun foydalanuvchi nomingiz va parolingizni kiriting",
   "login": "Kirish",
