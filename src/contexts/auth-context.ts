@@ -1,14 +1,15 @@
 import { createContext, useContext } from "react";
 import type { Dispatch, SetStateAction } from "react";
+import type { UserWithAuth } from "@/types";
 
 interface AuthContext {
-  isAuth: boolean;
-  setIsAuth: Dispatch<SetStateAction<boolean>>;
+  user: UserWithAuth;
+  setUser: Dispatch<SetStateAction<UserWithAuth>>;
 }
 
 const authContext = createContext<AuthContext>({
-  isAuth: false,
-  setIsAuth: () => {
+  user: { isAuth: false, first_name: "", last_name: "", middle_name: "" },
+  setUser: () => {
     //
   },
 });

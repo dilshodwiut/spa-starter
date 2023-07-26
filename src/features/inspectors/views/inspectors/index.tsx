@@ -18,6 +18,7 @@ export default function Inspectors(): React.ReactElement {
     contextHolder,
     onPageChange,
     onAddClick,
+    onSearchChange,
     t,
   } = useInspectorsState();
 
@@ -42,6 +43,7 @@ export default function Inspectors(): React.ReactElement {
             size="large"
             placeholder={t("search-by-fullname") ?? ""}
             suffix={<img src={SearchIcon} alt="search" />}
+            onChange={onSearchChange}
           />
 
           <Button

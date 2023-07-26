@@ -50,7 +50,6 @@ export default function Inspector(): React.ReactElement {
         <Form
           name="create-inspector-form"
           layout="vertical"
-          // initialValues={initialValues}
           onFinish={submitHandler}
           autoComplete="off"
           form={form}
@@ -70,22 +69,22 @@ export default function Inspector(): React.ReactElement {
                   },
                 ]}
               >
-                <Input size="large" />
+                <Input size="large" placeholder={t("last-name") ?? ""} />
               </Form.Item>
               <Form.Item label={t("passport")} name="passport_series">
-                <Input size="large" />
+                <Input size="large" placeholder={t("passport") ?? ""} />
               </Form.Item>
               <Form.Item label={t("phone")} name="phone">
-                <Input size="large" />
+                <Input size="large" placeholder={t("phone") ?? ""} />
               </Form.Item>
               <Form.Item label={t("organization")} name="organization">
-                <Input size="large" />
+                <Input size="large" placeholder={t("organization") ?? ""} />
               </Form.Item>
               <Form.Item label={t("region")} name="region">
-                <Select size="large" />
+                <Select size="large" placeholder={t("region") ?? ""} />
               </Form.Item>
               <Form.Item label={t("login")} name="username">
-                <Input size="large" />
+                <Input size="large" placeholder={t("login") ?? ""} />
               </Form.Item>
             </Col>
 
@@ -103,26 +102,29 @@ export default function Inspector(): React.ReactElement {
                   },
                 ]}
               >
-                <Input size="large" />
+                <Input size="large" placeholder={t("first-name") ?? ""} />
               </Form.Item>
               <Form.Item label={t("pinfl")} name="pinfl">
-                <Input size="large" />
+                <Input size="large" placeholder={t("pinfl") ?? ""} />
               </Form.Item>
               <Form.Item label={t("city-phone")} name="city_phone">
-                <Input size="large" />
+                <Input size="large" placeholder={t("city-phone") ?? ""} />
               </Form.Item>
               <Form.Item
                 label={t("organization-division")}
                 name="organization_divison"
               >
-                <Input size="large" />
+                <Input
+                  size="large"
+                  placeholder={t("organization-division") ?? ""}
+                />
               </Form.Item>
               <Form.Item label={t("district")} name="district">
-                <Select size="large" />
+                <Select size="large" placeholder={t("district") ?? ""} />
               </Form.Item>
               <Form.Item label={t("password")} name="password">
                 <Input.Password
-                  placeholder="Password"
+                  placeholder={t("password") ?? ""}
                   className="h-12 rounded-xl"
                 />
               </Form.Item>
@@ -142,7 +144,7 @@ export default function Inspector(): React.ReactElement {
                   },
                 ]}
               >
-                <Input size="large" />
+                <Input size="large" placeholder={t("patronymic") ?? ""} />
               </Form.Item>
               <Form.Item label={t("dob")} name="birth_date">
                 <DatePicker
@@ -152,10 +154,13 @@ export default function Inspector(): React.ReactElement {
                 />
               </Form.Item>
               <Form.Item label={t("residence-address")} name="address">
-                <Input size="large" />
+                <Input
+                  size="large"
+                  placeholder={t("residence-address") ?? ""}
+                />
               </Form.Item>
               <Form.Item label={t("job-title")} name="position">
-                <Input size="large" />
+                <Input size="large" placeholder={t("job-title") ?? ""} />
               </Form.Item>
             </Col>
           </Row>
@@ -163,7 +168,7 @@ export default function Inspector(): React.ReactElement {
           <div className="absolute bottom-6 right-6">
             <div className="flex gap-6">
               <Button
-                type="default"
+                type="ghost"
                 className="bg-gray-200 text-[#8498B4] font-medium text-[18px] h-14"
                 onClick={goBack}
               >
@@ -171,7 +176,7 @@ export default function Inspector(): React.ReactElement {
               </Button>
 
               <Button
-                type="primary"
+                type="ghost"
                 htmlType="submit"
                 className="bg-green-200 text-black font-medium text-[18px] h-14"
                 loading={isLoading}

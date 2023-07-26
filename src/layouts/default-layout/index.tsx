@@ -32,11 +32,12 @@ export default function DefaultLayout(props: Props): React.ReactElement {
     Text,
     theme,
     collapsed,
-    defaultMenuItemKeys,
+    menuKeys,
     items,
     languageOptions,
     siderProps,
     defaultLanguage,
+    user,
     handleLanguageChange,
     onToggleSider,
   } = useDefaultLayoutState(sidebarRoutes);
@@ -106,7 +107,7 @@ export default function DefaultLayout(props: Props): React.ReactElement {
           <ConfigProvider theme={theme}>
             <Menu
               mode="inline"
-              defaultSelectedKeys={defaultMenuItemKeys}
+              selectedKeys={menuKeys}
               items={items}
               style={{ borderRightWidth: 0 }}
               className="flex-grow px-2 bg-[#fafbfc]"
@@ -189,7 +190,7 @@ export default function DefaultLayout(props: Props): React.ReactElement {
               <div className="flex justify-between items-center bg-white rounded-xl p-[11px] border border-[#f5f5f5]">
                 <div className="flex flex-col">
                   <span className="font-medium text-[15px]">
-                    Davron Kulikov
+                    {`${user.first_name} ${user.last_name} ${user.middle_name}`}
                   </span>
                   <span className="text-[12px] text-[#8498B4]">
                     {t("inspector")}

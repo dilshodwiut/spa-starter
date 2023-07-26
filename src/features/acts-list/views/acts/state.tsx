@@ -8,11 +8,17 @@ import { compareAsc, lightFormat } from "date-fns";
 import formatDate from "@/helpers/formatDate";
 import formatAmount from "@/helpers/formatAmount";
 import ShowTotal from "@/components/show-total";
-import { Layout, Tag, message, theme } from "antd";
+import { Layout, Tag, Form, message, theme } from "antd";
 import type { SegmentedProps } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
 import getColor from "../../helpers/getColor";
-import { getAllActs, getArticles, getDocTypes, getRegions } from "../../api";
+import {
+  getAllActs,
+  getArticles,
+  getDocTypes,
+  getRegions,
+  getViolationTypes,
+} from "../../api";
 import type {
   ActStatus,
   ActsState,
@@ -29,6 +35,7 @@ export default function useActsState(): ActsState {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [messageApi, contextHolder] = message.useMessage();
+  const form = Form.useForm()[0];
 
   const [{ page, pageSize }, setPagination] = useState<{
     page: number;
@@ -40,7 +47,7 @@ export default function useActsState(): ActsState {
   const [search, setSearch] = useState<string>("");
   const [selectedRegion, setSelectedRegion] = useState<number>();
   const [filters, setFilters] = useState<FormFilters>({
-    doc_type_id: null,
+    doc_type_id: [],
     date: null,
     region_id: null,
     district_id: null,
@@ -134,9 +141,9 @@ export default function useActsState(): ActsState {
   docs ??= [];
 
   const { data: violationsData } = useQuery({
-    queryKey: ["violation-docs"],
+    queryKey: ["violation-types"],
     queryFn: async () => {
-      const res = await getDocTypes({});
+      const res = await getViolationTypes({});
       return res;
     },
     placeholderData: { count: 0, next: null, previous: null, results: [] },
@@ -166,6 +173,7 @@ export default function useActsState(): ActsState {
 
   const handleRegionChange = (value: number): void => {
     setSelectedRegion(value);
+    form.setFieldValue("district", undefined);
   };
 
   const onSegmentChange = (val: SegmentedProps["value"]): void => {
@@ -196,10 +204,8 @@ export default function useActsState(): ActsState {
   };
 
   const onFiltersApply = (values: FilterForm): void => {
-    console.log(values);
-
     const draft: FormFilters = {
-      doc_type_id: null,
+      doc_type_id: [],
       date: null,
       region_id: null,
       district_id: null,
@@ -380,6 +386,7 @@ export default function useActsState(): ActsState {
     violationTypes,
     selectedRegion,
     contextHolder,
+    form,
     showDrawer,
     closeDrawer,
     handleRegionChange,

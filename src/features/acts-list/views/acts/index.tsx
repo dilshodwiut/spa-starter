@@ -9,7 +9,6 @@ import {
   Form,
   Select,
   DatePicker,
-  Checkbox,
   ConfigProvider,
 } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
@@ -38,6 +37,7 @@ export default function Acts(): React.ReactElement {
     violationTypes,
     selectedRegion,
     contextHolder,
+    form,
     showDrawer,
     closeDrawer,
     handleRegionChange,
@@ -148,11 +148,19 @@ export default function Acts(): React.ReactElement {
         <Form
           name="filter"
           layout="vertical"
+          form={form}
           onFinish={onFiltersApply}
           initialValues={{ doc_type: [], violation_date: null }}
         >
           <Form.Item name="doc_type" label={t("doc-type")}>
-            <Checkbox.Group options={docs} />
+            <Select
+              placeholder={t("choose-from-list")}
+              className="w-full"
+              size="large"
+              mode="multiple"
+              options={docs}
+              allowClear
+            />
           </Form.Item>
 
           <Form.Item name="violation_date" label={t("violation-date")}>

@@ -53,6 +53,14 @@ interface ListResponse<T> {
   results: T;
 }
 
+interface User {
+  first_name: string;
+  last_name: string;
+  middle_name: string;
+}
+
+type UserWithAuth = User & { isAuth: boolean };
+
 export type {
   CustomRoute,
   Region,
@@ -61,4 +69,6 @@ export type {
   BaseParams,
   ListResponse,
   AppLang,
+  User,
+  UserWithAuth,
 };

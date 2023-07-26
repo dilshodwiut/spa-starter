@@ -1,7 +1,8 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
+import { useDebounce } from "usehooks-ts";
 import { Button, Layout, theme, message } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
 import type { InspectorsState, InspectorType } from "../../types";
@@ -9,24 +10,27 @@ import { getAllInspectors } from "../../api";
 
 const { Header, Content } = Layout;
 
-const onPageChange: TableProps<InspectorType>["onChange"] = (
-  pagination,
-  filters,
-  sorter,
-  extra,
-) => {
-  console.log("params", pagination, filters, sorter, extra);
-};
-
 export default function useInspectorsState(): InspectorsState {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
+  const [{ page, pageSize }, setPagination] = useState<{
+    page: number;
+    pageSize: number;
+  }>({ page: 1, pageSize: 20 });
+  const [search, setSearch] = useState<string>("");
+
+  const debouncedSearch = useDebounce<string>(search);
+
   const { data, isLoading, isPreviousData, isPlaceholderData, error } =
     useQuery({
-      queryKey: ["inspectors"],
+      queryKey: ["inspectors", { page, pageSize, debouncedSearch }],
       queryFn: async () => {
-        const res = await getAllInspectors();
+        const res = await getAllInspectors({
+          page,
+          page_size: pageSize,
+          search: debouncedSearch,
+        });
         return res;
       },
       keepPreviousData: true,
@@ -41,6 +45,23 @@ export default function useInspectorsState(): InspectorsState {
 
   const onAddClick = (): void => {
     navigate("create-inspector");
+  };
+
+  const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setSearch(e.target.value);
+  };
+
+  const onPageChange: TableProps<InspectorType>["onChange"] = (
+    pagination,
+    _filters,
+    sorter,
+    extra,
+  ) => {
+    setPagination({
+      page: pagination.current ?? 1,
+      pageSize: pagination.pageSize ?? 20,
+    });
+    console.log("params", pagination, _filters, sorter, extra);
   };
 
   const paginationProps = {
@@ -138,6 +159,7 @@ export default function useInspectorsState(): InspectorsState {
     contextHolder,
     onPageChange,
     onAddClick,
+    onSearchChange,
     t,
   };
 }

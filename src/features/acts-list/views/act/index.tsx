@@ -1,4 +1,5 @@
-import { Button, Select, Space, Tag, Row, Col, Divider, Upload } from "antd";
+import ReactPlayer from "react-player";
+import { Button, Select, Tag, Row, Col, Divider, Upload, Carousel } from "antd";
 import {
   CheckCircleFilled,
   CloseCircleFilled,
@@ -14,7 +15,6 @@ import img3 from "@/assets/img_3.png";
 import backIcon from "@/assets/arrow-left.svg";
 import violatorImg from "@/assets/portrait.png";
 import CustomCard from "../../components/custom-card";
-import SettingsIcon from "../../components/settings-icon";
 import ActionBox from "../../components/action-box";
 import Info from "../../components/info";
 import SendIcon from "../../components/send-icon";
@@ -31,12 +31,17 @@ export default function Act(): React.ReactElement {
     actId,
     uploadProps,
     isModalOpen,
+    isCarouselModalOpen,
     data,
+    carouselRef,
     handleOk,
     handleCancel,
+    handleCarouselModalCancel,
+    showCarouselModal,
     showModal,
     doSomeAction,
     goBack,
+    onImgClick,
     t,
   } = useActState();
 
@@ -83,7 +88,12 @@ export default function Act(): React.ReactElement {
 
           <div className="flex items-center gap-4">
             <Upload {...uploadProps}>
-              <Button icon={<SendIcon />}>{t("upload-file")}</Button>
+              <Button
+                icon={<SendIcon />}
+                className="flex items-center text-[#8498B4]"
+              >
+                {t("upload-file")}
+              </Button>
             </Upload>
 
             <div className="flex flex-col text-xs text-[#8498B4]">
@@ -94,50 +104,75 @@ export default function Act(): React.ReactElement {
         </Info>
       </CustomModal>
 
+      <CustomModal
+        title={<Title level={4}>{t("pictures")}</Title>}
+        open={isCarouselModalOpen}
+        footer={null}
+        onCancel={handleCarouselModalCancel}
+      >
+        <Carousel ref={carouselRef}>
+          <div className="m-0 h-80 text-white text-center leading-[160px]">
+            <img
+              src={img1}
+              alt="img 1"
+              className="w-full h-full cursor-pointer"
+              onClick={() => {
+                showCarouselModal();
+              }}
+              aria-hidden
+            />
+          </div>
+          <div className="m-0 h-80 text-white text-center leading-[160px]">
+            <img
+              src={img2}
+              alt="img 2"
+              className="w-full cursor-pointer"
+              onClick={() => {
+                showCarouselModal();
+              }}
+              aria-hidden
+            />
+          </div>
+          <div className="m-0 h-80 text-white text-center leading-[160px]">
+            <img
+              src={img3}
+              alt="img 3"
+              className="w-full cursor-pointer"
+              onClick={() => {
+                showCarouselModal();
+              }}
+              aria-hidden
+            />
+          </div>
+          <div className="m-0 h-80 text-white text-center leading-[160px]">
+            <ReactPlayer
+              width={472}
+              url="https://www.youtube.com/watch?v=9nzPNSzzY7Q"
+            />
+          </div>
+        </Carousel>
+      </CustomModal>
+
       <Header
         style={{ background: colorBgContainer }}
-        className="px-8 pt-2 flex items-center justify-between"
+        className="px-8 pt-2 flex items-center gap-4"
       >
-        <div className="flex items-center gap-4">
-          <button type="button" onClick={goBack}>
-            <img src={backIcon} alt="back" width={24} height={24} />
-          </button>
+        <button type="button" onClick={goBack}>
+          <img src={backIcon} alt="back" width={24} height={24} />
+        </button>
 
-          <h1 className="font-semibold text-2xl">
-            {t("act-details")} BH {actId}
-          </h1>
+        <h1 className="font-semibold text-2xl">
+          {t("act-details")} BH {actId}
+        </h1>
 
-          <div className="flex items-center gap-2">
-            <Tag bordered={false} color="default" className="py-1 px-2">
-              <span style={{ color: "#62738C" }}>{t("not-processed")}</span>
-            </Tag>
-            <Tag bordered={false} color="orange" className="py-1 px-2">
-              <span>{t("edited")}</span>
-            </Tag>
-          </div>
+        <div className="flex items-center gap-2">
+          <Tag bordered={false} color="default" className="py-1 px-2">
+            <span style={{ color: "#62738C" }}>{t("not-processed")}</span>
+          </Tag>
+          <Tag bordered={false} color="orange" className="py-1 px-2">
+            <span>{t("edited")}</span>
+          </Tag>
         </div>
-
-        <Space size="large">
-          <Select
-            placeholder="Choose city"
-            defaultValue="tashkent_city"
-            className="w-64"
-            size="large"
-            onChange={(value: string) => {
-              console.log(value);
-            }}
-            options={[
-              { value: "tashkent_city", label: t("tashkent-city") },
-              { value: "fergana_city", label: t("fergana-city") },
-            ]}
-          />
-          <Button
-            className="bg-[#d8f3dc] border-none font-bold flex items-center p-6 gap-1 rounded-xl"
-            icon={<SettingsIcon className="text-[#40916c]" />}
-          >
-            {t("filter")}
-          </Button>
-        </Space>
       </Header>
 
       <Content
@@ -319,17 +354,29 @@ export default function Act(): React.ReactElement {
                     <img
                       src={img1}
                       alt="img 1"
-                      className="2xl:w-[180px] lg:w-32 sm:w-20"
+                      className="2xl:w-[180px] lg:w-32 sm:w-20 cursor-pointer"
+                      onClick={() => {
+                        onImgClick(0);
+                      }}
+                      aria-hidden
                     />
                     <img
                       src={img2}
                       alt="img 2"
-                      className="2xl:w-[180px] lg:w-32 sm:w-20"
+                      className="2xl:w-[180px] lg:w-32 sm:w-20 cursor-pointer"
+                      onClick={() => {
+                        onImgClick(1);
+                      }}
+                      aria-hidden
                     />
                     <img
                       src={img3}
                       alt="img 3"
-                      className="2xl:w-[180px] lg:w-32 sm:w-20"
+                      className="2xl:w-[180px] lg:w-32 sm:w-20 cursor-pointer"
+                      onClick={() => {
+                        onImgClick(2);
+                      }}
+                      aria-hidden
                     />
                   </div>
                 }

@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { Layout, Typography, Input, theme, message } from "antd";
-import type { UploadProps } from "antd";
+import type { UploadProps, Carousel } from "antd";
 import type { NoticeType } from "antd/es/message/interface";
 import type { ActState } from "../../types";
 import { getAct } from "../../api";
@@ -37,6 +37,10 @@ export default function useActState(): ActState {
   const [messageApi, contextHolder] = message.useMessage();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCarouselModalOpen, setIsCarouselModalOpen] =
+    useState<boolean>(false);
+
+  const carouselRef = useRef<typeof Carousel>(null);
 
   const {
     token: { colorBgContainer },
@@ -65,6 +69,19 @@ export default function useActState(): ActState {
 
   const goBack = (): void => {
     navigate(-1);
+  };
+
+  const handleCarouselModalCancel = (): void => {
+    setIsCarouselModalOpen(false);
+  };
+
+  const showCarouselModal = (): void => {
+    setIsCarouselModalOpen(true);
+  };
+
+  const onImgClick = (index: number): void => {
+    carouselRef.current?.goTo(index, true);
+    setIsCarouselModalOpen(true);
   };
 
   const doSomeAction = async (
@@ -116,12 +133,17 @@ export default function useActState(): ActState {
     actId,
     uploadProps,
     isModalOpen,
+    isCarouselModalOpen,
     data,
+    carouselRef,
     handleOk,
     handleCancel,
+    handleCarouselModalCancel,
+    showCarouselModal,
     showModal,
     doSomeAction,
     goBack,
+    onImgClick,
     t,
   };
 }

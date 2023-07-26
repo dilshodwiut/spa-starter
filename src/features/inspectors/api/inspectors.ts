@@ -3,7 +3,7 @@ import type { BaseParams, ListResponse } from "@/types";
 import type { InspectorType } from "../types";
 
 export async function getAllInspectors(
-  params: BaseParams = {},
+  params: BaseParams & { search?: string } = {},
 ): Promise<ListResponse<InspectorType[]>> {
   const result: ListResponse<InspectorType[]> = await request({
     url: "/account/users/",

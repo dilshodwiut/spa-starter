@@ -8,7 +8,7 @@ import { login } from "../api";
 
 export default function Login(): React.ReactElement {
   const navigate = useNavigate();
-  const { setIsAuth } = useAuthContext();
+  const { setUser } = useAuthContext();
   const [messageApi, contextHolder] = message.useMessage();
   const { t } = useTranslation();
 
@@ -17,7 +17,20 @@ export default function Login(): React.ReactElement {
     onSuccess: (res) => {
       localStorage.setItem("refresh_token", res.refresh);
       localStorage.setItem("access_token", res.access);
-      setIsAuth(true);
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          first_name: res.user.first_name ?? "",
+          last_name: res.user.last_name ?? "",
+          middle_name: res.user.middle_name ?? "",
+        }),
+      );
+      setUser({
+        isAuth: true,
+        first_name: res.user.first_name ?? "",
+        last_name: res.user.last_name ?? "",
+        middle_name: res.user.middle_name ?? "",
+      });
       navigate("/");
     },
     onError: (error: { data: { detail: string } }) => {

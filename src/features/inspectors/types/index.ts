@@ -1,3 +1,4 @@
+import type { ChangeEventHandler } from "react";
 import type { Layout, Form, Input, FormInstance } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
 import type { TFunction } from "i18next";
@@ -16,6 +17,7 @@ interface InspectorsState {
   contextHolder: React.ReactElement;
   onPageChange: TableProps<InspectorType>["onChange"];
   onAddClick: () => void;
+  onSearchChange: ChangeEventHandler<HTMLInputElement>;
   t: TFunction;
 }
 

@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { useEventListener } from "usehooks-ts";
-import { Tag } from "antd";
+import { Button, Tag } from "antd";
 import type { ActionBoxIconPlaceholder, ActionBoxProps } from "../types";
 
 const colorMap = {
@@ -38,23 +38,25 @@ export default function ActionBox(props: ActionBoxProps): React.ReactElement {
   }
 
   return (
-    <div
+    <Button
+      type="ghost"
       className={clsx(
-        "p-4 rounded-xl flex items-center justify-between",
+        "h-16 rounded-xl flex items-center justify-between gap-2",
         className,
       )}
       style={{ background: colorMap[color][0] }}
+      onClick={onDispatchAction}
     >
-      <span className="flex items-center gap-2">
+      <div className="flex items-center gap-2">
         {icon.left}
         {children}
-      </span>
+      </div>
 
-      <span className="flex items-center gap-2">
+      <div className="flex items-center gap-2">
         <Tag className="bg-[#fafbfc] text-[#62738C]">{actionKey}</Tag>
         {icon.right}
-      </span>
-    </div>
+      </div>
+    </Button>
   );
 }
 

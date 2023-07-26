@@ -9,9 +9,10 @@ import type {
   SegmentedProps,
   SelectProps,
   FormProps,
+  FormInstance,
+  Carousel,
 } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
-import type { AbstractCheckboxGroupProps } from "antd/es/checkbox/Group";
 import type { NoticeType } from "antd/es/message/interface";
 import type { TFunction } from "i18next";
 
@@ -67,12 +68,17 @@ interface ActState {
   actId: string | undefined;
   uploadProps: UploadProps;
   isModalOpen: boolean;
+  isCarouselModalOpen: boolean;
   data: ActType | undefined;
+  carouselRef: React.RefObject<typeof Carousel>;
   handleOk: () => void;
   handleCancel: () => void;
+  handleCarouselModalCancel: () => void;
+  showCarouselModal: () => void;
   showModal: () => void;
   doSomeAction: (successMessage: string, type: NoticeType) => Promise<void>;
   goBack: () => void;
+  onImgClick: (index: number) => void;
   t: TFunction;
 }
 
@@ -178,10 +184,11 @@ interface ActsState {
   regions: SelectProps["options"];
   districts: SelectProps["options"];
   articles: SelectProps["options"];
-  docs: AbstractCheckboxGroupProps["options"];
+  docs: SelectProps["options"];
   violationTypes: SelectProps["options"];
   selectedRegion: number | undefined;
   contextHolder: React.ReactElement;
+  form: FormInstance;
   showDrawer: () => void;
   closeDrawer: () => void;
   onDrawerClose: () => void;

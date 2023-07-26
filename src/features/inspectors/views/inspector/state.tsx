@@ -76,8 +76,6 @@ export default function useInspectorState(): InspectorState {
     form.setFieldsValue(initialValues);
   }, [data, form]);
 
-  console.log(data);
-
   return {
     Header,
     Content,

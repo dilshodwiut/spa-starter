@@ -12,11 +12,11 @@ interface Props {
 export default function Root(props: Props): React.ReactElement {
   const { getRoutes } = props;
 
-  const { isAuth } = useAuthContext();
+  const { user } = useAuthContext();
 
   const routes = getRoutes();
 
-  if (!isAuth) {
+  if (!user.isAuth) {
     return <Navigate to="/auth/login" replace />;
   }
 

@@ -3,9 +3,9 @@ import { useAuthContext } from "@/contexts";
 
 const Auth: React.FC = function Auth() {
   const match = useMatch("/auth/login");
-  const { isAuth } = useAuthContext();
+  const { user } = useAuthContext();
 
-  if (isAuth) {
+  if (user.isAuth) {
     return <Navigate to="/" replace />;
   }
 

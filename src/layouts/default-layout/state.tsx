@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { compose, split, tail, take } from "ramda";
-import { Layout, Typography } from "antd";
 import { useTranslation } from "react-i18next";
+import { useAuthContext } from "@/contexts";
+import { Layout, Typography } from "antd";
 import { colors } from "@/config/theme";
 import settings from "@/config/settings";
 import clsx from "clsx";
@@ -10,7 +11,7 @@ import ruIcon from "@/assets/RU.svg";
 import uzIcon from "@/assets/UZ.png";
 import type { ThemeConfig, MenuProps, SiderProps } from "antd";
 import type { ItemType } from "antd/es/menu/hooks/useItems";
-import type { AppLang, CustomRoute } from "@/types";
+import type { AppLang, CustomRoute, User } from "@/types";
 
 const { Sider } = Layout;
 const { Text } = Typography;
@@ -32,13 +33,14 @@ interface DefaultLayoutState {
   theme: ThemeConfig;
   items?: ItemType[];
   collapsed: boolean;
-  defaultMenuItemKeys: string[];
+  menuKeys: string[];
   languageOptions: Array<{
     value: string;
     label: JSX.Element;
   }>;
   siderProps: SiderProps;
   defaultLanguage: AppLang;
+  user: User;
   handleLanguageChange: (value: AppLang) => void;
   onToggleSider: () => void;
 }
@@ -47,10 +49,12 @@ export default function useDefaultLayoutState(
   sidebarRoutes: CustomRoute[],
 ): DefaultLayoutState {
   const [collapsed, setCollapsed] = useState(false);
+  // const [menuKeys, setMenuKeys] = useState<string[]>([""]);
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+  const { user } = useAuthContext();
 
   const handleLanguageChange = (value: AppLang): void => {
     void i18n.changeLanguage(value);
@@ -59,8 +63,6 @@ export default function useDefaultLayoutState(
   const onToggleSider = (): void => {
     setCollapsed(!collapsed);
   };
-
-  const defaultMenuItemKeys = getTopRoute(pathname);
 
   const items = useMemo(
     // eslint-disable-next-line arrow-body-style
@@ -78,7 +80,7 @@ export default function useDefaultLayoutState(
             {collapsed ? "" : t(title ?? "")}
           </span>
         ),
-        title,
+        title: t(title!) ?? "",
         onClick: () => {
           navigate(path as string);
         },
@@ -136,16 +138,19 @@ export default function useDefaultLayoutState(
   const defaultLanguage = (localStorage.getItem("i18nextLng") ??
     settings.defaultLanguage) as AppLang;
 
+  const menuKeys = getTopRoute(pathname);
+
   return {
     Sider,
     Text,
     theme,
     collapsed,
-    defaultMenuItemKeys,
+    menuKeys,
     items,
     languageOptions,
     siderProps,
     defaultLanguage,
+    user,
     handleLanguageChange,
     onToggleSider,
   };
