@@ -13,12 +13,19 @@ import img1 from "@/assets/img_1.png";
 import img2 from "@/assets/img_2.png";
 import img3 from "@/assets/img_3.png";
 import backIcon from "@/assets/arrow-left.svg";
-import violatorImg from "@/assets/portrait.png";
 import CustomCard from "../../components/custom-card";
 import ActionBox from "../../components/action-box";
 import Info from "../../components/info";
 import SendIcon from "../../components/send-icon";
 import useActState from "./state";
+
+const statusMap = {
+  created: "non-processed",
+  defined: "processed",
+  sent: "sent",
+  rejected: "cancelled",
+  performed: "overdued",
+};
 
 export default function Act(): React.ReactElement {
   const {
@@ -28,17 +35,20 @@ export default function Act(): React.ReactElement {
     TextArea,
     contextHolder,
     colorBgContainer,
-    actId,
     uploadProps,
     isModalOpen,
     isCarouselModalOpen,
+    isActsModalOpen,
     data,
+    actsList,
     carouselRef,
     handleOk,
     handleCancel,
     handleCarouselModalCancel,
+    handleActsModalCancel,
     showCarouselModal,
     showModal,
+    showActsList,
     doSomeAction,
     goBack,
     onImgClick,
@@ -153,6 +163,19 @@ export default function Act(): React.ReactElement {
         </Carousel>
       </CustomModal>
 
+      <CustomModal
+        title={<Title level={4}>{t("acts-list")}</Title>}
+        open={isActsModalOpen}
+        footer={null}
+        onCancel={handleActsModalCancel}
+      >
+        {actsList.map(({ id, series, number }) => (
+          <p key={id}>
+            {series} {number}
+          </p>
+        ))}
+      </CustomModal>
+
       <Header
         style={{ background: colorBgContainer }}
         className="px-8 pt-2 flex items-center gap-4"
@@ -162,16 +185,27 @@ export default function Act(): React.ReactElement {
         </button>
 
         <h1 className="font-semibold text-2xl">
-          {t("act-details")} BH {actId}
+          {t("act-details")} {data?.series ?? ""} {data?.number ?? ""}
         </h1>
 
         <div className="flex items-center gap-2">
-          <Tag bordered={false} color="default" className="py-1 px-2">
-            <span style={{ color: "#62738C" }}>{t("not-processed")}</span>
-          </Tag>
-          <Tag bordered={false} color="orange" className="py-1 px-2">
-            <span>{t("edited")}</span>
-          </Tag>
+          {data?.status !== undefined ? (
+            <Tag bordered={false} color="default" className="py-1 px-2">
+              <span style={{ color: "#62738C" }}>
+                {t(statusMap[data?.status])}
+              </span>
+            </Tag>
+          ) : null}
+
+          {data?.parent_id !== null && data?.parent_id !== undefined ? (
+            <Button
+              type="ghost"
+              className="text-orange-400 border-orange-400"
+              onClick={showActsList}
+            >
+              {t("edited")}
+            </Button>
+          ) : null}
         </div>
       </Header>
 
@@ -187,9 +221,10 @@ export default function Act(): React.ReactElement {
             <CustomCard title={t("violator-details")}>
               <Row gutter={24}>
                 <Col span={5}>
-                  <div>
-                    <img src={violatorImg} alt="violator" />
-                  </div>
+                  <img
+                    src={`${import.meta.env.VITE_CDN_URL}${data?.logo ?? ""}`}
+                    alt="violator"
+                  />
                 </Col>
                 <Col span={19}>
                   <Row gutter={24}>

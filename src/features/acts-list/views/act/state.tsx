@@ -6,7 +6,7 @@ import { Layout, Typography, Input, theme, message } from "antd";
 import type { UploadProps, Carousel } from "antd";
 import type { NoticeType } from "antd/es/message/interface";
 import type { ActState } from "../../types";
-import { getAct } from "../../api";
+import { getAct, getAllActs } from "../../api";
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
@@ -36,9 +36,10 @@ export default function useActState(): ActState {
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isCarouselModalOpen, setIsCarouselModalOpen] =
     useState<boolean>(false);
+  const [isActsModalOpen, setIsActsModalOpen] = useState<boolean>(false);
 
   const carouselRef = useRef<typeof Carousel>(null);
 
@@ -54,6 +55,26 @@ export default function useActState(): ActState {
     },
     enabled: Boolean(actId),
   });
+
+  const { data: actsData, error: actsListError } = useQuery({
+    queryKey: ["acts", { series: data?.series, number: data?.number }],
+    queryFn: async () => {
+      const res = await getAllActs({
+        series: data?.series,
+        number: data?.number,
+      });
+      return res;
+    },
+    placeholderData: { count: 0, next: null, previous: null, results: [] },
+    enabled: Number.isInteger(data?.parent_id),
+  });
+
+  let actsList = actsData?.results.map(({ id, series, number }) => ({
+    id,
+    series,
+    number,
+  }));
+  actsList ??= [];
 
   const showModal = (): void => {
     setIsModalOpen(true);
@@ -80,8 +101,18 @@ export default function useActState(): ActState {
   };
 
   const onImgClick = (index: number): void => {
-    carouselRef.current?.goTo(index, true);
     setIsCarouselModalOpen(true);
+    setTimeout(() => {
+      carouselRef.current?.goTo(index, false);
+    }, 0);
+  };
+
+  const showActsList = (): void => {
+    setIsActsModalOpen(true);
+  };
+
+  const handleActsModalCancel = (): void => {
+    setIsActsModalOpen(false);
   };
 
   const doSomeAction = async (
@@ -121,7 +152,15 @@ export default function useActState(): ActState {
         content: error?.statusText,
       });
     }
-  }, [error, messageApi]);
+
+    if (actsListError !== null) {
+      void messageApi.error({
+        key: "acts-error",
+        // @ts-expect-error error type is unknown but it will get Response type and object from axios
+        content: actsListError?.statusText,
+      });
+    }
+  }, [error, actsListError, messageApi]);
 
   return {
     Header,
@@ -134,13 +173,17 @@ export default function useActState(): ActState {
     uploadProps,
     isModalOpen,
     isCarouselModalOpen,
+    isActsModalOpen,
     data,
+    actsList,
     carouselRef,
     handleOk,
     handleCancel,
     handleCarouselModalCancel,
+    handleActsModalCancel,
     showCarouselModal,
     showModal,
+    showActsList,
     doSomeAction,
     goBack,
     onImgClick,

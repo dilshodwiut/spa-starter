@@ -269,16 +269,16 @@ export default function useActsState(): ActsState {
       },
       {
         title: t("serial-number"),
-        dataIndex: "act_series",
+        dataIndex: "series",
         render(value, record) {
           if (typeof value === "string") {
-            return `${value} ${record.act_number}`;
+            return `${value} ${record.number}`;
           }
           return "";
         },
         sorter: (a, b) => {
-          const aWhole = `${a.act_series} ${a.act_number}`;
-          const bWhole = `${b.act_series} ${b.act_number}`;
+          const aWhole = `${a.series} ${a.number}`;
+          const bWhole = `${b.series} ${b.number}`;
           return aWhole.localeCompare(bWhole);
         },
       },

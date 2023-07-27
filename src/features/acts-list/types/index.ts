@@ -69,13 +69,17 @@ interface ActState {
   uploadProps: UploadProps;
   isModalOpen: boolean;
   isCarouselModalOpen: boolean;
+  isActsModalOpen: boolean;
   data: ActType | undefined;
+  actsList: Array<{ id: number; series: string; number: string }>;
   carouselRef: React.RefObject<typeof Carousel>;
   handleOk: () => void;
   handleCancel: () => void;
   handleCarouselModalCancel: () => void;
+  handleActsModalCancel: () => void;
   showCarouselModal: () => void;
   showModal: () => void;
+  showActsList: () => void;
   doSomeAction: (successMessage: string, type: NoticeType) => Promise<void>;
   goBack: () => void;
   onImgClick: (index: number) => void;
@@ -84,9 +88,15 @@ interface ActState {
 
 interface ActType {
   id: number;
-  status: ActStatus;
+  status: ActsStatus;
+  parent_id: number;
+
+  series: string;
+  number: string;
+
   act_series: string;
   act_number: string;
+
   act_date: string;
   address: string;
 
@@ -147,6 +157,9 @@ interface FormFilters {
 interface ActsParams extends Partial<FormFilters>, BaseParams {
   status?: ActsStatus;
   search?: string;
+
+  series?: string;
+  number?: string;
 }
 
 interface FilterForm {
