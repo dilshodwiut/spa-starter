@@ -36,7 +36,7 @@ interface ActionBoxProps {
   children: React.ReactNode;
   color: ActionBoxColor;
   actionKey: ActionKey;
-  onDispatchAction: () => void;
+  onDispatchAction: (() => void) | (() => Promise<void>);
   className?: string;
   Icon?: any;
   iconPosition?: "left" | "right";
@@ -72,6 +72,7 @@ interface ActState {
   isActsModalOpen: boolean;
   data: ActType | undefined;
   actsList: Array<{ id: number; series: string; number: string }>;
+  violationTypes: SelectProps["options"];
   carouselRef: React.RefObject<typeof Carousel>;
   handleOk: () => void;
   handleCancel: () => void;
@@ -80,7 +81,7 @@ interface ActState {
   showCarouselModal: () => void;
   showModal: () => void;
   showActsList: () => void;
-  doSomeAction: (successMessage: string, type: NoticeType) => Promise<void>;
+  notify: (successMessage: string, type: NoticeType) => Promise<void>;
   goBack: () => void;
   onImgClick: (index: number) => void;
   t: TFunction;
@@ -98,7 +99,9 @@ interface ActType {
   act_number: string;
 
   act_date: string;
-  address: string;
+  created_at: string;
+  region: BaseEntity;
+  district: BaseEntity;
 
   violation_type: ViolationType;
 
@@ -132,6 +135,7 @@ interface ActType {
     place_of_birth: string;
     document_series: string;
     document_number: string;
+    avatar: string;
   };
 
   violation_organization: {
@@ -148,7 +152,8 @@ interface ActType {
 
 interface FormFilters {
   doc_type_id: number[] | null;
-  date: string | null;
+  min_date: string | null;
+  max_date: string | null;
   region_id: number | null;
   district_id: number | null;
   violation_type: number | null;
@@ -168,7 +173,7 @@ interface FilterForm {
   infringement_article: number | undefined;
   region: number | undefined;
   violation_type: number | undefined;
-  violation_date: { $d: Date } | null;
+  violation_date: [{ $d: Date }, { $d: Date }] | null;
 }
 
 interface Article {

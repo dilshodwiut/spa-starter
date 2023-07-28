@@ -8,7 +8,7 @@ import { compareAsc, lightFormat } from "date-fns";
 import formatDate from "@/helpers/formatDate";
 import formatAmount from "@/helpers/formatAmount";
 import ShowTotal from "@/components/show-total";
-import { Layout, Tag, Form, message, theme } from "antd";
+import { Layout, Tag, Form, message, theme, Tooltip } from "antd";
 import type { SegmentedProps } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
 import getColor from "../../helpers/getColor";
@@ -48,7 +48,8 @@ export default function useActsState(): ActsState {
   const [selectedRegion, setSelectedRegion] = useState<number>();
   const [filters, setFilters] = useState<FormFilters>({
     doc_type_id: [],
-    date: null,
+    min_date: null,
+    max_date: null,
     region_id: null,
     district_id: null,
     violation_type: null,
@@ -69,7 +70,8 @@ export default function useActsState(): ActsState {
           status,
           search: debouncedSearch,
           doc_type_id: filters.doc_type_id,
-          date: filters.date,
+          min_date: filters.min_date,
+          max_date: filters.max_date,
           region_id: filters.region_id,
           district_id: filters.district_id,
           violation_type: filters.violation_type,
@@ -143,7 +145,7 @@ export default function useActsState(): ActsState {
   const { data: violationsData } = useQuery({
     queryKey: ["violation-types"],
     queryFn: async () => {
-      const res = await getViolationTypes({});
+      const res = await getViolationTypes();
       return res;
     },
     placeholderData: { count: 0, next: null, previous: null, results: [] },
@@ -206,7 +208,8 @@ export default function useActsState(): ActsState {
   const onFiltersApply = (values: FilterForm): void => {
     const draft: FormFilters = {
       doc_type_id: [],
-      date: null,
+      min_date: null,
+      max_date: null,
       region_id: null,
       district_id: null,
       violation_type: null,
@@ -217,7 +220,8 @@ export default function useActsState(): ActsState {
     }
 
     if (values.violation_date !== null) {
-      draft.date = lightFormat(values.violation_date.$d, "yyyy-MM-dd");
+      draft.min_date = lightFormat(values.violation_date[0].$d, "yyyy-MM-dd");
+      draft.max_date = lightFormat(values.violation_date[0].$d, "yyyy-MM-dd");
     }
 
     if (typeof values.region !== "undefined") {
@@ -258,12 +262,14 @@ export default function useActsState(): ActsState {
       {
         title: t("type"),
         dataIndex: "logo",
-        render(value: string) {
+        render(value: string, record: ActType) {
           return (
-            <img
-              src={`${import.meta.env.VITE_CDN_URL}${value}`}
-              alt="server type"
-            />
+            <Tooltip title={record.employee.organization.name}>
+              <img
+                src={`${import.meta.env.VITE_CDN_URL}${value}`}
+                alt={record.employee.organization.name}
+              />
+            </Tooltip>
           );
         },
       },
@@ -285,15 +291,21 @@ export default function useActsState(): ActsState {
       {
         title: t("reg-date"),
         dataIndex: "act_date",
-        render(value: string) {
-          return formatDate(value);
+        render(value: string, record: ActType) {
+          return (
+            <Tooltip title={formatDate(record.created_at, "dd.MM.yyyy HH:mm")}>
+              {formatDate(value)}
+            </Tooltip>
+          );
         },
         sorter: (a, b) =>
           compareAsc(new Date(a.act_date), new Date(b.act_date)),
       },
       {
         title: t("region, district"),
-        dataIndex: "address",
+        render(record: ActType) {
+          return `${record.region.name}, ${record.district.name}`;
+        },
       },
 
       {

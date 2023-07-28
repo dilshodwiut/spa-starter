@@ -49,3 +49,25 @@ export async function getViolationTypes(
 
   return result;
 }
+
+export async function updateViolationType(
+  id: string,
+  data: { violation_type?: string } = {},
+): Promise<void> {
+  await request({
+    url: `/violations/${id}/update-violation-type`,
+    method: "put",
+    data,
+  });
+}
+
+export async function updateViolationStatus(
+  id: string,
+  data: { status?: string } = {},
+): Promise<void> {
+  await request({
+    url: `/violations/${id}/update-status`,
+    method: "put",
+    data,
+  });
+}

@@ -56,6 +56,8 @@
   "apply": "Qo'llash",
   "choose-from-list": "Ro'yxatdan tanlang",
   "select-date": "Sanani tanlang",
+  "from": "dan",
+  "to": "gacha",
   "act-list-empty": "Dalolatnomalar ro'yxati bo'sh",
   "act-list-empty-info": "Bu yaqinda bekor qilingan barcha dalolatnomalar ro'yxatini ko'rsatadi",
 

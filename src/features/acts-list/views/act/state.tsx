@@ -6,7 +6,7 @@ import { Layout, Typography, Input, theme, message } from "antd";
 import type { UploadProps, Carousel } from "antd";
 import type { NoticeType } from "antd/es/message/interface";
 import type { ActState } from "../../types";
-import { getAct, getAllActs } from "../../api";
+import { getAct, getAllActs, getViolationTypes } from "../../api";
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
@@ -76,6 +76,21 @@ export default function useActState(): ActState {
   }));
   actsList ??= [];
 
+  const { data: violationsData } = useQuery({
+    queryKey: ["violation-types"],
+    queryFn: async () => {
+      const res = await getViolationTypes();
+      return res;
+    },
+    placeholderData: { count: 0, next: null, previous: null, results: [] },
+  });
+
+  let violationTypes = violationsData?.results.map(({ id, name }) => ({
+    label: name,
+    value: id,
+  }));
+  violationTypes ??= [];
+
   const showModal = (): void => {
     setIsModalOpen(true);
   };
@@ -115,7 +130,7 @@ export default function useActState(): ActState {
     setIsActsModalOpen(false);
   };
 
-  const doSomeAction = async (
+  const notify = async (
     successMessage: string,
     type: NoticeType,
   ): Promise<void> => {
@@ -176,6 +191,7 @@ export default function useActState(): ActState {
     isActsModalOpen,
     data,
     actsList,
+    violationTypes,
     carouselRef,
     handleOk,
     handleCancel,
@@ -184,7 +200,7 @@ export default function useActState(): ActState {
     showCarouselModal,
     showModal,
     showActsList,
-    doSomeAction,
+    notify,
     goBack,
     onImgClick,
     t,

@@ -164,10 +164,10 @@ export default function Acts(): React.ReactElement {
           </Form.Item>
 
           <Form.Item name="violation_date" label={t("violation-date")}>
-            <DatePicker
+            <DatePicker.RangePicker
               className="w-full"
               size="large"
-              placeholder={t("select-date") ?? ""}
+              placeholder={[t("from"), t("to")]}
             />
           </Form.Item>
 

@@ -18,6 +18,7 @@ import ActionBox from "../../components/action-box";
 import Info from "../../components/info";
 import SendIcon from "../../components/send-icon";
 import useActState from "./state";
+import { updateViolationType } from "../../api";
 
 const statusMap = {
   created: "non-processed",
@@ -35,12 +36,14 @@ export default function Act(): React.ReactElement {
     TextArea,
     contextHolder,
     colorBgContainer,
+    actId,
     uploadProps,
     isModalOpen,
     isCarouselModalOpen,
     isActsModalOpen,
     data,
     actsList,
+    violationTypes,
     carouselRef,
     handleOk,
     handleCancel,
@@ -49,7 +52,7 @@ export default function Act(): React.ReactElement {
     showCarouselModal,
     showModal,
     showActsList,
-    doSomeAction,
+    notify,
     goBack,
     onImgClick,
     t,
@@ -87,7 +90,11 @@ export default function Act(): React.ReactElement {
           <Info
             rootClassName="flex-1"
             of={t("reg-date")}
-            value={formatDate(data?.act_date ?? "")}
+            value={
+              data?.act_date !== undefined && data?.act_date !== null
+                ? formatDate(data?.act_date)
+                : null
+            }
           />
         </div>
         <Divider className="mt-3" />
@@ -170,9 +177,10 @@ export default function Act(): React.ReactElement {
         onCancel={handleActsModalCancel}
       >
         {actsList.map(({ id, series, number }) => (
-          <p key={id}>
-            {series} {number}
-          </p>
+          <div key={id} className="flex gap-8 mt-4">
+            <Info of={t("series")} value={series} />
+            <Info of={t("number")} value={number} />
+          </div>
         ))}
       </CustomModal>
 
@@ -220,12 +228,17 @@ export default function Act(): React.ReactElement {
           <Col span={12}>
             <CustomCard title={t("violator-details")}>
               <Row gutter={24}>
-                <Col span={5}>
-                  <img
-                    src={`${import.meta.env.VITE_CDN_URL}${data?.logo ?? ""}`}
-                    alt="violator"
-                  />
-                </Col>
+                {data?.violation_person?.avatar !== undefined &&
+                data?.violation_person?.avatar !== "" ? (
+                  <Col span={5}>
+                    <img
+                      src={`${import.meta.env.VITE_CDN_URL}${
+                        data?.violation_person?.avatar
+                      }`}
+                      alt="violator"
+                    />
+                  </Col>
+                ) : null}
                 <Col span={19}>
                   <Row gutter={24}>
                     <Col span={24}>
@@ -467,7 +480,11 @@ export default function Act(): React.ReactElement {
                 <Info of={t("volume")} value={data?.total_volume} />
                 <Info
                   of={t("amount")}
-                  value={formatAmount(data?.total_sum ?? 0)}
+                  value={
+                    data?.total_sum !== undefined
+                      ? formatAmount(data?.total_sum)
+                      : ""
+                  }
                 />
               </div>
             </CustomCard>
@@ -476,19 +493,29 @@ export default function Act(): React.ReactElement {
 
         <br />
 
-        <div className="flex items-stretch gap-6">
+        <div className="flex items-stretch flex-wrap gap-6">
           <ActionBox
             color="blue"
             className="flex-1"
             actionKey="F5"
             Icon={CheckCircleFilled}
-            onDispatchAction={() => {
-              void doSomeAction(
-                `${t("act")} BH 2240106381566 ${t(
-                  "confirmed-admin-violation",
-                )}`,
-                "success",
-              );
+            onDispatchAction={async () => {
+              try {
+                throw new Error("WTF");
+
+                await updateViolationType(actId!, {
+                  violation_type: violationTypes[0].value,
+                });
+
+                void notify(
+                  `${t("act")} BH 2240106381566 ${t(
+                    "confirmed-admin-violation",
+                  )}`,
+                  "success",
+                );
+              } catch {
+                void notify(`${t("error")}`, "error");
+              }
             }}
           >
             {t("approve-admin-violation")}
@@ -498,13 +525,23 @@ export default function Act(): React.ReactElement {
             className="flex-1"
             actionKey="F6"
             Icon={CheckCircleFilled}
-            onDispatchAction={() => {
-              void doSomeAction(
-                `${t("act")} BH 2240106381566 ${t(
-                  "confirmed-criminal-violation",
-                )}`,
-                "success",
-              );
+            onDispatchAction={async () => {
+              try {
+                throw new Error("WTF");
+
+                await updateViolationType(actId!, {
+                  violation_type: violationTypes[1].value,
+                });
+
+                void notify(
+                  `${t("act")} BH 2240106381566 ${t(
+                    "confirmed-criminal-violation",
+                  )}`,
+                  "success",
+                );
+              } catch {
+                void notify(`${t("error")}`, "error");
+              }
             }}
           >
             {t("approve-criminal-violation")}
@@ -515,11 +552,14 @@ export default function Act(): React.ReactElement {
             actionKey="F7"
             Icon={FileTextFilled}
             onDispatchAction={() => {
-              void doSomeAction(t("pdf-downloaded"), "success");
+              void notify(t("pdf-downloaded"), "success");
             }}
           >
             {t("download-pdf")}
           </ActionBox>
+        </div>
+
+        <div className="flex items-stretch flex-wrap gap-6 mt-6">
           <ActionBox
             color="red"
             className="flex-1"
@@ -536,7 +576,7 @@ export default function Act(): React.ReactElement {
             Icon={RightCircleFilled}
             iconPosition="right"
             onDispatchAction={() => {
-              // void doSomeAction();
+              // void notify();
             }}
           >
             {t("next")}
