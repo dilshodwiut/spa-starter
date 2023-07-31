@@ -41,6 +41,13 @@ interface BaseEntity {
   name: string;
 }
 
+type MediaFileType = "image" | "video" | "doc";
+
+interface MediaFile {
+  file: string;
+  type: MediaFileType;
+}
+
 interface BaseParams {
   page?: number;
   page_size?: number;
@@ -67,6 +74,7 @@ export type {
   District,
   BaseEntity,
   BaseParams,
+  MediaFile,
   ListResponse,
   AppLang,
   User,

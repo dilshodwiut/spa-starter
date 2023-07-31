@@ -2,16 +2,16 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { isInt } from "radash";
+// import { isInt } from "radash";
 import { useDebounce } from "usehooks-ts";
 import { compareAsc, lightFormat } from "date-fns";
-import formatDate from "@/helpers/formatDate";
-import formatAmount from "@/helpers/formatAmount";
 import ShowTotal from "@/components/show-total";
 import { Layout, Tag, Form, message, theme, Tooltip } from "antd";
 import type { SegmentedProps } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
-import getColor from "../../helpers/getColor";
+import getColor from "../../helpers/get-color";
+import formatDate from "../../helpers/formatDate";
+import formatAmount from "../../helpers/formatAmount";
 import {
   getAllActs,
   getArticles,
@@ -20,10 +20,9 @@ import {
   getViolationTypes,
 } from "../../api";
 import type {
-  ActStatus,
+  // ActStatus,
   ActsState,
   ActType,
-  ViolationType,
   ActsStatus,
   FormFilters,
   FilterForm,
@@ -151,9 +150,10 @@ export default function useActsState(): ActsState {
     placeholderData: { count: 0, next: null, previous: null, results: [] },
   });
 
-  let violationTypes = violationsData?.results.map(({ id, name }) => ({
+  let violationTypes = violationsData?.results.map(({ id, name, key }) => ({
     label: name,
     value: id,
+    key,
   }));
   violationTypes ??= [];
 
@@ -264,7 +264,7 @@ export default function useActsState(): ActsState {
         dataIndex: "logo",
         render(value: string, record: ActType) {
           return (
-            <Tooltip title={record.employee.organization.name}>
+            <Tooltip title={record.employee?.organization?.name}>
               <img
                 src={`${import.meta.env.VITE_CDN_URL}${value}`}
                 alt={record.employee.organization.name}
@@ -321,7 +321,6 @@ export default function useActsState(): ActsState {
       },
       {
         title: t("violation"),
-        dataIndex: "violation_type",
       },
       {
         title: t("amount (som)"),
@@ -342,32 +341,41 @@ export default function useActsState(): ActsState {
 
           return 0;
         },
-        render: (value: ViolationType | null) =>
-          value !== null ? (
-            <Tag
-              bordered={false}
-              color={getColor(value)}
-              className="p-1 w-full text-center"
-            >
-              {t(value ?? "")}
-            </Tag>
-          ) : null,
+        render: (value: number) => {
+          const violation = violationTypes?.find(
+            (viol) => viol.value === value,
+          );
+
+          if (violation !== undefined) {
+            return (
+              <Tag
+                bordered={false}
+                color={getColor(violation.key)}
+                className="p-1 w-full text-center"
+              >
+                {violation.label}
+              </Tag>
+            );
+          }
+
+          return "";
+        },
       },
-      {
-        title: t("status"),
-        dataIndex: "status",
-        render: (value: ActStatus) => (
-          <Tag
-            bordered={false}
-            color={getColor(value)}
-            className="p-1 w-full text-center"
-          >
-            {isInt(value) ? `${value} days` : t(value)}
-          </Tag>
-        ),
-      },
+      // {
+      //   title: t("status"),
+      //   dataIndex: "status",
+      //   render: (value: ActStatus) => (
+      //     <Tag
+      //       bordered={false}
+      //       color={getColor(value)}
+      //       className="p-1 w-full text-center"
+      //     >
+      //       {isInt(value) ? `${value} days` : t(value)}
+      //     </Tag>
+      //   ),
+      // },
     ],
-    [t],
+    [violationTypes, t],
   );
 
   useEffect(() => {

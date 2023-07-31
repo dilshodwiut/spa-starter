@@ -52,10 +52,10 @@ export async function getViolationTypes(
 
 export async function updateViolationType(
   id: string,
-  data: { violation_type?: string } = {},
+  data: { violation_type?: number } = {},
 ): Promise<void> {
   await request({
-    url: `/violations/${id}/update-violation-type`,
+    url: `/violations/${id}/update-violation-type/`,
     method: "put",
     data,
   });
@@ -66,7 +66,7 @@ export async function updateViolationStatus(
   data: { status?: string } = {},
 ): Promise<void> {
   await request({
-    url: `/violations/${id}/update-status`,
+    url: `/violations/${id}/update-status/`,
     method: "put",
     data,
   });

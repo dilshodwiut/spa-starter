@@ -1,5 +1,5 @@
-import type { ChangeEventHandler } from "react";
-import type { BaseEntity, BaseParams, ListResponse } from "@/types";
+import type { ChangeEventHandler, Dispatch, SetStateAction } from "react";
+import type { BaseEntity, BaseParams, ListResponse, MediaFile } from "@/types";
 import type {
   Layout,
   Typography,
@@ -10,10 +10,10 @@ import type {
   SelectProps,
   FormProps,
   FormInstance,
-  Carousel,
 } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
 import type { NoticeType } from "antd/es/message/interface";
+import type { CarouselRef } from "antd/es/carousel";
 import type { TFunction } from "i18next";
 
 type ViolationType = "administrative" | "criminal";
@@ -21,8 +21,8 @@ type ActStatus = "received" | "new" | number;
 type ActsStatus = "created" | "defined" | "sent" | "rejected" | "performed";
 
 type getColorFn = (
-  input: ViolationType | ActStatus,
-) => "processing" | "green" | "default" | "orange" | "red" | "";
+  input: ViolationType, // | ActStatus
+) => "blue" | "green" | "default"; // | "orange" | "red"
 
 type ActionBoxColor = "blue" | "green" | "grey" | "red";
 type ActionKey = "F5" | "F6" | "F7" | "F8" | "F9";
@@ -40,6 +40,8 @@ interface ActionBoxProps {
   className?: string;
   Icon?: any;
   iconPosition?: "left" | "right";
+  isDisabled?: boolean;
+  isLoading?: boolean;
 }
 
 interface CustomCardProps {
@@ -58,6 +60,12 @@ interface InfoProps {
   children?: React.ReactNode;
 }
 
+interface ActionInProcess {
+  admin: boolean;
+  criminal: boolean;
+  cancel: boolean;
+}
+
 interface ActState {
   Header: typeof Layout.Header;
   Content: typeof Layout.Content;
@@ -72,19 +80,22 @@ interface ActState {
   isActsModalOpen: boolean;
   data: ActType | undefined;
   actsList: Array<{ id: number; series: string; number: string }>;
-  violationTypes: SelectProps["options"];
-  carouselRef: React.RefObject<typeof Carousel>;
+  violationTypes: Violation[];
+  carouselRef: React.RefObject<CarouselRef>;
+  isCurrFetching: boolean;
+  actionInProcess: ActionInProcess;
   handleOk: () => void;
   handleCancel: () => void;
   handleCarouselModalCancel: () => void;
   handleActsModalCancel: () => void;
-  showCarouselModal: () => void;
   showModal: () => void;
   showActsList: () => void;
   notify: (successMessage: string, type: NoticeType) => Promise<void>;
   goBack: () => void;
   onImgClick: (index: number) => void;
+  renderFile: (file: MediaFile) => React.ReactNode;
   t: TFunction;
+  setActionInProcess: Dispatch<SetStateAction<ActionInProcess>>;
 }
 
 interface ActType {
@@ -103,12 +114,14 @@ interface ActType {
   region: BaseEntity;
   district: BaseEntity;
 
-  violation_type: ViolationType;
+  violation_type: number;
 
   server_type: "government" | "power_industry";
   client_type: "legal_entity" | "individual" | "budget_organization";
   violation: string;
   amount: number;
+
+  files: MediaFile[];
 
   logo: string;
   is_juridic: string;
@@ -186,7 +199,9 @@ interface Article {
 
 interface ViolationDoc extends BaseEntity {}
 
-interface Violation extends ViolationDoc {}
+interface Violation extends BaseEntity {
+  key: ViolationType;
+}
 
 interface ActsState {
   Header: typeof Layout.Header;
@@ -220,7 +235,6 @@ interface ActsState {
 }
 
 export type {
-  ViolationType,
   ActStatus,
   getColorFn,
   ActionBoxColor,

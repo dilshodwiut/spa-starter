@@ -1,4 +1,3 @@
-import ReactPlayer from "react-player";
 import { Button, Select, Tag, Row, Col, Divider, Upload, Carousel } from "antd";
 import {
   CheckCircleFilled,
@@ -6,19 +5,16 @@ import {
   FileTextFilled,
   RightCircleFilled,
 } from "@ant-design/icons";
-import formatDate from "@/helpers/formatDate";
-import formatAmount from "@/helpers/formatAmount";
 import CustomModal from "@/components/modal";
-import img1 from "@/assets/img_1.png";
-import img2 from "@/assets/img_2.png";
-import img3 from "@/assets/img_3.png";
 import backIcon from "@/assets/arrow-left.svg";
+import { updateViolationType } from "../../api";
+import formatDate from "../../helpers/formatDate";
+import formatAmount from "../../helpers/formatAmount";
 import CustomCard from "../../components/custom-card";
 import ActionBox from "../../components/action-box";
 import Info from "../../components/info";
 import SendIcon from "../../components/send-icon";
 import useActState from "./state";
-import { updateViolationType } from "../../api";
 
 const statusMap = {
   created: "non-processed",
@@ -45,17 +41,20 @@ export default function Act(): React.ReactElement {
     actsList,
     violationTypes,
     carouselRef,
+    isCurrFetching,
+    actionInProcess,
     handleOk,
     handleCancel,
     handleCarouselModalCancel,
     handleActsModalCancel,
-    showCarouselModal,
     showModal,
     showActsList,
     notify,
     goBack,
     onImgClick,
+    renderFile,
     t,
+    setActionInProcess,
   } = useActState();
 
   return (
@@ -122,51 +121,17 @@ export default function Act(): React.ReactElement {
       </CustomModal>
 
       <CustomModal
-        title={<Title level={4}>{t("pictures")}</Title>}
+        title={<Title level={4}>{t("files")}</Title>}
         open={isCarouselModalOpen}
         footer={null}
         onCancel={handleCarouselModalCancel}
       >
-        <Carousel ref={carouselRef}>
-          <div className="m-0 h-80 text-white text-center leading-[160px]">
-            <img
-              src={img1}
-              alt="img 1"
-              className="w-full h-full cursor-pointer"
-              onClick={() => {
-                showCarouselModal();
-              }}
-              aria-hidden
-            />
-          </div>
-          <div className="m-0 h-80 text-white text-center leading-[160px]">
-            <img
-              src={img2}
-              alt="img 2"
-              className="w-full cursor-pointer"
-              onClick={() => {
-                showCarouselModal();
-              }}
-              aria-hidden
-            />
-          </div>
-          <div className="m-0 h-80 text-white text-center leading-[160px]">
-            <img
-              src={img3}
-              alt="img 3"
-              className="w-full cursor-pointer"
-              onClick={() => {
-                showCarouselModal();
-              }}
-              aria-hidden
-            />
-          </div>
-          <div className="m-0 h-80 text-white text-center leading-[160px]">
-            <ReactPlayer
-              width={472}
-              url="https://www.youtube.com/watch?v=9nzPNSzzY7Q"
-            />
-          </div>
+        <Carousel
+          ref={carouselRef}
+          // dotPosition="top"
+          // dots={{ className: "bg-black h-8 flex justify-center items-center" }}
+        >
+          {data?.files?.map(renderFile)}
         </Carousel>
       </CustomModal>
 
@@ -396,36 +361,21 @@ export default function Act(): React.ReactElement {
               <br />
 
               <Info
-                of={t("violation-pictures")}
+                of={t("violation-files")}
                 value={
                   <div className="flex gap-4 mt-4">
-                    <img
-                      src={img1}
-                      alt="img 1"
-                      className="2xl:w-[180px] lg:w-32 sm:w-20 cursor-pointer"
-                      onClick={() => {
-                        onImgClick(0);
-                      }}
-                      aria-hidden
-                    />
-                    <img
-                      src={img2}
-                      alt="img 2"
-                      className="2xl:w-[180px] lg:w-32 sm:w-20 cursor-pointer"
-                      onClick={() => {
-                        onImgClick(1);
-                      }}
-                      aria-hidden
-                    />
-                    <img
-                      src={img3}
-                      alt="img 3"
-                      className="2xl:w-[180px] lg:w-32 sm:w-20 cursor-pointer"
-                      onClick={() => {
-                        onImgClick(2);
-                      }}
-                      aria-hidden
-                    />
+                    {data?.files?.map((file, index) => (
+                      <img
+                        key={file.file}
+                        src={`${import.meta.env.VITE_MEDIA_URL}/${file.file}`}
+                        alt="violation"
+                        className="2xl:w-[180px] lg:w-32 sm:w-20 cursor-pointer"
+                        onClick={() => {
+                          onImgClick(index);
+                        }}
+                        aria-hidden
+                      />
+                    ))}
                   </div>
                 }
               />
@@ -495,16 +445,22 @@ export default function Act(): React.ReactElement {
 
         <div className="flex items-stretch flex-wrap gap-6">
           <ActionBox
+            isDisabled={isCurrFetching}
+            isLoading={actionInProcess.admin}
             color="blue"
             className="flex-1"
             actionKey="F5"
             Icon={CheckCircleFilled}
             onDispatchAction={async () => {
+              setActionInProcess((prev) => ({ ...prev, admin: true }));
+
               try {
-                throw new Error("WTF");
+                const violationType = violationTypes?.find(
+                  (violation) => violation.key === "administrative",
+                );
 
                 await updateViolationType(actId!, {
-                  violation_type: violationTypes[0].value,
+                  violation_type: violationType?.id,
                 });
 
                 void notify(
@@ -516,21 +472,29 @@ export default function Act(): React.ReactElement {
               } catch {
                 void notify(`${t("error")}`, "error");
               }
+
+              setActionInProcess((prev) => ({ ...prev, admin: false }));
             }}
           >
             {t("approve-admin-violation")}
           </ActionBox>
           <ActionBox
+            isDisabled={isCurrFetching}
+            isLoading={actionInProcess.criminal}
             color="green"
             className="flex-1"
             actionKey="F6"
             Icon={CheckCircleFilled}
             onDispatchAction={async () => {
+              setActionInProcess((prev) => ({ ...prev, criminal: true }));
+
               try {
-                throw new Error("WTF");
+                const violationType = violationTypes?.find(
+                  (violation) => violation.key === "criminal",
+                );
 
                 await updateViolationType(actId!, {
-                  violation_type: violationTypes[1].value,
+                  violation_type: violationType?.id,
                 });
 
                 void notify(
@@ -542,11 +506,14 @@ export default function Act(): React.ReactElement {
               } catch {
                 void notify(`${t("error")}`, "error");
               }
+
+              setActionInProcess((prev) => ({ ...prev, criminal: false }));
             }}
           >
             {t("approve-criminal-violation")}
           </ActionBox>
           <ActionBox
+            isDisabled={isCurrFetching}
             color="grey"
             className="flex-1"
             actionKey="F7"
@@ -561,6 +528,8 @@ export default function Act(): React.ReactElement {
 
         <div className="flex items-stretch flex-wrap gap-6 mt-6">
           <ActionBox
+            isDisabled={isCurrFetching}
+            isLoading={actionInProcess.cancel}
             color="red"
             className="flex-1"
             actionKey="F8"
@@ -570,6 +539,7 @@ export default function Act(): React.ReactElement {
             {t("cancel-act")}
           </ActionBox>
           <ActionBox
+            isDisabled={isCurrFetching}
             color="green"
             className="flex-1"
             actionKey="F9"

@@ -18,13 +18,15 @@ export default function ActionBox(props: ActionBoxProps): React.ReactElement {
     actionKey,
     Icon,
     iconPosition,
+    isDisabled,
+    isLoading,
     onDispatchAction,
   } = props;
 
   useEventListener("keydown", (e) => {
     if (e.key === actionKey) {
       e.preventDefault();
-      onDispatchAction();
+      void onDispatchAction();
     }
   });
 
@@ -45,7 +47,11 @@ export default function ActionBox(props: ActionBoxProps): React.ReactElement {
         className,
       )}
       style={{ background: colorMap[color][0] }}
-      onClick={onDispatchAction}
+      onClick={() => {
+        void onDispatchAction();
+      }}
+      disabled={isDisabled}
+      loading={isLoading}
     >
       <div className="flex items-center gap-2">
         {icon.left}
@@ -63,4 +69,6 @@ export default function ActionBox(props: ActionBoxProps): React.ReactElement {
 ActionBox.defaultProps = {
   className: "",
   iconPosition: "left",
+  isDisabled: false,
+  isLoading: false,
 };
