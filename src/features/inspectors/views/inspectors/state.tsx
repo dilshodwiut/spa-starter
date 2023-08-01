@@ -141,10 +141,10 @@ export default function useInspectorsState(): InspectorsState {
       void messageApi.error({
         key: "acts-error",
         // @ts-expect-error error type is unknown but it will get Response type and object from axios
-        content: error?.statusText,
+        content: error?.statusText ?? t("error-fetching-data"),
       });
     }
-  }, [error, messageApi]);
+  }, [error, messageApi, t]);
 
   return {
     Header,

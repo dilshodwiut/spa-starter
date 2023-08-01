@@ -63,7 +63,7 @@ export async function updateViolationType(
 
 export async function updateViolationStatus(
   id: string,
-  data: { status?: string } = {},
+  data: { status?: string; description?: string } = {},
 ): Promise<void> {
   await request({
     url: `/violations/${id}/update-status/`,

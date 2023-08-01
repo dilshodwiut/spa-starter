@@ -56,30 +56,33 @@ export default function useActsState(): ActsState {
 
   const debouncedSearch = useDebounce<string>(search);
 
-  const { data, isLoading, isPreviousData, isPlaceholderData, error } =
-    useQuery({
-      queryKey: [
-        "acts",
-        { page, pageSize, status, debouncedSearch, ...filters },
-      ],
-      queryFn: async () => {
-        const res = await getAllActs({
-          page,
-          page_size: pageSize,
-          status,
-          search: debouncedSearch,
-          doc_type_id: filters.doc_type_id,
-          min_date: filters.min_date,
-          max_date: filters.max_date,
-          region_id: filters.region_id,
-          district_id: filters.district_id,
-          violation_type: filters.violation_type,
-        });
-        return res;
-      },
-      keepPreviousData: true,
-      placeholderData: { count: 0, next: null, previous: null, results: [] },
-    });
+  const {
+    data,
+    isLoading,
+    isPreviousData,
+    isPlaceholderData,
+    isFetching,
+    error,
+  } = useQuery({
+    queryKey: ["acts", { page, pageSize, status, debouncedSearch, ...filters }],
+    queryFn: async () => {
+      const res = await getAllActs({
+        page,
+        page_size: pageSize,
+        status,
+        search: debouncedSearch,
+        doc_type_id: filters.doc_type_id,
+        min_date: filters.min_date,
+        max_date: filters.max_date,
+        region_id: filters.region_id,
+        district_id: filters.district_id,
+        violation_type: filters.violation_type,
+      });
+      return res;
+    },
+    keepPreviousData: true,
+    placeholderData: { count: 0, next: null, previous: null, results: [] },
+  });
 
   const { data: locations } = useQuery({
     queryKey: ["regions"],
@@ -257,6 +260,9 @@ export default function useActsState(): ActsState {
     locale: { items_per_page: "" },
   };
 
+  const isTableLoading =
+    isLoading || isPreviousData || isPlaceholderData || isFetching;
+
   const columns: ColumnsType<ActType> = useMemo(
     () => [
       {
@@ -383,18 +389,16 @@ export default function useActsState(): ActsState {
       void messageApi.error({
         key: "acts-error",
         // @ts-expect-error error type is unknown but it will get Response type and object from axios
-        content: error?.statusText,
+        content: error?.statusText ?? t("error-fetching-data"),
       });
     }
-  }, [error, messageApi]);
+  }, [error, messageApi, t]);
 
   return {
     Header,
     Content,
     data,
-    isLoading,
-    isPreviousData,
-    isPlaceholderData,
+    isTableLoading,
     columns,
     colorBgContainer,
     paginationProps,

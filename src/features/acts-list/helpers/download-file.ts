@@ -9,7 +9,7 @@ export default function downloadFile(url: string, filename: string): void {
       const blob = xhr.response;
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = `violation_file_${uid(16, "-")}_${filename}`;
+      link.download = `violation_file_${uid(8, "-")}_${filename}`;
       link.click();
     }
   };

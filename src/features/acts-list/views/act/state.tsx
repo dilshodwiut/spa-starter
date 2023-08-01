@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import ReactPlayer from "react-player";
 import { Layout, Typography, Input, theme, message, Button } from "antd";
@@ -8,11 +8,18 @@ import { CloudDownloadOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
 import type { NoticeType } from "antd/es/message/interface";
 import type { CarouselRef } from "antd/es/carousel";
+import type { RcFile } from "antd/es/upload";
 import type { MediaFile } from "@/types";
 import type { ActState } from "../../types";
 import downloadFile from "../../helpers/download-file";
 import getFileData from "../../helpers/get-file-data";
-import { getAct, getAllActs, getViolationTypes } from "../../api";
+import {
+  getAct,
+  getAllActs,
+  getViolationTypes,
+  updateViolationStatus,
+  updateViolationType,
+} from "../../api";
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
@@ -34,19 +41,23 @@ const uploadProps: UploadProps = {
       console.log(`${info.file.name} file upload failed.`);
     }
   },
+  beforeUpload(file: RcFile) {
+    const isLt50Mb = file.size / 1024 / 1024 <= 50;
+    if (!isLt50Mb) {
+      void message.error("Image must smaller than 2MB!");
+    }
+    return isLt50Mb;
+  },
 };
 
 const renderFile = (file: MediaFile): React.ReactNode => {
   if (file.type === "image") {
     return (
-      <div
-        key={file.file}
-        className="m-0 h-[360px] text-white text-center leading-[160px]"
-      >
+      <div key={file.file} className="h-[392px]">
         <img
           src={`${import.meta.env.VITE_MEDIA_URL}/${file.file}`}
           alt="violation"
-          className="w-full h-full"
+          className="w-full"
         />
       </div>
     );
@@ -54,17 +65,14 @@ const renderFile = (file: MediaFile): React.ReactNode => {
 
   if (file.type === "video") {
     return (
-      <div
-        key={file.file}
-        className="m-0 h-[360px] text-white text-center leading-[160px] bg-black"
-      >
+      <div key={file.file} className="h-[392px] bg-black">
         <ReactPlayer width={472} url={file.file} controls playing light />
       </div>
     );
   }
 
   return (
-    <div className="h-[360px]">
+    <div key={file.file} className="h-[392px]">
       <div className="h-full flex flex-col justify-center items-center">
         <CloudDownloadOutlined style={{ fontSize: "8rem" }} />
         <Button
@@ -97,12 +105,15 @@ export default function useActState(): ActState {
     criminal: false,
     cancel: false,
   });
+  const [note, setNote] = useState("");
 
   const carouselRef = useRef<CarouselRef>(null);
 
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["act", actId],
@@ -153,12 +164,90 @@ export default function useActState(): ActState {
   const isCurrFetching =
     isLoading || isActsDataLoading || isViolationsDataLoading;
 
+  const violTypeMutation = useMutation({
+    mutationFn: async (_data: { violation_type?: number }) => {
+      await updateViolationType(actId!, _data);
+    },
+    onSuccess: (_data, variables, _context) => {
+      void queryClient.invalidateQueries(["acts"]);
+
+      const violType = violationTypes.find(
+        (viol) => viol.id === variables.violation_type,
+      );
+
+      if (violType?.key === "administrative") {
+        void notify(
+          `${t("act")} ${data?.series ?? ""} ${data?.number ?? ""} ${t(
+            "confirmed-admin-violation",
+          )}`,
+          "success",
+        );
+      } else {
+        void notify(
+          `${t("act")} ${data?.series ?? ""} ${data?.number ?? ""} ${t(
+            "confirmed-criminal-violation",
+          )}`,
+          "success",
+        );
+      }
+    },
+    onError: (): void => {
+      void notify(`${t("error")}`, "error");
+    },
+    onMutate: (variables): void => {
+      const violType = violationTypes.find(
+        (viol) => viol.id === variables.violation_type,
+      );
+
+      if (violType?.key === "administrative") {
+        setActionInProcess((prev) => ({ ...prev, admin: true }));
+      } else {
+        setActionInProcess((prev) => ({ ...prev, criminal: true }));
+      }
+    },
+    onSettled: (_data, _err, variables, _context): void => {
+      const violType = violationTypes.find(
+        (viol) => viol.id === variables.violation_type,
+      );
+
+      if (violType?.key === "administrative") {
+        setActionInProcess((prev) => ({ ...prev, admin: false }));
+      } else {
+        setActionInProcess((prev) => ({ ...prev, criminal: false }));
+      }
+    },
+  });
+
+  const violStatusMutation = useMutation({
+    mutationFn: async (_data: { status?: string; description?: string }) => {
+      await updateViolationStatus(actId!, _data);
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries(["acts"]);
+
+      setNote("");
+      setIsModalOpen(false);
+    },
+    onError: (): void => {
+      void notify(`${t("error")}`, "error");
+    },
+    onMutate: (): void => {
+      setActionInProcess((prev) => ({ ...prev, cancel: true }));
+    },
+    onSettled: (): void => {
+      setActionInProcess((prev) => ({ ...prev, cancel: false }));
+    },
+  });
+
   const showModal = (): void => {
     setIsModalOpen(true);
   };
 
   const handleOk = (): void => {
-    setIsModalOpen(false);
+    violStatusMutation.mutate({
+      status: "rejected",
+      description: note,
+    });
   };
 
   const handleCancel = (): void => {
@@ -202,7 +291,7 @@ export default function useActState(): ActState {
       void messageApi.error({
         key: "acts-error",
         // @ts-expect-error error type is unknown but it will get Response type and object from axios
-        content: error?.statusText,
+        content: error?.statusText ?? t("error-fetching-data"),
       });
     }
 
@@ -210,10 +299,10 @@ export default function useActState(): ActState {
       void messageApi.error({
         key: "acts-error",
         // @ts-expect-error error type is unknown but it will get Response type and object from axios
-        content: actsListError?.statusText,
+        content: actsListError?.statusText ?? t("error-fetching-data"),
       });
     }
-  }, [error, actsListError, messageApi]);
+  }, [error, actsListError, messageApi, t]);
 
   return {
     Header,
@@ -222,7 +311,6 @@ export default function useActState(): ActState {
     TextArea,
     contextHolder,
     colorBgContainer,
-    actId,
     uploadProps,
     isModalOpen,
     isCarouselModalOpen,
@@ -233,6 +321,8 @@ export default function useActState(): ActState {
     carouselRef,
     isCurrFetching,
     actionInProcess,
+    violTypeMutation,
+    note,
     handleOk,
     handleCancel,
     handleCarouselModalCancel,
@@ -243,7 +333,7 @@ export default function useActState(): ActState {
     goBack,
     onImgClick,
     renderFile,
+    setNote,
     t,
-    setActionInProcess,
   };
 }

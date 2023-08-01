@@ -7,7 +7,6 @@ import {
 } from "@ant-design/icons";
 import CustomModal from "@/components/modal";
 import backIcon from "@/assets/arrow-left.svg";
-import { updateViolationType } from "../../api";
 import formatDate from "../../helpers/formatDate";
 import formatAmount from "../../helpers/formatAmount";
 import CustomCard from "../../components/custom-card";
@@ -32,7 +31,6 @@ export default function Act(): React.ReactElement {
     TextArea,
     contextHolder,
     colorBgContainer,
-    actId,
     uploadProps,
     isModalOpen,
     isCarouselModalOpen,
@@ -43,6 +41,8 @@ export default function Act(): React.ReactElement {
     carouselRef,
     isCurrFetching,
     actionInProcess,
+    violTypeMutation,
+    note,
     handleOk,
     handleCancel,
     handleCarouselModalCancel,
@@ -53,8 +53,8 @@ export default function Act(): React.ReactElement {
     goBack,
     onImgClick,
     renderFile,
+    setNote,
     t,
-    setActionInProcess,
   } = useActState();
 
   return (
@@ -68,14 +68,17 @@ export default function Act(): React.ReactElement {
           </>
         }
         open={isModalOpen}
-        onOk={handleOk}
         onCancel={handleCancel}
         footer={
           <>
             <Divider className="mb-3" />
             <div>
-              <Button onClick={handleCancel}>{t("cancel")}</Button>
-              <Button onClick={handleOk}>{t("approve")}</Button>
+              <Button disabled={actionInProcess.cancel} onClick={handleCancel}>
+                {t("cancel")}
+              </Button>
+              <Button loading={actionInProcess.cancel} onClick={handleOk}>
+                {t("approve")}
+              </Button>
             </div>
           </>
         }
@@ -84,7 +87,7 @@ export default function Act(): React.ReactElement {
           <Info
             rootClassName="flex-1"
             of={t("act-serial-number")}
-            value={`${data?.act_series ?? ""} ${data?.act_number ?? ""}`}
+            value={`${data?.series ?? ""} ${data?.number ?? ""}`}
           />
           <Info
             rootClassName="flex-1"
@@ -100,7 +103,14 @@ export default function Act(): React.ReactElement {
 
         <Info of={t("choose-annulment-reason")} className="flex flex-col gap-2">
           <Select placeholder={t("reason")} />
-          <TextArea rows={4} placeholder={t("note") ?? ""} />
+          <TextArea
+            rows={4}
+            placeholder={t("note") ?? ""}
+            value={note}
+            onChange={(e) => {
+              setNote(e.target.value);
+            }}
+          />
 
           <div className="flex items-center gap-4">
             <Upload {...uploadProps}>
@@ -128,8 +138,10 @@ export default function Act(): React.ReactElement {
       >
         <Carousel
           ref={carouselRef}
-          // dotPosition="top"
-          // dots={{ className: "bg-black h-8 flex justify-center items-center" }}
+          dots={{
+            className:
+              "absolute bottom-0 bg-black h-8 flex justify-center items-center",
+          }}
         >
           {data?.files?.map(renderFile)}
         </Carousel>
@@ -364,18 +376,20 @@ export default function Act(): React.ReactElement {
                 of={t("violation-files")}
                 value={
                   <div className="flex gap-4 mt-4">
-                    {data?.files?.map((file, index) => (
-                      <img
-                        key={file.file}
-                        src={`${import.meta.env.VITE_MEDIA_URL}/${file.file}`}
-                        alt="violation"
-                        className="2xl:w-[180px] lg:w-32 sm:w-20 cursor-pointer"
-                        onClick={() => {
-                          onImgClick(index);
-                        }}
-                        aria-hidden
-                      />
-                    ))}
+                    {data?.files
+                      ?.filter((file) => file.type === "image")
+                      .map((file, index) => (
+                        <img
+                          key={file.file}
+                          src={`${import.meta.env.VITE_MEDIA_URL}/${file.file}`}
+                          alt="violation"
+                          className="2xl:w-[180px] lg:w-32 sm:w-20 cursor-pointer"
+                          onClick={() => {
+                            onImgClick(index);
+                          }}
+                          aria-hidden
+                        />
+                      ))}
                   </div>
                 }
               />
@@ -452,28 +466,13 @@ export default function Act(): React.ReactElement {
             actionKey="F5"
             Icon={CheckCircleFilled}
             onDispatchAction={async () => {
-              setActionInProcess((prev) => ({ ...prev, admin: true }));
+              const foundViolType = violationTypes?.find(
+                (violation) => violation.key === "administrative",
+              );
 
-              try {
-                const violationType = violationTypes?.find(
-                  (violation) => violation.key === "administrative",
-                );
-
-                await updateViolationType(actId!, {
-                  violation_type: violationType?.id,
-                });
-
-                void notify(
-                  `${t("act")} BH 2240106381566 ${t(
-                    "confirmed-admin-violation",
-                  )}`,
-                  "success",
-                );
-              } catch {
-                void notify(`${t("error")}`, "error");
-              }
-
-              setActionInProcess((prev) => ({ ...prev, admin: false }));
+              violTypeMutation.mutate({
+                violation_type: foundViolType?.id,
+              });
             }}
           >
             {t("approve-admin-violation")}
@@ -486,28 +485,13 @@ export default function Act(): React.ReactElement {
             actionKey="F6"
             Icon={CheckCircleFilled}
             onDispatchAction={async () => {
-              setActionInProcess((prev) => ({ ...prev, criminal: true }));
+              const foundViolType = violationTypes?.find(
+                (violation) => violation.key === "criminal",
+              );
 
-              try {
-                const violationType = violationTypes?.find(
-                  (violation) => violation.key === "criminal",
-                );
-
-                await updateViolationType(actId!, {
-                  violation_type: violationType?.id,
-                });
-
-                void notify(
-                  `${t("act")} BH 2240106381566 ${t(
-                    "confirmed-criminal-violation",
-                  )}`,
-                  "success",
-                );
-              } catch {
-                void notify(`${t("error")}`, "error");
-              }
-
-              setActionInProcess((prev) => ({ ...prev, criminal: false }));
+              violTypeMutation.mutate({
+                violation_type: foundViolType?.id,
+              });
             }}
           >
             {t("approve-criminal-violation")}

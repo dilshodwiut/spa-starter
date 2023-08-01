@@ -23,9 +23,7 @@ export default function Acts(): React.ReactElement {
     Header,
     Content,
     data,
-    isLoading,
-    isPreviousData,
-    isPlaceholderData,
+    isTableLoading,
     columns,
     colorBgContainer,
     paginationProps,
@@ -106,7 +104,7 @@ export default function Acts(): React.ReactElement {
           }}
         >
           <Table
-            loading={isLoading || isPreviousData || isPlaceholderData}
+            loading={isTableLoading}
             onRow={onTableRow}
             rowKey={(record) => record.id}
             columns={columns}

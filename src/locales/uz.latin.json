@@ -119,6 +119,7 @@
 
   "action-in-progress": "Iltimos kuting...",
   "error": "Xatolik",
+  "error-fetching-data": "Maʼlumotlarni olishda xatolik yuz berdi",
 
   "see": "Ko'rish",
   "datetime": "Sana va vaqt",

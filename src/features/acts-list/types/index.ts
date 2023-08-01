@@ -1,4 +1,5 @@
 import type { ChangeEventHandler, Dispatch, SetStateAction } from "react";
+import type { UseMutationResult } from "@tanstack/react-query";
 import type { BaseEntity, BaseParams, ListResponse, MediaFile } from "@/types";
 import type {
   Layout,
@@ -73,7 +74,6 @@ interface ActState {
   TextArea: typeof Input.TextArea;
   contextHolder: React.ReactElement;
   colorBgContainer: string;
-  actId: string | undefined;
   uploadProps: UploadProps;
   isModalOpen: boolean;
   isCarouselModalOpen: boolean;
@@ -84,6 +84,15 @@ interface ActState {
   carouselRef: React.RefObject<CarouselRef>;
   isCurrFetching: boolean;
   actionInProcess: ActionInProcess;
+  violTypeMutation: UseMutationResult<
+    void,
+    unknown,
+    {
+      violation_type?: number | undefined;
+    },
+    unknown
+  >;
+  note: string;
   handleOk: () => void;
   handleCancel: () => void;
   handleCarouselModalCancel: () => void;
@@ -94,8 +103,8 @@ interface ActState {
   goBack: () => void;
   onImgClick: (index: number) => void;
   renderFile: (file: MediaFile) => React.ReactNode;
+  setNote: Dispatch<SetStateAction<string>>;
   t: TFunction;
-  setActionInProcess: Dispatch<SetStateAction<ActionInProcess>>;
 }
 
 interface ActType {
@@ -207,9 +216,7 @@ interface ActsState {
   Header: typeof Layout.Header;
   Content: typeof Layout.Content;
   data: ListResponse<ActType[]> | undefined;
-  isLoading: boolean;
-  isPreviousData: boolean;
-  isPlaceholderData: boolean;
+  isTableLoading: boolean;
   columns: ColumnsType<ActType>;
   colorBgContainer: string;
   paginationProps: TableProps<ActType>["pagination"];
