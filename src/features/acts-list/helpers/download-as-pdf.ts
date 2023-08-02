@@ -5,7 +5,7 @@ export default function downloadAsPdf(
   element: HTMLElement,
   filename: string,
 ): void {
-  html2canvas(element).then((canvas) => {
+  void html2canvas(element).then((canvas) => {
     const imgData = canvas.toDataURL("image/png");
     const pdf = new JsPDF();
     pdf.addImage({

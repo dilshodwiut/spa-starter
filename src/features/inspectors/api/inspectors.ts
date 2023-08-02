@@ -27,7 +27,7 @@ export async function createInspector(
   data: Exclude<Partial<InspectorType>, "id">,
 ): Promise<Exclude<Partial<InspectorType>, "id">> {
   const result: Exclude<Partial<InspectorType>, "id"> = await request({
-    url: `/account/users`,
+    url: `/account/users/`,
     method: "post",
     data,
   });
