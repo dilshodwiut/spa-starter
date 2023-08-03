@@ -93,6 +93,8 @@ interface ActState {
     unknown
   >;
   note: string;
+  reason: number | undefined;
+  reasons: SelectProps["options"];
   handleOk: () => void;
   handleCancel: () => void;
   handleCarouselModalCancel: () => void;
@@ -104,6 +106,7 @@ interface ActState {
   onImgClick: (index: number) => void;
   renderFile: (file: MediaFile) => React.ReactNode;
   setNote: Dispatch<SetStateAction<string>>;
+  setReason: Dispatch<SetStateAction<number | undefined>>;
   t: TFunction;
 }
 
@@ -212,6 +215,10 @@ interface Violation extends BaseEntity {
   key: ViolationType;
 }
 
+interface Reason extends BaseEntity {
+  translations: string;
+}
+
 interface ActsState {
   Header: typeof Layout.Header;
   Content: typeof Layout.Content;
@@ -260,4 +267,5 @@ export type {
   Article,
   Violation,
   ViolationDoc,
+  Reason,
 };

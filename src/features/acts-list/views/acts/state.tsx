@@ -5,13 +5,15 @@ import { useTranslation } from "react-i18next";
 // import { isInt } from "radash";
 import { useDebounce } from "usehooks-ts";
 import { compareAsc, lightFormat } from "date-fns";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import ShowTotal from "@/components/show-total";
 import { Layout, Tag, Form, message, theme, Tooltip } from "antd";
 import type { SegmentedProps } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
+import placeholderIcon from "@/assets/image-placeholder.svg";
 import getColor from "../../helpers/get-color";
-import formatDate from "../../helpers/formatDate";
-import formatAmount from "../../helpers/formatAmount";
+import formatDate from "../../helpers/format-date";
+import formatAmount from "../../helpers/format-amount";
 import {
   getAllActs,
   getArticles,
@@ -266,14 +268,27 @@ export default function useActsState(): ActsState {
   const columns: ColumnsType<ActType> = useMemo(
     () => [
       {
-        title: t("type"),
+        title: t("org-type"),
         dataIndex: "logo",
         render(value: string, record: ActType) {
           return (
             <Tooltip title={record.employee?.organization?.name}>
-              <img
-                src={`${import.meta.env.VITE_CDN_URL}${value}`}
+              <LazyLoadImage
+                src={
+                  value !== "" && typeof value === "string"
+                    ? `${import.meta.env.VITE_CDN_URL}${value}`
+                    : placeholderIcon
+                }
                 alt={record.employee.organization.name}
+                effect="opacity"
+                style={{
+                  borderRadius: "6px",
+                }}
+                onError={(e) => {
+                  console.log(e);
+                  e.target.onerror = null;
+                  e.target.src = placeholderIcon;
+                }}
               />
             </Tooltip>
           );

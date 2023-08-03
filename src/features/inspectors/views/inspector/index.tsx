@@ -1,7 +1,11 @@
-import { Button, Col, DatePicker, Result, Row, Select } from "antd";
+import { PatternFormat } from "react-number-format";
+import { Button, DatePicker, Result, Select } from "antd";
 import CustomModal from "@/components/modal";
 import backIcon from "@/assets/arrow-left.svg";
 import tickIcon from "@/assets/tick-square.svg";
+// import 'dayjs/locale/zh-cn';
+// import locale from "antd/es/date-picker/locale/ru_RU";
+import localeRu from "@/locales/ru.datepicker.json";
 import useInspectorState from "./state";
 
 export default function Inspector(): React.ReactElement {
@@ -15,10 +19,13 @@ export default function Inspector(): React.ReactElement {
     inspectorId,
     form,
     isLoading,
+    regions,
+    districts,
     contextHolder,
     goBack,
     handleCancel,
     submitHandler,
+    handleRegionChange,
     t,
   } = useInspectorState();
 
@@ -54,116 +61,198 @@ export default function Inspector(): React.ReactElement {
           autoComplete="off"
           form={form}
         >
-          <Row gutter={48}>
-            <Col span={8}>
-              <Form.Item
-                label={t("last-name")}
-                name="last_name"
-                rules={[
-                  {
-                    required: true,
-                    type: "string",
-                    min: 1,
-                    whitespace: true,
-                    message: t("lastname-min-5") ?? "",
-                  },
-                ]}
-              >
-                <Input size="large" placeholder={t("last-name") ?? ""} />
-              </Form.Item>
-              <Form.Item label={t("passport")} name="passport_series">
-                <Input size="large" placeholder={t("passport") ?? ""} />
-              </Form.Item>
-              <Form.Item label={t("phone")} name="phone">
-                <Input size="large" placeholder={t("phone") ?? ""} />
-              </Form.Item>
-              <Form.Item label={t("organization")} name="organization">
-                <Input size="large" placeholder={t("organization") ?? ""} />
-              </Form.Item>
-              <Form.Item label={t("region")} name="region">
-                <Select size="large" placeholder={t("region") ?? ""} />
-              </Form.Item>
-              <Form.Item label={t("login")} name="username">
-                <Input size="large" placeholder={t("login") ?? ""} />
-              </Form.Item>
-            </Col>
+          <div className="w-full flex gap-4">
+            <Form.Item
+              label={t("last-name")}
+              name="last_name"
+              rules={[
+                {
+                  required: true,
+                  type: "string",
+                  min: 1,
+                  whitespace: true,
+                  message: t("lastname-min-5") ?? "",
+                },
+              ]}
+              className="w-1/3"
+            >
+              <Input size="large" placeholder={t("last-name") ?? ""} />
+            </Form.Item>
+            <Form.Item
+              label={t("first-name")}
+              name="first_name"
+              rules={[
+                {
+                  required: true,
+                  type: "string",
+                  min: 1,
+                  whitespace: true,
+                  message: t("firstname-min-3") ?? "",
+                },
+              ]}
+              className="w-1/3"
+            >
+              <Input size="large" placeholder={t("first-name") ?? ""} />
+            </Form.Item>
+            <Form.Item
+              label={t("patronymic")}
+              name="patronymic"
+              rules={[
+                {
+                  required: true,
+                  type: "string",
+                  min: 1,
+                  whitespace: true,
+                  message: t("patronymic-min-5") ?? "",
+                },
+              ]}
+              className="w-1/3"
+            >
+              <Input size="large" placeholder={t("patronymic") ?? ""} />
+            </Form.Item>
+          </div>
 
-            <Col span={8}>
-              <Form.Item
-                label={t("first-name")}
-                name="first_name"
-                rules={[
-                  {
-                    required: true,
-                    type: "string",
-                    min: 1,
-                    whitespace: true,
-                    message: t("firstname-min-3") ?? "",
-                  },
-                ]}
-              >
-                <Input size="large" placeholder={t("first-name") ?? ""} />
-              </Form.Item>
-              <Form.Item label={t("pinfl")} name="pinfl">
-                <Input size="large" placeholder={t("pinfl") ?? ""} />
-              </Form.Item>
-              <Form.Item label={t("city-phone")} name="city_phone">
-                <Input size="large" placeholder={t("city-phone") ?? ""} />
-              </Form.Item>
-              <Form.Item
-                label={t("organization-division")}
-                name="organization_divison"
-              >
-                <Input
-                  size="large"
-                  placeholder={t("organization-division") ?? ""}
-                />
-              </Form.Item>
-              <Form.Item label={t("district")} name="district">
-                <Select size="large" placeholder={t("district") ?? ""} />
-              </Form.Item>
-              <Form.Item label={t("password")} name="password">
-                <Input.Password
-                  placeholder={t("password") ?? ""}
-                  className="h-12 rounded-xl"
-                />
-              </Form.Item>
-            </Col>
+          <div className="w-full flex gap-4">
+            <Form.Item
+              label={t("passport")}
+              name="passport_series"
+              className="w-1/3"
+            >
+              <Input size="large" placeholder={t("passport") ?? ""} />
+            </Form.Item>
+            <Form.Item label={t("pinfl")} name="pinfl" className="w-1/3">
+              <Input size="large" placeholder={t("pinfl") ?? ""} />
+            </Form.Item>
 
-            <Col span={8}>
-              <Form.Item
-                label={t("patronymic")}
-                name="patronymic"
-                rules={[
-                  {
-                    required: true,
-                    type: "string",
-                    min: 1,
-                    whitespace: true,
-                    message: t("patronymic-min-5") ?? "",
-                  },
-                ]}
-              >
-                <Input size="large" placeholder={t("patronymic") ?? ""} />
-              </Form.Item>
-              <Form.Item label={t("dob")} name="birth_date">
-                <DatePicker
-                  size="large"
-                  className="w-full"
-                  placeholder={t("select-date") ?? ""}
-                />
-              </Form.Item>
-              <Form.Item label={t("residence-address")} name="address">
-                <Input
-                  size="large"
-                  placeholder={t("residence-address") ?? ""}
-                />
-              </Form.Item>
-              <Form.Item label={t("job-title")} name="position">
-                <Input size="large" placeholder={t("job-title") ?? ""} />
-              </Form.Item>
-            </Col>
-          </Row>
+            <Form.Item label={t("dob")} name="birth_date" className="w-1/3">
+              <DatePicker
+                size="large"
+                className="w-full"
+                placeholder={t("select-date") ?? ""}
+                disabledDate={(currDate) =>
+                  currDate.add(18, "year").isAfter(Date.now())
+                }
+                // locale={localeRu}
+              />
+            </Form.Item>
+          </div>
+
+          <div className="w-full flex gap-4">
+            <Form.Item label={t("phone")} name="phone" className="w-1/3">
+              <PatternFormat
+                format="+998 ## ### ## ##"
+                customInput={Input}
+                size="large"
+                placeholder="+998"
+              />
+            </Form.Item>
+
+            <Form.Item
+              label={t("city-phone")}
+              name="city_phone"
+              className="w-1/3"
+            >
+              <PatternFormat
+                format="+998 ## ### ## ##"
+                customInput={Input}
+                size="large"
+                placeholder="+998"
+              />
+            </Form.Item>
+
+            <Form.Item
+              label={t("residence-address")}
+              name="address"
+              className="w-1/3"
+            >
+              <Input size="large" placeholder={t("residence-address") ?? ""} />
+            </Form.Item>
+          </div>
+
+          <div className="w-full flex gap-4">
+            <Form.Item
+              label={t("organization")}
+              name="organization"
+              className="w-1/3"
+            >
+              <Input size="large" placeholder={t("organization") ?? ""} />
+            </Form.Item>
+
+            <Form.Item
+              label={t("organization-division")}
+              name="organization_divison"
+              className="w-1/3"
+            >
+              <Input
+                size="large"
+                placeholder={t("organization-division") ?? ""}
+              />
+            </Form.Item>
+            <Form.Item label={t("job-title")} name="position" className="w-1/3">
+              <Input size="large" placeholder={t("job-title") ?? ""} />
+            </Form.Item>
+          </div>
+
+          <div className="w-full flex gap-4">
+            <Form.Item label={t("region")} name="region" className="w-1/3">
+              <Select
+                size="large"
+                placeholder={t("region") ?? ""}
+                onChange={handleRegionChange}
+                options={regions}
+                allowClear
+              />
+            </Form.Item>
+            <Form.Item label={t("district")} name="district" className="w-1/3">
+              <Select
+                size="large"
+                placeholder={t("district") ?? ""}
+                options={districts}
+                allowClear
+              />
+            </Form.Item>
+            <div className="w-1/3" />
+          </div>
+
+          <div className="w-full flex gap-4">
+            <Form.Item
+              label={t("login")}
+              name="username"
+              className="w-1/3"
+              rules={[
+                {
+                  required: true,
+                  type: "string",
+                  min: 1,
+                  whitespace: true,
+                  message: t("username-min-3") ?? "",
+                },
+              ]}
+            >
+              <Input size="large" placeholder={t("login") ?? ""} />
+            </Form.Item>
+
+            <Form.Item
+              label={t("password")}
+              name="password"
+              className="w-1/3"
+              rules={[
+                {
+                  required: true,
+                  type: "string",
+                  min: 1,
+                  whitespace: true,
+                  message: t("password-min-6") ?? "",
+                },
+              ]}
+            >
+              <Input.Password
+                placeholder={t("password") ?? ""}
+                className="h-10 rounded-lg"
+              />
+            </Form.Item>
+            <div className="w-1/3" />
+          </div>
 
           <div className="absolute bottom-6 right-6">
             <div className="flex gap-6">
@@ -193,8 +282,8 @@ export default function Inspector(): React.ReactElement {
       <CustomModal open={isModalOpen} onCancel={handleCancel} footer={null}>
         <Result
           status="success"
-          title="Success!"
-          subTitle="New user added to the system"
+          title={t("success")}
+          subTitle={t("user-added")}
           icon={
             <div className="h-24 w-24 bg-[#fafbfc] rounded-3xl m-auto flex">
               <img

@@ -16,6 +16,7 @@ import getFileData from "../../helpers/get-file-data";
 import {
   getAct,
   getAllActs,
+  getReasons,
   getViolationTypes,
   updateViolationStatus,
   updateViolationType,
@@ -106,6 +107,7 @@ export default function useActState(): ActState {
     cancel: false,
   });
   const [note, setNote] = useState("");
+  const [reason, setReason] = useState<number>();
 
   const carouselRef = useRef<CarouselRef>(null);
 
@@ -123,6 +125,19 @@ export default function useActState(): ActState {
     },
     enabled: Boolean(actId),
   });
+
+  const { data: reasonsData } = useQuery({
+    queryKey: ["reasons"],
+    queryFn: async () => {
+      const res = await getReasons();
+      return res;
+    },
+  });
+
+  const reasons = reasonsData?.results?.map(({ id, name }) => ({
+    label: name,
+    value: id,
+  }));
 
   const {
     data: actsData,
@@ -170,6 +185,7 @@ export default function useActState(): ActState {
     },
     onSuccess: (_data, variables, _context) => {
       void queryClient.invalidateQueries(["acts"]);
+      void queryClient.invalidateQueries(["act", actId]);
 
       const violType = violationTypes.find(
         (viol) => viol.id === variables.violation_type,
@@ -219,11 +235,16 @@ export default function useActState(): ActState {
   });
 
   const violStatusMutation = useMutation({
-    mutationFn: async (_data: { status?: string; description?: string }) => {
+    mutationFn: async (_data: {
+      status: string;
+      reason: number;
+      description?: string;
+    }) => {
       await updateViolationStatus(actId!, _data);
     },
     onSuccess: () => {
       void queryClient.invalidateQueries(["acts"]);
+      void queryClient.invalidateQueries(["act", actId]);
 
       setNote("");
       setIsModalOpen(false);
@@ -246,6 +267,7 @@ export default function useActState(): ActState {
   const handleOk = (): void => {
     violStatusMutation.mutate({
       status: "rejected",
+      reason,
       description: note,
     });
   };
@@ -323,6 +345,8 @@ export default function useActState(): ActState {
     actionInProcess,
     violTypeMutation,
     note,
+    reasons,
+    reason,
     handleOk,
     handleCancel,
     handleCarouselModalCancel,
@@ -334,6 +358,7 @@ export default function useActState(): ActState {
     onImgClick,
     renderFile,
     setNote,
+    setReason,
     t,
   };
 }

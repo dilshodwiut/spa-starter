@@ -1,5 +1,4 @@
 import actsListRoutes from "./routes";
+import { getRegions } from "./api";
 
-const somethingElse = null;
-
-export { actsListRoutes, somethingElse };
+export { actsListRoutes, getRegions };

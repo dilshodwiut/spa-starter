@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { clone } from "ramda";
 import { Layout, Form, Input, theme, message } from "antd";
+import { getRegions } from "@/features/acts-list";
 import type { FormValues, InspectorState } from "../../types";
 import { createInspector, getInspector, updateInspector } from "../../api";
 
@@ -17,12 +18,13 @@ export default function useInspectorState(): InspectorState {
   const form = Form.useForm()[0];
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedRegion, setSelectedRegion] = useState<number>();
 
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  const { data } = useQuery({
+  const { data, error } = useQuery({
     queryKey: ["inspector", inspectorId],
     queryFn: async () => {
       const res = await getInspector(inspectorId!);
@@ -30,6 +32,36 @@ export default function useInspectorState(): InspectorState {
     },
     enabled: Boolean(inspectorId),
   });
+
+  const { data: locations, error: locationsError } = useQuery({
+    queryKey: ["regions"],
+    queryFn: async () => {
+      const res = await getRegions();
+      return res;
+    },
+    placeholderData: { count: 0, next: null, previous: null, results: [] },
+  });
+
+  let regions = locations?.results.map(({ id, name }) => ({
+    value: id,
+    label: name,
+  }));
+  regions ??= [];
+
+  const districts = useMemo(() => {
+    const location = locations?.results.find(
+      (loc) => loc.id === selectedRegion,
+    );
+
+    if (typeof location !== "undefined") {
+      return location?.districts.map(({ id, name }) => ({
+        value: id,
+        label: name,
+      }));
+    }
+
+    return [];
+  }, [selectedRegion, locations?.results]);
 
   const mutationFn = async (formData: FormValues): Promise<void> => {
     if (typeof inspectorId === "string") {
@@ -44,15 +76,19 @@ export default function useInspectorState(): InspectorState {
     onSuccess: () => {
       setIsModalOpen(true);
     },
-    onError: (error: { data: { detail: string } }) => {
+    onError: (_error: { data: { detail: string } }) => {
       void messageApi.error({
-        content: error.data.detail,
+        content: _error.data.detail,
       });
     },
   });
 
+  const handleRegionChange = (value: number): void => {
+    setSelectedRegion(value);
+    form.setFieldValue("district", undefined);
+  };
+
   const handleCancel = (): void => {
-    console.log("cancel");
     setIsModalOpen(false);
   };
 
@@ -62,7 +98,7 @@ export default function useInspectorState(): InspectorState {
 
   const submitHandler = (values: FormValues): void => {
     console.log(values);
-    mutate(values);
+    // mutate(values);
   };
 
   useEffect(() => {
@@ -76,6 +112,24 @@ export default function useInspectorState(): InspectorState {
     form.setFieldsValue(initialValues);
   }, [data, form]);
 
+  useEffect(() => {
+    if (error !== null) {
+      void messageApi.error({
+        key: "inspector-error",
+        // @ts-expect-error error type is unknown but it will get Response type and object from axios
+        content: error?.statusText ?? t("error-fetching-data"),
+      });
+    }
+
+    if (locationsError !== null) {
+      void messageApi.error({
+        key: "regions-error",
+        // @ts-expect-error error type is unknown but it will get Response type and object from axios
+        content: locationsError?.statusText ?? t("error-fetching-data"),
+      });
+    }
+  }, [error, locationsError, messageApi, t]);
+
   return {
     Header,
     Content,
@@ -86,10 +140,13 @@ export default function useInspectorState(): InspectorState {
     inspectorId,
     form,
     isLoading,
+    regions,
+    districts,
     contextHolder,
     goBack,
     handleCancel,
     submitHandler,
+    handleRegionChange,
     t,
   };
 }

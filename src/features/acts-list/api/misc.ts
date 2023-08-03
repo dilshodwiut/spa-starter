@@ -1,6 +1,6 @@
 import request from "@/utils/axios";
 import type { BaseParams, ListResponse, Region } from "@/types";
-import type { Article, Violation, ViolationDoc } from "../types";
+import type { Article, Reason, Violation, ViolationDoc } from "../types";
 
 export async function getRegions(
   params: BaseParams = {},
@@ -50,6 +50,18 @@ export async function getViolationTypes(
   return result;
 }
 
+export async function getReasons(
+  params: BaseParams = {},
+): Promise<ListResponse<Reason[]>> {
+  const result: ListResponse<Reason[]> = await request({
+    url: "/reasons/",
+    method: "get",
+    params,
+  });
+
+  return result;
+}
+
 export async function updateViolationType(
   id: string,
   data: { violation_type?: number } = {},
@@ -63,7 +75,7 @@ export async function updateViolationType(
 
 export async function updateViolationStatus(
   id: string,
-  data: { status?: string; description?: string } = {},
+  data: { status: string; reason: number; description?: string } = {},
 ): Promise<void> {
   await request({
     url: `/violations/${id}/update-status/`,

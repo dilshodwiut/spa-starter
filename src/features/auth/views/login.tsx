@@ -31,7 +31,7 @@ export default function Login(): React.ReactElement {
         last_name: res.user.last_name ?? "",
         middle_name: res.user.middle_name ?? "",
       });
-      navigate("/");
+      navigate("/statistics");
     },
     onError: (error: { data: { detail: string } }) => {
       void messageApi.error({

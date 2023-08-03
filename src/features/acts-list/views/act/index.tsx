@@ -4,16 +4,20 @@ import {
   CloseCircleFilled,
   FileTextFilled,
   RightCircleFilled,
+  UserOutlined,
 } from "@ant-design/icons";
+import { PatternFormat } from "react-number-format";
+import clsx from "clsx";
 import CustomModal from "@/components/modal";
 import backIcon from "@/assets/arrow-left.svg";
-import formatDate from "../../helpers/formatDate";
-import formatAmount from "../../helpers/formatAmount";
+import formatDate from "../../helpers/format-date";
+import formatAmount from "../../helpers/format-amount";
 import CustomCard from "../../components/custom-card";
 import ActionBox from "../../components/action-box";
 import Info from "../../components/info";
 import SendIcon from "../../components/send-icon";
 import useActState from "./state";
+import formatPhoneNumber from "../../helpers/format-phone-number";
 
 const statusMap = {
   created: "non-processed",
@@ -43,6 +47,8 @@ export default function Act(): React.ReactElement {
     actionInProcess,
     violTypeMutation,
     note,
+    reason,
+    reasons,
     handleOk,
     handleCancel,
     handleCarouselModalCancel,
@@ -54,6 +60,7 @@ export default function Act(): React.ReactElement {
     onImgClick,
     renderFile,
     setNote,
+    setReason,
     t,
   } = useActState();
 
@@ -102,7 +109,14 @@ export default function Act(): React.ReactElement {
         <Divider className="mt-3" />
 
         <Info of={t("choose-annulment-reason")} className="flex flex-col gap-2">
-          <Select placeholder={t("reason")} />
+          <Select
+            placeholder={t("reason")}
+            options={reasons}
+            value={reason}
+            onChange={(val) => {
+              setReason(val);
+            }}
+          />
           <TextArea
             rows={4}
             placeholder={t("note") ?? ""}
@@ -114,10 +128,7 @@ export default function Act(): React.ReactElement {
 
           <div className="flex items-center gap-4">
             <Upload {...uploadProps}>
-              <Button
-                icon={<SendIcon />}
-                className="flex items-center text-[#8498B4]"
-              >
+              <Button icon={<SendIcon />} className="flex items-center 8498B4]">
                 {t("upload-file")}
               </Button>
             </Upload>
@@ -215,7 +226,18 @@ export default function Act(): React.ReactElement {
                       alt="violator"
                     />
                   </Col>
-                ) : null}
+                ) : (
+                  <Col
+                    span={5}
+                    className="flex justify-center items-center border"
+                  >
+                    <UserOutlined
+                      style={{
+                        fontSize: "3rem",
+                      }}
+                    />
+                  </Col>
+                )}
                 <Col span={19}>
                   <Row gutter={24}>
                     <Col span={24}>
@@ -240,7 +262,10 @@ export default function Act(): React.ReactElement {
                     <Col span={12}>
                       <Info
                         of={t("phone")}
-                        value={data?.violation_person?.phone}
+                        value={formatPhoneNumber(
+                          data?.violation_person?.phone ?? "",
+                          "+### ## ### ## ##",
+                        )}
                       />
                     </Col>
                   </Row>
@@ -272,14 +297,14 @@ export default function Act(): React.ReactElement {
                 </Col>
                 <Col span={8}>
                   <Info
-                    of={t("citizenship")}
-                    value={data?.violation_person?.citizenship}
+                    of={t("nationality")}
+                    value={data?.violation_person?.nationality}
                   />
                 </Col>
                 <Col span={8}>
                   <Info
-                    of={t("nationality")}
-                    value={data?.violation_person?.nationality}
+                    of={t("citizenship")}
+                    value={data?.violation_person?.citizenship}
                   />
                 </Col>
               </Row>
@@ -349,7 +374,10 @@ export default function Act(): React.ReactElement {
                 <Col span={12}>
                   <Info
                     of={t("phone")}
-                    value={data?.violation_organization?.phone}
+                    value={formatPhoneNumber(
+                      data?.violation_organization?.phone ?? "",
+                      "+### ## ### ## ##",
+                    )}
                   />
                 </Col>
               </Row>
@@ -408,8 +436,10 @@ export default function Act(): React.ReactElement {
                 </Col>
                 <Col span={12}>
                   <Info
-                    of={t("position")}
-                    value={data?.employee?.position}
+                    of={t("fullname")}
+                    value={`${data?.employee?.first_name ?? ""} ${
+                      data?.employee?.last_name ?? ""
+                    } ${data?.employee?.middle_name ?? ""}`}
                     rootClassName="flex-1"
                   />
                 </Col>
@@ -420,10 +450,8 @@ export default function Act(): React.ReactElement {
               <Row gutter={24}>
                 <Col span={12}>
                   <Info
-                    of={t("fullname")}
-                    value={`${data?.employee?.first_name ?? ""} ${
-                      data?.employee?.last_name ?? ""
-                    } ${data?.employee?.middle_name ?? ""}`}
+                    of={t("position")}
+                    value={data?.employee?.position}
                     rootClassName="flex-1"
                   />
                 </Col>
@@ -441,7 +469,18 @@ export default function Act(): React.ReactElement {
 
             <CustomCard title={t("illegal-gas-usage-calculation")}>
               <div className="flex gap-8">
-                <Info of={t("volume")} value={data?.total_volume} />
+                <Info
+                  of={t("volume")}
+                  value={
+                    data?.total_volume !== undefined ? (
+                      <span>
+                        {formatAmount(data?.total_volume)} m<sup>3</sup>
+                      </span>
+                    ) : (
+                      ""
+                    )
+                  }
+                />
                 <Info
                   of={t("amount")}
                   value={
@@ -459,39 +498,49 @@ export default function Act(): React.ReactElement {
 
         <div className="flex items-stretch flex-wrap gap-6">
           <ActionBox
-            isDisabled={isCurrFetching}
+            isDisabled={isCurrFetching || data?.violation_type !== null}
             isLoading={actionInProcess.admin}
             color="blue"
-            className="flex-1"
+            className={clsx(
+              "flex-1",
+              data?.violation_type !== null ? "cursor-not-allowed" : "",
+            )}
             actionKey="F5"
             Icon={CheckCircleFilled}
             onDispatchAction={async () => {
-              const foundViolType = violationTypes?.find(
-                (violation) => violation.key === "administrative",
-              );
+              if (data?.violation_type === null) {
+                const foundViolType = violationTypes?.find(
+                  (violation) => violation.key === "administrative",
+                );
 
-              violTypeMutation.mutate({
-                violation_type: foundViolType?.id,
-              });
+                violTypeMutation.mutate({
+                  violation_type: foundViolType?.id,
+                });
+              }
             }}
           >
             {t("approve-admin-violation")}
           </ActionBox>
           <ActionBox
-            isDisabled={isCurrFetching}
+            isDisabled={isCurrFetching || data?.violation_type !== null}
             isLoading={actionInProcess.criminal}
             color="green"
-            className="flex-1"
+            className={clsx(
+              "flex-1",
+              data?.violation_type !== null ? "cursor-not-allowed" : "",
+            )}
             actionKey="F6"
             Icon={CheckCircleFilled}
             onDispatchAction={async () => {
-              const foundViolType = violationTypes?.find(
-                (violation) => violation.key === "criminal",
-              );
+              if (data?.violation_type === null) {
+                const foundViolType = violationTypes?.find(
+                  (violation) => violation.key === "criminal",
+                );
 
-              violTypeMutation.mutate({
-                violation_type: foundViolType?.id,
-              });
+                violTypeMutation.mutate({
+                  violation_type: foundViolType?.id,
+                });
+              }
             }}
           >
             {t("approve-criminal-violation")}
@@ -512,13 +561,20 @@ export default function Act(): React.ReactElement {
 
         <div className="flex items-stretch flex-wrap gap-6 mt-6">
           <ActionBox
-            isDisabled={isCurrFetching}
+            isDisabled={isCurrFetching || data?.violation_type !== null}
             isLoading={actionInProcess.cancel}
             color="red"
-            className="flex-1"
+            className={clsx(
+              "flex-1",
+              data?.violation_type !== null ? "cursor-not-allowed" : "",
+            )}
             actionKey="F8"
             Icon={CloseCircleFilled}
-            onDispatchAction={showModal}
+            onDispatchAction={() => {
+              if (data?.violation_type === null) {
+                showModal();
+              }
+            }}
           >
             {t("cancel-act")}
           </ActionBox>

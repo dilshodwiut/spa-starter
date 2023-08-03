@@ -1,4 +1,14 @@
-import { Layout, Menu, Button, Select, ConfigProvider, Popover } from "antd";
+import {
+  Layout,
+  Menu,
+  Button,
+  Select,
+  ConfigProvider,
+  Popover,
+  Popconfirm,
+} from "antd";
+import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
+import { useAuthContext } from "@/contexts";
 import { colors } from "@/config/theme";
 import { useTranslation } from "react-i18next";
 import clsx from "clsx";
@@ -16,13 +26,6 @@ interface Props {
   children: React.ReactElement;
   sidebarRoutes: CustomRoute[];
 }
-
-const content = (
-  <div>
-    <div>Content 1</div>
-    <div>Content 2</div>
-  </div>
-);
 
 export default function DefaultLayout(props: Props): React.ReactElement {
   const { children, sidebarRoutes } = props;
@@ -174,7 +177,12 @@ export default function DefaultLayout(props: Props): React.ReactElement {
             )}
 
             {collapsed ? (
-              <Popover arrow={false} content={content} title="" trigger="click">
+              <Popover
+                arrow={false}
+                content={<PopoverContent />}
+                title=""
+                trigger="click"
+              >
                 <div
                   className={clsx(
                     "flex justify-between items-center bg-white rounded-xl p-[11px] border border-[#f5f5f5] cursor-pointer",
@@ -199,7 +207,7 @@ export default function DefaultLayout(props: Props): React.ReactElement {
 
                 <Popover
                   arrow={false}
-                  content={content}
+                  content={<PopoverContent />}
                   title=""
                   trigger="click"
                 >
@@ -216,3 +224,35 @@ export default function DefaultLayout(props: Props): React.ReactElement {
 }
 
 const profileCollapseClasses = "w-12 m-auto";
+
+function PopoverContent(): React.ReactElement {
+  const { t } = useTranslation();
+  const { setUser } = useAuthContext();
+
+  const logout = (): void => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("user");
+    setUser({
+      isAuth: false,
+      first_name: "",
+      last_name: "",
+      middle_name: "",
+    });
+  };
+
+  return (
+    <div className="flex flex-col gap-2">
+      <Button icon={<UserOutlined />}>{t("profile")}</Button>
+      <Popconfirm
+        title="Logout"
+        description="Are you sure want to quit?"
+        okText="Yes"
+        cancelText="No"
+        okButtonProps={{ className: "text-[#40916C]" }}
+      >
+        <Button icon={<LogoutOutlined />}>{t("logout")}</Button>
+      </Popconfirm>
+    </div>
+  );
+}

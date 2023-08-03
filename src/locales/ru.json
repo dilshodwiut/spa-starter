@@ -15,6 +15,8 @@
   "notification": "Уведомление",
   "inspectors": "Инспекторы",
   "inspector": "Инспектор",
+  "logout": "Выйти",
+  "profile": "Профиль",
 
   "processed": "Обработанные",
   "non-processed": "Не обработанные",
@@ -31,6 +33,8 @@
   "search-by-serial-number": "Поиск по Серийному номеру",
   "filter": "Фильтр",
   "type": "Тип",
+  "org-type": "Тип Орг.",
+  "violator-type": "Тип правонарушителя",
   "doc-type": "Тип документа",
   "serial-number": "Серийный номер",
   "reg-date": "Дата регистрации",
@@ -120,6 +124,8 @@
   "action-in-progress": "Действия в ходе...",
   "error": "Ошибка",
   "error-fetching-data": "Ошибка получения данных",
+  "success": "Успех!",
+  "user-added": "В систему добавлен новый пользователь",
 
   "see": "Посмотреть",
   "datetime": "Дата и время",

@@ -1,5 +1,5 @@
 import type { ChangeEventHandler } from "react";
-import type { Layout, Form, Input, FormInstance } from "antd";
+import type { Layout, Form, Input, FormInstance, SelectProps } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
 import type { TFunction } from "i18next";
 import type { BaseEntity, ListResponse } from "@/types";
@@ -31,9 +31,12 @@ interface InspectorState {
   inspectorId: string | undefined;
   form: FormInstance;
   isLoading: boolean;
+  regions: SelectProps["options"];
+  districts: SelectProps["options"];
   contextHolder: React.ReactElement;
   goBack: () => void;
   handleCancel: () => void;
+  handleRegionChange: (value: number) => void;
   submitHandler: (values: FormValues) => void;
   t: TFunction;
 }
