@@ -353,7 +353,7 @@ export default function useActsState(): ActsState {
       },
 
       {
-        title: t("type"),
+        title: t("violator-type"),
         dataIndex: "violation_type",
         sorter: (a, b) => {
           if (a.violation_type !== null && b.violation_type !== null) {

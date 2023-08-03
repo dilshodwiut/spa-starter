@@ -395,7 +395,7 @@ export default function Act(): React.ReactElement {
                 />
                 <Info
                   of={t("additional-article")}
-                  value="No"
+                  value={t("no")}
                   valueClassName="font-semibold text-xl"
                 />
               </div>

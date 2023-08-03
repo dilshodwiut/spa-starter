@@ -3,17 +3,24 @@ export default function formatPhoneNumber(
   format: string,
 ): string {
   const numberPlaceholder = "#";
+  const countryCode = "998";
   const result = [];
 
+  let fullPhone = phone;
+
   if (phone.length === 0) return "";
+  if (phone.length < 12) {
+    fullPhone = `${countryCode}${phone}`;
+  }
 
   let phoneTokenIdx = 0;
   let formatTokenIdx = 0;
 
-  const phoneTokens = phone.split("");
-  const formatTokens = format.split("");
+  if (fullPhone[0] !== "+") {
+    // which means, if not formatted
+    const phoneTokens = fullPhone.split("");
+    const formatTokens = format.split("");
 
-  if (phoneTokens[0] !== "+") {
     while (result.length < formatTokens.length) {
       const currChar = formatTokens[formatTokenIdx];
 
@@ -30,5 +37,10 @@ export default function formatPhoneNumber(
     return result.join("");
   }
 
-  return phone;
+  if (fullPhone[0] === "+" && fullPhone.length === 13) {
+    // which means there is no space between numbers: "+998936604530"
+    return formatPhoneNumber(fullPhone.slice(1), format);
+  }
+
+  return fullPhone;
 }

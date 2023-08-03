@@ -36,6 +36,7 @@ export default function useInspectorsState(): InspectorsState {
     data,
     isLoading,
     isFetching,
+    isRefetching,
     isPreviousData,
     isPlaceholderData,
     error,
@@ -114,7 +115,11 @@ export default function useInspectorsState(): InspectorsState {
   };
 
   const isTableLoading =
-    isLoading || isPreviousData || isPlaceholderData || isFetching;
+    isLoading ||
+    isPreviousData ||
+    isPlaceholderData ||
+    isFetching ||
+    isRefetching;
 
   const columns: ColumnsType<InspectorType> = useMemo(
     () => [
