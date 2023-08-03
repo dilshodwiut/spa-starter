@@ -11,9 +11,7 @@ interface InspectorsState {
   columns: ColumnsType<InspectorType>;
   colorBgContainer: string;
   paginationProps: TableProps<InspectorType>["pagination"];
-  isLoading: boolean;
-  isPreviousData: boolean;
-  isPlaceholderData: boolean;
+  isTableLoading: boolean;
   contextHolder: React.ReactElement;
   onPageChange: TableProps<InspectorType>["onChange"];
   onAddClick: () => void;

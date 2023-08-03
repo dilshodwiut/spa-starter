@@ -12,9 +12,7 @@ export default function Inspectors(): React.ReactElement {
     columns,
     colorBgContainer,
     paginationProps,
-    isLoading,
-    isPreviousData,
-    isPlaceholderData,
+    isTableLoading,
     contextHolder,
     onPageChange,
     onAddClick,
@@ -68,7 +66,7 @@ export default function Inspectors(): React.ReactElement {
           dataSource={data?.results}
           onChange={onPageChange}
           pagination={paginationProps}
-          loading={isLoading || isPreviousData || isPlaceholderData}
+          loading={isTableLoading}
         />
         {data?.count === 0 ? (
           <>

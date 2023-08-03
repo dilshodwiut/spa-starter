@@ -8,7 +8,13 @@ interface AuthContext {
 }
 
 const authContext = createContext<AuthContext>({
-  user: { isAuth: false, first_name: "", last_name: "", middle_name: "" },
+  user: {
+    isAuth: false,
+    first_name: "",
+    last_name: "",
+    middle_name: "",
+    is_superuser: false,
+  },
   setUser: () => {
     //
   },

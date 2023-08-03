@@ -17,6 +17,9 @@
   "inspector": "Inspektor",
   "logout": "Chiqish",
   "profile": "Profil",
+  "sure-quit": "Haqiqatdan ham chiqmoqchimisiz?",
+  "yes": "Ha",
+  "no": "Yo'q",
 
   "processed": "Qayta ishlangan",
   "non-processed": "Qayta ishlanmagan",
@@ -128,6 +131,8 @@
   "user-added": "Tizimga yangi foydalanuvchi qo'shildi",
 
   "see": "Ko'rish",
+  "delete": "Oʻchirish",
+  "sure-delete-inspector": "Haqiqatdan ham bu inspektorni oʻchirib tashlamoqchimisiz?",
   "datetime": "Sana va vaqt",
   "description": "Tavsif",
   "action": "Amal",

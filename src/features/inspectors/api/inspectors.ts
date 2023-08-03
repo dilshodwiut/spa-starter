@@ -47,3 +47,10 @@ export async function updateInspector(
 
   return result;
 }
+
+export async function deleteInspector(id: number): Promise<void> {
+  await request({
+    url: `/account/users/${id}/`,
+    method: "delete",
+  });
+}

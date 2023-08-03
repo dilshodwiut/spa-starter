@@ -1,18 +1,24 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { useDebounce } from "usehooks-ts";
-import { Button, Layout, theme, message } from "antd";
+import { useAuthContext } from "@/contexts";
+import { Button, Layout, Modal, theme, message } from "antd";
+import { ExclamationCircleFilled } from "@ant-design/icons";
 import type { ColumnsType, TableProps } from "antd/es/table";
 import type { InspectorsState, InspectorType } from "../../types";
-import { getAllInspectors } from "../../api";
+import { deleteInspector, getAllInspectors } from "../../api";
 
 const { Header, Content } = Layout;
+
+const { confirm } = Modal;
 
 export default function useInspectorsState(): InspectorsState {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { user } = useAuthContext();
+  const queryClient = useQueryClient();
 
   const [{ page, pageSize }, setPagination] = useState<{
     page: number;
@@ -21,27 +27,43 @@ export default function useInspectorsState(): InspectorsState {
   const [search, setSearch] = useState<string>("");
 
   const debouncedSearch = useDebounce<string>(search);
-
-  const { data, isLoading, isPreviousData, isPlaceholderData, error } =
-    useQuery({
-      queryKey: ["inspectors", { page, pageSize, debouncedSearch }],
-      queryFn: async () => {
-        const res = await getAllInspectors({
-          page,
-          page_size: pageSize,
-          search: debouncedSearch,
-        });
-        return res;
-      },
-      keepPreviousData: true,
-      placeholderData: { count: 0, next: null, previous: null, results: [] },
-    });
-
+  const [messageApi, contextHolder] = message.useMessage();
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  const [messageApi, contextHolder] = message.useMessage();
+  const {
+    data,
+    isLoading,
+    isFetching,
+    isPreviousData,
+    isPlaceholderData,
+    error,
+  } = useQuery({
+    queryKey: ["inspectors", { page, pageSize, debouncedSearch }],
+    queryFn: async () => {
+      const res = await getAllInspectors({
+        page,
+        page_size: pageSize,
+        search: debouncedSearch,
+      });
+      return res;
+    },
+    keepPreviousData: true,
+    placeholderData: { count: 0, next: null, previous: null, results: [] },
+  });
+
+  const { mutate, isLoading: isDeleting } = useMutation({
+    mutationFn: deleteInspector,
+    onSuccess: () => {
+      void queryClient.invalidateQueries(["inspectors"]);
+    },
+    onError: (_error: { data: { detail: string } }) => {
+      void messageApi.error({
+        content: _error.data.detail,
+      });
+    },
+  });
 
   const onAddClick = (): void => {
     navigate("create-inspector");
@@ -64,6 +86,23 @@ export default function useInspectorsState(): InspectorsState {
     console.log("params", pagination, _filters, sorter, extra);
   };
 
+  const showDeleteModal = (record: InspectorType): void => {
+    confirm({
+      title: t("sure-delete-inspector"),
+      icon: <ExclamationCircleFilled />,
+      content: `${record.last_name ?? ""} ${record.first_name ?? ""} ${
+        record.middle_name ?? ""
+      }`,
+      okText: t("yes"),
+      okType: "danger",
+      cancelText: t("no"),
+      okButtonProps: { loading: isDeleting },
+      onOk() {
+        mutate(record.id);
+      },
+    });
+  };
+
   const paginationProps = {
     defaultPageSize: 10,
     total: data?.count,
@@ -73,6 +112,9 @@ export default function useInspectorsState(): InspectorsState {
     },
     locale: { items_per_page: "" },
   };
+
+  const isTableLoading =
+    isLoading || isPreviousData || isPlaceholderData || isFetching;
 
   const columns: ColumnsType<InspectorType> = useMemo(
     () => [
@@ -124,16 +166,28 @@ export default function useInspectorsState(): InspectorsState {
         title: t("action"),
         render(_value, record) {
           return (
-            <Link to={`/inspectors/${record.id}`}>
-              <Button className="bg-[#D8F3DC] text-[#40916C]">
-                {t("see")}
-              </Button>
-            </Link>
+            <div className="flex gap-4">
+              <Link to={`/inspectors/${record.id}`}>
+                <Button className="bg-[#D8F3DC] text-[#40916C]">
+                  {t("see")}
+                </Button>
+              </Link>
+              {user.is_superuser ? (
+                <Button
+                  danger
+                  onClick={() => {
+                    showDeleteModal(record);
+                  }}
+                >
+                  {t("delete")}
+                </Button>
+              ) : null}
+            </div>
           );
         },
       },
     ],
-    [t],
+    [],
   );
 
   useEffect(() => {
@@ -153,9 +207,7 @@ export default function useInspectorsState(): InspectorsState {
     columns,
     colorBgContainer,
     paginationProps,
-    isLoading,
-    isPreviousData,
-    isPlaceholderData,
+    isTableLoading,
     contextHolder,
     onPageChange,
     onAddClick,

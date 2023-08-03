@@ -312,76 +312,78 @@ export default function Act(): React.ReactElement {
 
             <br />
 
-            <CustomCard title={t("organization-information")}>
-              <Row gutter={24}>
-                <Col span={12}>
-                  <Info
-                    of={t("name")}
-                    value={data?.violation_organization?.name}
-                  />
-                </Col>
-                <Col span={12}>
-                  <Info
-                    of={t("activity-kind")}
-                    value={data?.violation_organization?.type}
-                  />
-                </Col>
-              </Row>
+            {data?.is_juridic === true ? (
+              <CustomCard title={t("organization-information")}>
+                <Row gutter={24}>
+                  <Col span={12}>
+                    <Info
+                      of={t("name")}
+                      value={data?.violation_organization?.name}
+                    />
+                  </Col>
+                  <Col span={12}>
+                    <Info
+                      of={t("activity-kind")}
+                      value={data?.violation_organization?.type}
+                    />
+                  </Col>
+                </Row>
 
-              <br />
+                <br />
 
-              <Row gutter={24}>
-                <Col span={7}>
-                  <Info
-                    of={t("inn")}
-                    value={data?.violation_organization?.stir}
-                  />
-                </Col>
-                <Col span={10}>
-                  <Info
-                    of={t("user-number-in-system")}
-                    value={data?.violation_organization?.subscriber_number}
-                  />
-                </Col>
-                <Col span={7}>
-                  <Info
-                    of={t("inventory-number")}
-                    value={data?.violation_organization?.cadastral_number}
-                  />
-                </Col>
-              </Row>
+                <Row gutter={24}>
+                  <Col span={7}>
+                    <Info
+                      of={t("inn")}
+                      value={data?.violation_organization?.stir}
+                    />
+                  </Col>
+                  <Col span={10}>
+                    <Info
+                      of={t("user-number-in-system")}
+                      value={data?.violation_organization?.subscriber_number}
+                    />
+                  </Col>
+                  <Col span={7}>
+                    <Info
+                      of={t("inventory-number")}
+                      value={data?.violation_organization?.cadastral_number}
+                    />
+                  </Col>
+                </Row>
 
-              <br />
+                <br />
 
-              <Row gutter={24}>
-                <Col span={24}>
-                  <Info
-                    of={t("legal-address")}
-                    value={data?.violation_organization?.address}
-                  />
-                </Col>
-              </Row>
+                <Row gutter={24}>
+                  <Col span={24}>
+                    <Info
+                      of={t("legal-address")}
+                      value={data?.violation_organization?.address}
+                    />
+                  </Col>
+                </Row>
 
-              <br />
+                <br />
 
-              <Row gutter={24}>
-                <Col span={12}>
-                  <Info
-                    of={t("director's-fullname")}
-                    value={data?.violation_organization?.director_fio}
-                  />
-                </Col>
-                <Col span={12}>
-                  <Info
-                    of={t("phone")}
-                    value={formatPhoneNumber(
-                      data?.violation_organization?.phone ?? "",
-                      "+### ## ### ## ##",
-                    )}
-                  />
-                </Col>
-              </Row>
-            </CustomCard>
+                <Row gutter={24}>
+                  <Col span={12}>
+                    <Info
+                      of={t("director's-fullname")}
+                      value={data?.violation_organization?.director_fio}
+                    />
+                  </Col>
+                  <Col span={12}>
+                    <Info
+                      of={t("phone")}
+                      value={formatPhoneNumber(
+                        data?.violation_organization?.phone ?? "",
+                        "+### ## ### ## ##",
+                      )}
+                    />
+                  </Col>
+                </Row>
+              </CustomCard>
+            ) : null}
           </Col>
           <Col span={12}>
             <CustomCard title={t("violator-description")}>

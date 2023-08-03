@@ -5,9 +5,13 @@ import {
   Select,
   ConfigProvider,
   Popover,
-  Popconfirm,
+  Modal,
 } from "antd";
-import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  ExclamationCircleFilled,
+  LogoutOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { useAuthContext } from "@/contexts";
 import { colors } from "@/config/theme";
 import { useTranslation } from "react-i18next";
@@ -21,6 +25,8 @@ import ruIcon from "@/assets/RU.svg";
 import uzIcon from "@/assets/UZ.png";
 import type { CustomRoute } from "@/types";
 import useDefaultLayoutState from "./state";
+
+const { confirm } = Modal;
 
 interface Props {
   children: React.ReactElement;
@@ -238,21 +244,30 @@ function PopoverContent(): React.ReactElement {
       first_name: "",
       last_name: "",
       middle_name: "",
+      is_superuser: false,
+    });
+  };
+
+  const showDeleteConfirm = (): void => {
+    confirm({
+      title: t("sure-quit"),
+      icon: <ExclamationCircleFilled />,
+      okButtonProps: { className: "text-[#40916C]" },
+      okText: t("yes"),
+      cancelText: t("no"),
+      onOk() {
+        setTimeout(logout, 500);
+      },
     });
   };
 
   return (
     <div className="flex flex-col gap-2">
       <Button icon={<UserOutlined />}>{t("profile")}</Button>
-      <Popconfirm
-        title="Logout"
-        description="Are you sure want to quit?"
-        okText="Yes"
-        cancelText="No"
-        okButtonProps={{ className: "text-[#40916C]" }}
-      >
-        <Button icon={<LogoutOutlined />}>{t("logout")}</Button>
-      </Popconfirm>
+
+      <Button icon={<LogoutOutlined />} onClick={showDeleteConfirm}>
+        {t("logout")}
+      </Button>
     </div>
   );
 }

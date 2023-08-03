@@ -136,7 +136,7 @@ interface ActType {
   files: MediaFile[];
 
   logo: string;
-  is_juridic: string;
+  is_juridic: boolean;
   total_sum: number;
   total_volume: number;
 

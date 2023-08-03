@@ -64,6 +64,7 @@ interface User {
   first_name: string;
   last_name: string;
   middle_name: string;
+  is_superuser: boolean;
 }
 
 type UserWithAuth = User & { isAuth: boolean };

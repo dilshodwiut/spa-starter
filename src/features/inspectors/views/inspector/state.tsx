@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { clone } from "ramda";
+import { lightFormat } from "date-fns";
 import { Layout, Form, Input, theme, message } from "antd";
 import { getRegions } from "@/features/acts-list";
 import type { FormValues, InspectorState } from "../../types";
@@ -97,8 +98,12 @@ export default function useInspectorState(): InspectorState {
   };
 
   const submitHandler = (values: FormValues): void => {
-    console.log(values);
-    // mutate(values);
+    const fields = clone(values);
+    if (values.birth_date !== undefined && values.birth_date !== null) {
+      fields.birth_date = lightFormat(values?.birth_date.$d, "yyyy-MM-dd");
+    }
+
+    mutate(fields);
   };
 
   useEffect(() => {

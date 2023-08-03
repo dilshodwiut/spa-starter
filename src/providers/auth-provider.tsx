@@ -11,6 +11,7 @@ const userCreds: User = JSON.parse(localStorage.getItem("user")!) ?? {
   first_name: "",
   last_name: "",
   middle_name: "",
+  is_superuser: false,
 };
 
 export default function AuthProvider(props: Props): React.ReactElement {
@@ -21,6 +22,7 @@ export default function AuthProvider(props: Props): React.ReactElement {
     first_name: userCreds.first_name,
     last_name: userCreds.last_name,
     middle_name: userCreds.middle_name,
+    is_superuser: userCreds.is_superuser,
   });
 
   const value = useMemo(() => ({ user, setUser }), [user]);

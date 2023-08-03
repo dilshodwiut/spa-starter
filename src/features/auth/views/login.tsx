@@ -23,6 +23,7 @@ export default function Login(): React.ReactElement {
           first_name: res.user.first_name ?? "",
           last_name: res.user.last_name ?? "",
           middle_name: res.user.middle_name ?? "",
+          is_superuser: res.user.is_superuser,
         }),
       );
       setUser({
@@ -30,6 +31,7 @@ export default function Login(): React.ReactElement {
         first_name: res.user.first_name ?? "",
         last_name: res.user.last_name ?? "",
         middle_name: res.user.middle_name ?? "",
+        is_superuser: res.user.is_superuser,
       });
       navigate("/statistics");
     },

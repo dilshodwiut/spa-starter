@@ -43,6 +43,7 @@ export async function errorHandler(
           localStorage.setItem("refresh_token_error", JSON.stringify(err));
           localStorage.removeItem("refresh_token");
           localStorage.removeItem("access_token");
+          localStorage.removeItem("user");
           window.location.replace("/auth/login");
         }
       }
