@@ -265,8 +265,8 @@ export default function useActsState(): ActsState {
   const isTableLoading =
     isLoading || isPreviousData || isPlaceholderData || isFetching;
 
-  const columns: ColumnsType<ActType> = useMemo(
-    () => [
+  const columns = useMemo(() => {
+    const allColumns: ColumnsType<ActType> = [
       {
         title: t("org-type"),
         dataIndex: "logo",
@@ -329,7 +329,6 @@ export default function useActsState(): ActsState {
           return `${record.region.name}, ${record.district.name}`;
         },
       },
-
       {
         title: t("type"),
         dataIndex: "is_juridic",
@@ -352,8 +351,8 @@ export default function useActsState(): ActsState {
           return formatAmount(sum);
         },
       },
-
       {
+        key: "violation-type",
         title: t("violator-type"),
         dataIndex: "violation_type",
         sorter: (a, b) => {
@@ -396,9 +395,15 @@ export default function useActsState(): ActsState {
       //     </Tag>
       //   ),
       // },
-    ],
-    [violationTypes, t],
-  );
+    ];
+    console.log(allColumns);
+
+    if (status === "created") {
+      return allColumns.filter((col) => col.key !== "violation-type");
+    }
+
+    return allColumns;
+  }, [violationTypes, status, t]);
 
   useEffect(() => {
     if (error !== null) {
