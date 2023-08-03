@@ -284,6 +284,7 @@ export default function useActsState(): ActsState {
                 style={{
                   borderRadius: "6px",
                 }}
+                width={75}
                 onError={(e) => {
                   console.log(e);
                   e.target.onerror = null;

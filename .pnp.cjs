@@ -48,6 +48,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["axios", "npm:1.4.0"],\
             ["clsx", "npm:1.2.1"],\
             ["date-fns", "npm:2.30.0"],\
+            ["dayjs", "npm:1.11.9"],\
             ["eslint", "npm:8.44.0"],\
             ["eslint-config-airbnb", "virtual:888386864bbef588716a32e61cfeabcab6d23677fbe727cae928b0763f3d1444c6acbe8983de3ec3ab6a1e69115213e6053d916ab869833d7e871a2b6e720034#npm:19.0.4"],\
             ["eslint-config-prettier", "virtual:888386864bbef588716a32e61cfeabcab6d23677fbe727cae928b0763f3d1444c6acbe8983de3ec3ab6a1e69115213e6053d916ab869833d7e871a2b6e720034#npm:8.8.0"],\
@@ -3573,6 +3574,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["axios", "npm:1.4.0"],\
             ["clsx", "npm:1.2.1"],\
             ["date-fns", "npm:2.30.0"],\
+            ["dayjs", "npm:1.11.9"],\
             ["eslint", "npm:8.44.0"],\
             ["eslint-config-airbnb", "virtual:888386864bbef588716a32e61cfeabcab6d23677fbe727cae928b0763f3d1444c6acbe8983de3ec3ab6a1e69115213e6053d916ab869833d7e871a2b6e720034#npm:19.0.4"],\
             ["eslint-config-prettier", "virtual:888386864bbef588716a32e61cfeabcab6d23677fbe727cae928b0763f3d1444c6acbe8983de3ec3ab6a1e69115213e6053d916ab869833d7e871a2b6e720034#npm:8.8.0"],\

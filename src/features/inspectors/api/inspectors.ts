@@ -16,7 +16,7 @@ export async function getAllInspectors(
 
 export async function getInspector(id: string): Promise<InspectorType> {
   const result: InspectorType = await request({
-    url: `/account/users/${id}`,
+    url: `/account/users/${id}/`,
     method: "get",
   });
 
@@ -40,7 +40,7 @@ export async function updateInspector(
   data: Exclude<Partial<InspectorType>, "id">,
 ): Promise<Exclude<Partial<InspectorType>, "id">> {
   const result: Exclude<Partial<InspectorType>, "id"> = await request({
-    url: `/account/users/${id}`,
+    url: `/account/users/${id}/`,
     method: "put",
     data,
   });

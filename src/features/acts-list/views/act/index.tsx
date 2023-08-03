@@ -405,7 +405,7 @@ export default function Act(): React.ReactElement {
               <Info
                 of={t("violation-files")}
                 value={
-                  <div className="flex gap-4 mt-4">
+                  <div className="flex flex-wrap gap-4 mt-4">
                     {data?.files
                       ?.filter((file) => file.type === "image")
                       .map((file, index) => (

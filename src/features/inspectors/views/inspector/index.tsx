@@ -1,11 +1,12 @@
 import { PatternFormat } from "react-number-format";
 import { Button, DatePicker, Result, Select } from "antd";
+import dayjs from "dayjs";
+import "dayjs/locale/ru";
+import locale from "antd/es/date-picker/locale/ru_RU";
+import localeRu from "@/locales/ru.datepicker.json";
 import CustomModal from "@/components/modal";
 import backIcon from "@/assets/arrow-left.svg";
 import tickIcon from "@/assets/tick-square.svg";
-// import 'dayjs/locale/zh-cn';
-// import locale from "antd/es/date-picker/locale/ru_RU";
-import localeRu from "@/locales/ru.datepicker.json";
 import useInspectorState from "./state";
 
 export default function Inspector(): React.ReactElement {
@@ -132,7 +133,8 @@ export default function Inspector(): React.ReactElement {
                 disabledDate={(currDate) =>
                   currDate.add(18, "year").isAfter(Date.now())
                 }
-                // locale={localeRu}
+                locale={locale}
+                defaultPickerValue={dayjs().year(2000).month(0).date(1)}
               />
             </Form.Item>
           </div>
@@ -238,7 +240,7 @@ export default function Inspector(): React.ReactElement {
               className="w-1/3"
               rules={[
                 {
-                  required: true,
+                  required: inspectorId === undefined,
                   type: "string",
                   min: 1,
                   whitespace: true,
