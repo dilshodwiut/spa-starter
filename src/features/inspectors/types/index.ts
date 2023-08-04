@@ -1,7 +1,8 @@
 import type { ChangeEventHandler } from "react";
+import type { TFunction } from "i18next";
 import type { Layout, Form, Input, FormInstance, SelectProps } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
-import type { TFunction } from "i18next";
+import type { PickerLocale } from "antd/es/date-picker/generatePicker";
 import type { BaseEntity, ListResponse } from "@/types";
 
 interface InspectorsState {
@@ -31,6 +32,7 @@ interface InspectorState {
   isLoading: boolean;
   regions: SelectProps["options"];
   districts: SelectProps["options"];
+  locale: PickerLocale | undefined;
   contextHolder: React.ReactElement;
   goBack: () => void;
   handleCancel: () => void;

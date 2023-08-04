@@ -130,7 +130,6 @@ interface ActType {
 
   server_type: "government" | "power_industry";
   client_type: "legal_entity" | "individual" | "budget_organization";
-  violation: string;
   amount: number;
 
   files: MediaFile[];
@@ -139,6 +138,14 @@ interface ActType {
   is_juridic: boolean;
   total_sum: number;
   total_volume: number;
+
+  status_duration_time: number;
+  status_update_time: number;
+
+  violation: {
+    law_article_id: number;
+    additional_articles: Array<{ law_article_id: number }>;
+  };
 
   employee: {
     certificate: string;

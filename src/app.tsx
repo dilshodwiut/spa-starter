@@ -8,14 +8,14 @@ import {
 
 export default function App(): React.ReactElement {
   return (
-    <ThemeProvider>
+    <QueryProvider>
       <LangProvider>
-        <QueryProvider>
+        <ThemeProvider>
           <AuthProvider>
             <Routes />
           </AuthProvider>
-        </QueryProvider>
+        </ThemeProvider>
       </LangProvider>
-    </ThemeProvider>
+    </QueryProvider>
   );
 }

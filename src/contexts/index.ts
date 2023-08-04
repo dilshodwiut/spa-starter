@@ -1,7 +1,4 @@
 import { useAuthContext } from "@/contexts/auth-context";
+import { useLangContext } from "./lang-context";
 
-const useNothing = (): void => {
-  //
-};
-
-export { useAuthContext, useNothing };
+export { useAuthContext, useLangContext };

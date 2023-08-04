@@ -1,8 +1,8 @@
-import { lightFormat, parseISO } from "date-fns";
+import dayjs from "dayjs";
 
 export default function formatDate(
   date: string,
-  format = "dd.MM.yyyy",
+  format = "DD.MM.YYYY",
 ): string {
-  return lightFormat(parseISO(date), format);
+  return dayjs(date).format(format);
 }

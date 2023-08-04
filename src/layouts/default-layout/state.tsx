@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { compose, split, tail, take } from "ramda";
 import { useTranslation } from "react-i18next";
-import { useAuthContext } from "@/contexts";
+import { useAuthContext, useLangContext } from "@/contexts";
+import { compose, split, tail, take } from "ramda";
 import { Layout, Typography } from "antd";
 import { colors } from "@/config/theme";
 import settings from "@/config/settings";
@@ -49,16 +49,14 @@ export default function useDefaultLayoutState(
   sidebarRoutes: CustomRoute[],
 ): DefaultLayoutState {
   const [collapsed, setCollapsed] = useState(false);
-  // const [menuKeys, setMenuKeys] = useState<string[]>([""]);
 
-  const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { t, i18n } = useTranslation();
+  const { pathname } = useLocation();
   const { user } = useAuthContext();
+  const { t } = useTranslation();
+  const { changeLang } = useLangContext();
 
-  const handleLanguageChange = (value: AppLang): void => {
-    void i18n.changeLanguage(value);
-  };
+  const handleLanguageChange = changeLang;
 
   const onToggleSider = (): void => {
     setCollapsed(!collapsed);

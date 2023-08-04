@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 // import { isInt } from "radash";
 import { useDebounce } from "usehooks-ts";
-import { compareAsc, lightFormat } from "date-fns";
+import dayjs from "dayjs";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import ShowTotal from "@/components/show-total";
 import { Layout, Tag, Form, message, theme, Tooltip } from "antd";
@@ -225,8 +225,8 @@ export default function useActsState(): ActsState {
     }
 
     if (values.violation_date !== null) {
-      draft.min_date = lightFormat(values.violation_date[0].$d, "yyyy-MM-dd");
-      draft.max_date = lightFormat(values.violation_date[0].$d, "yyyy-MM-dd");
+      draft.min_date = dayjs(values.violation_date[0].$d).format("YYYY-MM-DD");
+      draft.max_date = dayjs(values.violation_date[0].$d).format("YYYY-MM-DD");
     }
 
     if (typeof values.region !== "undefined") {
@@ -273,24 +273,27 @@ export default function useActsState(): ActsState {
         render(value: string, record: ActType) {
           return (
             <Tooltip title={record.employee?.organization?.name}>
-              <LazyLoadImage
-                src={
-                  value !== "" && typeof value === "string"
-                    ? `${import.meta.env.VITE_CDN_URL}${value}`
-                    : placeholderIcon
-                }
-                alt={record.employee.organization.name}
-                effect="opacity"
-                style={{
-                  borderRadius: "6px",
-                }}
-                width={75}
-                onError={(e) => {
-                  console.log(e);
-                  e.target.onerror = null;
-                  e.target.src = placeholderIcon;
-                }}
-              />
+              <div className="flex items-center">
+                <LazyLoadImage
+                  src={
+                    value !== "" && typeof value === "string"
+                      ? `${import.meta.env.VITE_CDN_URL}${value}`
+                      : placeholderIcon
+                  }
+                  alt={record.employee.organization.name}
+                  effect="opacity"
+                  style={{
+                    borderRadius: "6px",
+                  }}
+                  width={50}
+                  height="100%"
+                  onError={(e) => {
+                    console.log(e);
+                    e.target.onerror = null;
+                    e.target.src = placeholderIcon;
+                  }}
+                />
+              </div>
             </Tooltip>
           );
         },
@@ -315,13 +318,16 @@ export default function useActsState(): ActsState {
         dataIndex: "act_date",
         render(value: string, record: ActType) {
           return (
-            <Tooltip title={formatDate(record.created_at, "dd.MM.yyyy HH:mm")}>
+            <Tooltip title={formatDate(record.created_at, "DD.MM.YYYY HH:mm")}>
               {formatDate(value)}
             </Tooltip>
           );
         },
-        sorter: (a, b) =>
-          compareAsc(new Date(a.act_date), new Date(b.act_date)),
+        sorter: (a, b) => {
+          const isAsc = dayjs(a.act_date).isBefore(b.act_date);
+          if (isAsc) return -1;
+          return 1;
+        },
       },
       {
         title: t("region, district"),
@@ -342,6 +348,16 @@ export default function useActsState(): ActsState {
       },
       {
         title: t("violation"),
+        dataIndex: "violation",
+        render(value: {
+          law_article_id: number;
+          additional_articles: Array<{ law_article_id: number }>;
+        }) {
+          return renderReduce([
+            { law_article_id: value.law_article_id },
+            ...value.additional_articles,
+          ]);
+        },
       },
       {
         title: t("amount (som)"),
@@ -382,28 +398,44 @@ export default function useActsState(): ActsState {
           return "";
         },
       },
-      // {
-      //   title: t("status"),
-      //   dataIndex: "status",
-      //   render: (value: ActStatus) => (
-      //     <Tag
-      //       bordered={false}
-      //       color={getColor(value)}
-      //       className="p-1 w-full text-center"
-      //     >
-      //       {isInt(value) ? `${value} days` : t(value)}
-      //     </Tag>
-      //   ),
-      // },
+      {
+        title: t("deadline"),
+        dataIndex: "status_duration_time",
+        render: (value: number, record) => (
+          <Tag
+            bordered={false}
+            color={getColor(value)}
+            className="p-1 w-full text-center"
+          >
+            {`${Math.round(
+              (value - record.status_update_time) / 60 / 60 / 24,
+            )} day(s)`}
+          </Tag>
+        ),
+      },
     ];
-    console.log(allColumns);
 
     if (status === "created") {
       return allColumns.filter((col) => col.key !== "violation-type");
     }
 
     return allColumns;
-  }, [violationTypes, status, t]);
+  }, [violationTypes, status, articles, t]);
+
+  function renderReduce(arr: Array<{ law_article_id: number }>): string {
+    return arr
+      .reduce((acc, curr) => {
+        const article = articles?.find(
+          (artcl) => artcl.value === curr.law_article_id,
+        );
+        if (article !== undefined) {
+          return acc.concat(article.label);
+        }
+
+        return acc;
+      }, [])
+      .join(", ");
+  }
 
   useEffect(() => {
     if (error !== null) {

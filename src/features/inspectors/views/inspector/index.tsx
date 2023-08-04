@@ -1,9 +1,6 @@
 import { PatternFormat } from "react-number-format";
 import { Button, DatePicker, Result, Select } from "antd";
 import dayjs from "dayjs";
-import "dayjs/locale/ru";
-import locale from "antd/es/date-picker/locale/ru_RU";
-import localeRu from "@/locales/ru.datepicker.json";
 import CustomModal from "@/components/modal";
 import backIcon from "@/assets/arrow-left.svg";
 import tickIcon from "@/assets/tick-square.svg";
@@ -22,6 +19,7 @@ export default function Inspector(): React.ReactElement {
     isLoading,
     regions,
     districts,
+    locale,
     contextHolder,
     goBack,
     handleCancel,
@@ -70,7 +68,7 @@ export default function Inspector(): React.ReactElement {
                 {
                   required: true,
                   type: "string",
-                  min: 1,
+                  min: 5,
                   whitespace: true,
                   message: t("lastname-min-5") ?? "",
                 },
@@ -86,7 +84,7 @@ export default function Inspector(): React.ReactElement {
                 {
                   required: true,
                   type: "string",
-                  min: 1,
+                  min: 3,
                   whitespace: true,
                   message: t("firstname-min-3") ?? "",
                 },
@@ -100,7 +98,7 @@ export default function Inspector(): React.ReactElement {
               name="patronymic"
               rules={[
                 {
-                  required: true,
+                  required: false,
                   type: "string",
                   min: 1,
                   whitespace: true,
@@ -118,29 +116,67 @@ export default function Inspector(): React.ReactElement {
               label={t("passport")}
               name="passport_series"
               className="w-1/3"
+              rules={[
+                {
+                  required: true,
+                  type: "string",
+                  min: 5,
+                  whitespace: true,
+                },
+              ]}
             >
               <Input size="large" placeholder={t("passport") ?? ""} />
             </Form.Item>
-            <Form.Item label={t("pinfl")} name="pinfl" className="w-1/3">
+            <Form.Item
+              label={t("pinfl")}
+              name="pinfl"
+              className="w-1/3"
+              rules={[
+                {
+                  required: true,
+                  type: "string",
+                  min: 5,
+                  whitespace: true,
+                },
+              ]}
+            >
               <Input size="large" placeholder={t("pinfl") ?? ""} />
             </Form.Item>
 
-            <Form.Item label={t("dob")} name="birth_date" className="w-1/3">
+            <Form.Item
+              label={t("dob")}
+              name="birth_date"
+              className="w-1/3"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
               <DatePicker
                 size="large"
                 className="w-full"
                 placeholder={t("select-date") ?? ""}
+                locale={locale}
+                defaultPickerValue={dayjs().year(2000).month(0).date(1)}
                 disabledDate={(currDate) =>
                   currDate.add(18, "year").isAfter(Date.now())
                 }
-                locale={locale}
-                defaultPickerValue={dayjs().year(2000).month(0).date(1)}
               />
             </Form.Item>
           </div>
 
           <div className="w-full flex gap-4">
-            <Form.Item label={t("phone")} name="phone" className="w-1/3">
+            <Form.Item
+              label={t("phone")}
+              name="phone"
+              className="w-1/3"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
               <PatternFormat
                 format="+998 ## ### ## ##"
                 customInput={Input}
@@ -166,6 +202,14 @@ export default function Inspector(): React.ReactElement {
               label={t("residence-address")}
               name="address"
               className="w-1/3"
+              rules={[
+                {
+                  required: true,
+                  type: "string",
+                  min: 5,
+                  whitespace: true,
+                },
+              ]}
             >
               <Input size="large" placeholder={t("residence-address") ?? ""} />
             </Form.Item>
@@ -176,6 +220,14 @@ export default function Inspector(): React.ReactElement {
               label={t("organization")}
               name="organization"
               className="w-1/3"
+              rules={[
+                {
+                  required: true,
+                  type: "string",
+                  min: 5,
+                  whitespace: true,
+                },
+              ]}
             >
               <Input size="large" placeholder={t("organization") ?? ""} />
             </Form.Item>
@@ -190,13 +242,37 @@ export default function Inspector(): React.ReactElement {
                 placeholder={t("organization-division") ?? ""}
               />
             </Form.Item>
-            <Form.Item label={t("job-title")} name="position" className="w-1/3">
+            <Form.Item
+              label={t("job-title")}
+              name="position"
+              className="w-1/3"
+              rules={[
+                {
+                  required: true,
+                  type: "string",
+                  min: 3,
+                  whitespace: true,
+                },
+              ]}
+            >
               <Input size="large" placeholder={t("job-title") ?? ""} />
             </Form.Item>
           </div>
 
           <div className="w-full flex gap-4">
-            <Form.Item label={t("region")} name="region" className="w-1/3">
+            <Form.Item
+              label={t("region")}
+              name="region"
+              className="w-1/3"
+              rules={[
+                {
+                  required: true,
+                  type: "string",
+                  min: 5,
+                  whitespace: true,
+                },
+              ]}
+            >
               <Select
                 size="large"
                 placeholder={t("region") ?? ""}
@@ -225,7 +301,7 @@ export default function Inspector(): React.ReactElement {
                 {
                   required: true,
                   type: "string",
-                  min: 1,
+                  min: 3,
                   whitespace: true,
                   message: t("username-min-3") ?? "",
                 },
