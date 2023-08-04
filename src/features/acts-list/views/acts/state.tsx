@@ -407,9 +407,7 @@ export default function useActsState(): ActsState {
             color={getColor(value)}
             className="p-1 w-full text-center"
           >
-            {`${Math.round(
-              (value - record.status_update_time) / 60 / 60 / 24,
-            )} day(s)`}
+            {displayDeadline(Math.round(value - record.status_update_time))}
           </Tag>
         ),
       },
@@ -435,6 +433,40 @@ export default function useActsState(): ActsState {
         return acc;
       }, [])
       .join(", ");
+  }
+
+  function displayDeadline(diff: number): string {
+    const dayInSeconds = 86400;
+    const hourInSeconds = 3600;
+    const minInSeconds = 60;
+
+    if (diff >= dayInSeconds) {
+      const fullDays = Math.floor(diff / dayInSeconds);
+      return `${fullDays} day(s) ${displayDeadline(
+        diff - fullDays * dayInSeconds,
+      )}`;
+    }
+
+    if (diff >= hourInSeconds) {
+      const fullHours = Math.floor(diff / hourInSeconds);
+      return `${fullHours} hour(s) ${displayDeadline(
+        diff - fullHours * hourInSeconds,
+      )}`;
+    }
+
+    if (diff >= minInSeconds) {
+      const fullMins = Math.floor(diff / minInSeconds);
+      return `${fullMins} minute(s) ${displayDeadline(
+        diff - fullMins * minInSeconds,
+      )}`;
+    }
+
+    // if (diff === 0) {
+    //   return "";
+    // }
+
+    // return `${diff} second(s)`;
+    return "";
   }
 
   useEffect(() => {
