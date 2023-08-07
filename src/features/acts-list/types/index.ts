@@ -18,12 +18,12 @@ import type { CarouselRef } from "antd/es/carousel";
 import type { TFunction } from "i18next";
 
 type ViolationType = "administrative" | "criminal";
-type ActStatus = "received" | "new" | number;
+type ActStatus = number; // | "received" | "new"
 type ActsStatus = "created" | "defined" | "sent" | "rejected" | "performed";
 
 type getColorFn = (
-  input: ViolationType, // | ActStatus
-) => "blue" | "green" | "default"; // | "orange" | "red"
+  input: ViolationType | ActStatus,
+) => "blue" | "green" | "default" | "orange" | "red";
 
 type ActionBoxColor = "blue" | "green" | "grey" | "red";
 type ActionKey = "F5" | "F6" | "F7" | "F8" | "F9";
@@ -88,7 +88,7 @@ interface ActState {
     void,
     unknown,
     {
-      violation_type?: number | undefined;
+      violation_type: number;
     },
     unknown
   >;
@@ -183,12 +183,14 @@ interface ActType {
 }
 
 interface FormFilters {
-  doc_type_id: number[] | null;
-  min_date: string | null;
-  max_date: string | null;
-  region_id: number | null;
-  district_id: number | null;
-  violation_type: number | null;
+  doc_type_id: number[] | string[];
+  min_date: string;
+  max_date: string;
+  region_id: number | string;
+  district_id: number | string;
+  violation_type: number | string;
+
+  // [key: string]: string;
 }
 
 interface ActsParams extends Partial<FormFilters>, BaseParams {
@@ -241,6 +243,7 @@ interface ActsState {
   docs: SelectProps["options"];
   violationTypes: SelectProps["options"];
   selectedRegion: number | undefined;
+  searchParams: URLSearchParams;
   contextHolder: React.ReactElement;
   form: FormInstance;
   showDrawer: () => void;

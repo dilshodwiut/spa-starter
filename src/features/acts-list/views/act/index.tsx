@@ -6,7 +6,6 @@ import {
   RightCircleFilled,
   UserOutlined,
 } from "@ant-design/icons";
-import { PatternFormat } from "react-number-format";
 import clsx from "clsx";
 import CustomModal from "@/components/modal";
 import backIcon from "@/assets/arrow-left.svg";
@@ -515,9 +514,11 @@ export default function Act(): React.ReactElement {
                   (violation) => violation.key === "administrative",
                 );
 
-                violTypeMutation.mutate({
-                  violation_type: foundViolType?.id,
-                });
+                if (foundViolType !== undefined) {
+                  violTypeMutation.mutate({
+                    violation_type: foundViolType?.id,
+                  });
+                }
               }
             }}
           >
@@ -539,9 +540,11 @@ export default function Act(): React.ReactElement {
                   (violation) => violation.key === "criminal",
                 );
 
-                violTypeMutation.mutate({
-                  violation_type: foundViolType?.id,
-                });
+                if (foundViolType !== undefined) {
+                  violTypeMutation.mutate({
+                    violation_type: foundViolType?.id,
+                  });
+                }
               }
             }}
           >

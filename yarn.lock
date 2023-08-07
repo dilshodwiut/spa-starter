@@ -2422,15 +2422,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:^2.30.0":
-  version: 2.30.0
-  resolution: "date-fns@npm:2.30.0"
-  dependencies:
-    "@babel/runtime": ^7.21.0
-  checksum: f7be01523282e9bb06c0cd2693d34f245247a29098527d4420628966a2d9aad154bd0e90a6b1cf66d37adcb769cd108cf8a7bd49d76db0fb119af5cdd13644f4
-  languageName: node
-  linkType: hard
-
 "dayjs@npm:^1.11.1, dayjs@npm:^1.11.9":
   version: 1.11.9
   resolution: "dayjs@npm:1.11.9"
@@ -2704,7 +2695,6 @@ __metadata:
     autoprefixer: ^10.4.14
     axios: ^1.4.0
     clsx: ^1.2.1
-    date-fns: ^2.30.0
     dayjs: ^1.11.9
     eslint: ^8.0.1
     eslint-config-airbnb: ^19.0.4

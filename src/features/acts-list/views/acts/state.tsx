@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-// import { isInt } from "radash";
 import { useDebounce } from "usehooks-ts";
-import dayjs from "dayjs";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import ShowTotal from "@/components/show-total";
+import dayjs from "dayjs";
+import qs from "query-string";
 import { Layout, Tag, Form, message, theme, Tooltip } from "antd";
+import ShowTotal from "@/components/show-total";
 import type { SegmentedProps } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
 import placeholderIcon from "@/assets/image-placeholder.svg";
@@ -22,39 +22,35 @@ import {
   getViolationTypes,
 } from "../../api";
 import type {
-  // ActStatus,
   ActsState,
   ActType,
   ActsStatus,
   FormFilters,
   FilterForm,
 } from "../../types";
+import secondsToDate from "../../helpers/seconds-to-date";
+import renderOptions from "../../helpers/render-options";
+import displayDeadline from "../../helpers/display-deadline";
 
 const { Header, Content } = Layout;
+
+const defaultParams =
+  "page=1&page_size=20&status=created&min_date=&max_date=&doc_type_id=&region_id=&district_id=&violation_type=&search=";
 
 export default function useActsState(): ActsState {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [messageApi, contextHolder] = message.useMessage();
   const form = Form.useForm()[0];
-
-  const [{ page, pageSize }, setPagination] = useState<{
-    page: number;
-    pageSize: number;
-  }>({ page: 1, pageSize: 20 });
+  const [searchParams, setSearchParams] = useSearchParams(
+    window.location.search === "" ? defaultParams : window.location.search,
+  );
 
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
-  const [status, setStatus] = useState<ActsStatus>("created");
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState<string>(
+    searchParams.get("search") ?? "",
+  );
   const [selectedRegion, setSelectedRegion] = useState<number>();
-  const [filters, setFilters] = useState<FormFilters>({
-    doc_type_id: [],
-    min_date: null,
-    max_date: null,
-    region_id: null,
-    district_id: null,
-    violation_type: null,
-  });
 
   const debouncedSearch = useDebounce<string>(search);
 
@@ -66,19 +62,22 @@ export default function useActsState(): ActsState {
     isFetching,
     error,
   } = useQuery({
-    queryKey: ["acts", { page, pageSize, status, debouncedSearch, ...filters }],
+    queryKey: ["acts", { ...searchParams.parse(), search: debouncedSearch }],
     queryFn: async () => {
       const res = await getAllActs({
-        page,
-        page_size: pageSize,
-        status,
+        page: +(searchParams.get("page") ?? 1),
+        page_size: +(searchParams.get("page_size") ?? 20),
+        status: (searchParams.get("status") ?? "created") as ActsStatus,
         search: debouncedSearch,
-        doc_type_id: filters.doc_type_id,
-        min_date: filters.min_date,
-        max_date: filters.max_date,
-        region_id: filters.region_id,
-        district_id: filters.district_id,
-        violation_type: filters.violation_type,
+        doc_type_id:
+          searchParams.getAll("doc_type_id")[0] === ""
+            ? [""]
+            : searchParams.getAll("doc_type_id").map(Number),
+        min_date: searchParams.get("min_date") ?? "",
+        max_date: searchParams.get("max_date") ?? "",
+        region_id: searchParams.get("region_id") ?? "",
+        district_id: searchParams.get("district_id") ?? "",
+        violation_type: searchParams.get("violation_type") ?? "",
       });
       return res;
     },
@@ -184,7 +183,7 @@ export default function useActsState(): ActsState {
   };
 
   const onSegmentChange = (val: SegmentedProps["value"]): void => {
-    setStatus(val as ActsStatus);
+    setSearchParams({ ...searchParams.parse(), status: val as ActsStatus });
   };
 
   const onTableRow: TableProps<ActType>["onRow"] = (record) => ({
@@ -200,27 +199,27 @@ export default function useActsState(): ActsState {
   const onPageChange: TableProps<ActType>["onChange"] = (
     pagination,
     _filters,
-    sorter,
-    extra,
+    _sorter,
+    _extra,
   ) => {
-    setPagination({
-      page: pagination.current ?? 1,
-      pageSize: pagination.pageSize ?? 20,
+    setSearchParams({
+      ...searchParams.parse(),
+      page: pagination.current?.toString() ?? "1",
+      page_size: pagination.pageSize?.toString() ?? "20",
     });
-    console.log("params", pagination, _filters, sorter, extra);
   };
 
   const onFiltersApply = (values: FilterForm): void => {
     const draft: FormFilters = {
-      doc_type_id: [],
-      min_date: null,
-      max_date: null,
-      region_id: null,
-      district_id: null,
-      violation_type: null,
+      doc_type_id: [""],
+      min_date: "",
+      max_date: "",
+      region_id: "",
+      district_id: "",
+      violation_type: "",
     };
 
-    if (typeof values.doc_type !== "undefined") {
+    if (typeof values.doc_type !== "undefined" && values.doc_type.length > 0) {
       draft.doc_type_id = values.doc_type;
     }
 
@@ -245,19 +244,27 @@ export default function useActsState(): ActsState {
       draft.violation_type = values.violation_type;
     }
 
-    setFilters(draft);
+    // we need to stringify it first to satisfy ts, otherwise it complains because of
+    // FormFilters index signature mismatch with setSearchParams argument type
+    const nextInit = { ...searchParams.parse(), ...draft };
+    setSearchParams(qs.stringify(nextInit));
     closeDrawer();
   };
 
   const paginationProps = {
-    defaultPageSize: 20,
+    defaultCurrent: +(searchParams.get("page") ?? 1),
+    defaultPageSize: +(searchParams.get("page_size") ?? 20),
     total: data?.count,
     showSizeChanger: true,
     showTotal(total: number, range: [number, number]) {
       return <ShowTotal total={total} range={range} />;
     },
     onShowSizeChange(current: number, size: number): void {
-      console.log(current, size);
+      setSearchParams({
+        ...searchParams.parse(),
+        page: current.toString(),
+        page_size: size.toString(),
+      });
     },
     locale: { items_per_page: "" },
   };
@@ -288,9 +295,8 @@ export default function useActsState(): ActsState {
                   width={50}
                   height="100%"
                   onError={(e) => {
-                    console.log(e);
-                    e.target.onerror = null;
-                    e.target.src = placeholderIcon;
+                    (e.target as HTMLImageElement).onerror = null;
+                    (e.target as HTMLImageElement).src = placeholderIcon;
                   }}
                 />
               </div>
@@ -353,7 +359,7 @@ export default function useActsState(): ActsState {
           law_article_id: number;
           additional_articles: Array<{ law_article_id: number }>;
         }) {
-          return renderReduce([
+          return renderOptions(articles, [
             { law_article_id: value.law_article_id },
             ...value.additional_articles,
           ]);
@@ -401,73 +407,37 @@ export default function useActsState(): ActsState {
       {
         title: t("deadline"),
         dataIndex: "status_duration_time",
-        render: (value: number, record) => (
-          <Tag
-            bordered={false}
-            color={getColor(value)}
-            className="p-1 w-full text-center"
-          >
-            {displayDeadline(Math.round(value - record.status_update_time))}
-          </Tag>
-        ),
+        render: (value: number, record) => {
+          const diff = Math.round(value - record.status_update_time);
+          const hasPassed = diff < 0;
+          const dateObj = secondsToDate(Math.abs(diff));
+
+          return (
+            <Tag
+              bordered={false}
+              color={getColor(
+                hasPassed ? -(dateObj.days ?? 0) : dateObj.days ?? 0,
+              )}
+              className="p-1 w-full text-center"
+            >
+              {displayDeadline(dateObj, hasPassed)}
+            </Tag>
+          );
+        },
       },
     ];
 
-    if (status === "created") {
+    if (searchParams.get("status") === "created") {
       return allColumns.filter((col) => col.key !== "violation-type");
     }
 
     return allColumns;
-  }, [violationTypes, status, articles, t]);
+  }, [violationTypes, searchParams, articles, t]);
 
-  function renderReduce(arr: Array<{ law_article_id: number }>): string {
-    return arr
-      .reduce((acc, curr) => {
-        const article = articles?.find(
-          (artcl) => artcl.value === curr.law_article_id,
-        );
-        if (article !== undefined) {
-          return acc.concat(article.label);
-        }
-
-        return acc;
-      }, [])
-      .join(", ");
-  }
-
-  function displayDeadline(diff: number): string {
-    const dayInSeconds = 86400;
-    const hourInSeconds = 3600;
-    const minInSeconds = 60;
-
-    if (diff >= dayInSeconds) {
-      const fullDays = Math.floor(diff / dayInSeconds);
-      return `${fullDays} day(s) ${displayDeadline(
-        diff - fullDays * dayInSeconds,
-      )}`;
-    }
-
-    if (diff >= hourInSeconds) {
-      const fullHours = Math.floor(diff / hourInSeconds);
-      return `${fullHours} hour(s) ${displayDeadline(
-        diff - fullHours * hourInSeconds,
-      )}`;
-    }
-
-    if (diff >= minInSeconds) {
-      const fullMins = Math.floor(diff / minInSeconds);
-      return `${fullMins} minute(s) ${displayDeadline(
-        diff - fullMins * minInSeconds,
-      )}`;
-    }
-
-    // if (diff === 0) {
-    //   return "";
-    // }
-
-    // return `${diff} second(s)`;
-    return "";
-  }
+  useEffect(() => {
+    setSearchParams({ ...searchParams.parse(), search: debouncedSearch });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch, setSearchParams]);
 
   useEffect(() => {
     if (error !== null) {
@@ -494,6 +464,7 @@ export default function useActsState(): ActsState {
     docs,
     violationTypes,
     selectedRegion,
+    searchParams,
     contextHolder,
     form,
     showDrawer,

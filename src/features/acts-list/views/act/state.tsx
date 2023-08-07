@@ -120,7 +120,7 @@ export default function useActState(): ActState {
   const { data, isLoading, error } = useQuery({
     queryKey: ["act", actId],
     queryFn: async () => {
-      const res = await getAct(actId!);
+      const res = await getAct(actId as string);
       return res;
     },
     enabled: Boolean(actId),
@@ -180,8 +180,8 @@ export default function useActState(): ActState {
     isLoading || isActsDataLoading || isViolationsDataLoading;
 
   const violTypeMutation = useMutation({
-    mutationFn: async (_data: { violation_type?: number }) => {
-      await updateViolationType(actId!, _data);
+    mutationFn: async (_data: { violation_type: number }) => {
+      await updateViolationType(actId as string, _data);
     },
     onSuccess: (_data, variables, _context) => {
       void queryClient.invalidateQueries(["acts"]);
@@ -240,7 +240,7 @@ export default function useActState(): ActState {
       reason: number;
       description?: string;
     }) => {
-      await updateViolationStatus(actId!, _data);
+      await updateViolationStatus(actId as string, _data);
     },
     onSuccess: () => {
       void queryClient.invalidateQueries(["acts"]);
@@ -265,11 +265,13 @@ export default function useActState(): ActState {
   };
 
   const handleOk = (): void => {
-    violStatusMutation.mutate({
-      status: "rejected",
-      reason,
-      description: note,
-    });
+    if (reason !== undefined) {
+      violStatusMutation.mutate({
+        status: "rejected",
+        reason,
+        description: note,
+      });
+    }
   };
 
   const handleCancel = (): void => {

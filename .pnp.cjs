@@ -47,7 +47,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["autoprefixer", "virtual:888386864bbef588716a32e61cfeabcab6d23677fbe727cae928b0763f3d1444c6acbe8983de3ec3ab6a1e69115213e6053d916ab869833d7e871a2b6e720034#npm:10.4.14"],\
             ["axios", "npm:1.4.0"],\
             ["clsx", "npm:1.2.1"],\
-            ["date-fns", "npm:2.30.0"],\
             ["dayjs", "npm:1.11.9"],\
             ["eslint", "npm:8.44.0"],\
             ["eslint-config-airbnb", "virtual:888386864bbef588716a32e61cfeabcab6d23677fbe727cae928b0763f3d1444c6acbe8983de3ec3ab6a1e69115213e6053d916ab869833d7e871a2b6e720034#npm:19.0.4"],\
@@ -3226,16 +3225,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["date-fns", [\
-        ["npm:2.30.0", {\
-          "packageLocation": "./.yarn/cache/date-fns-npm-2.30.0-895c790e0f-f7be015232.zip/node_modules/date-fns/",\
-          "packageDependencies": [\
-            ["date-fns", "npm:2.30.0"],\
-            ["@babel/runtime", "npm:7.22.6"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["dayjs", [\
         ["npm:1.11.9", {\
           "packageLocation": "./.yarn/cache/dayjs-npm-1.11.9-c47d327b7c-a4844d83dc.zip/node_modules/dayjs/",\
@@ -3573,7 +3562,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["autoprefixer", "virtual:888386864bbef588716a32e61cfeabcab6d23677fbe727cae928b0763f3d1444c6acbe8983de3ec3ab6a1e69115213e6053d916ab869833d7e871a2b6e720034#npm:10.4.14"],\
             ["axios", "npm:1.4.0"],\
             ["clsx", "npm:1.2.1"],\
-            ["date-fns", "npm:2.30.0"],\
             ["dayjs", "npm:1.11.9"],\
             ["eslint", "npm:8.44.0"],\
             ["eslint-config-airbnb", "virtual:888386864bbef588716a32e61cfeabcab6d23677fbe727cae928b0763f3d1444c6acbe8983de3ec3ab6a1e69115213e6053d916ab869833d7e871a2b6e720034#npm:19.0.4"],\

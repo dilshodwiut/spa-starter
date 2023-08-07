@@ -8,11 +8,11 @@ const getColor: getColorFn = (input) => {
     // received: "default",
   } as const;
 
-  // if (typeof input === "number") {
-  //   if (input > 3) return "green";
-  //   if (input > 1) return "orange";
-  //   return "red";
-  // }
+  if (typeof input === "number") {
+    if (input > 3) return "green";
+    if (input > 0) return "orange";
+    return "red";
+  }
 
   return input in map ? map[input] : "default";
 };

@@ -64,7 +64,7 @@ export async function getReasons(
 
 export async function updateViolationType(
   id: string,
-  data: { violation_type?: number } = {},
+  data: { violation_type: number },
 ): Promise<void> {
   await request({
     url: `/violations/${id}/update-violation-type/`,
@@ -75,7 +75,7 @@ export async function updateViolationType(
 
 export async function updateViolationStatus(
   id: string,
-  data: { status: string; reason: number; description?: string } = {},
+  data: { status: string; reason: number; description?: string },
 ): Promise<void> {
   await request({
     url: `/violations/${id}/update-status/`,

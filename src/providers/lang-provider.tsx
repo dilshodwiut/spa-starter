@@ -4,6 +4,7 @@ import { langContext } from "@/contexts/lang-context";
 import settings from "@/config/settings";
 import "@/utils/i18n";
 import "@/lib/to-capital-case";
+import "@/lib/parse";
 import type { AppLang } from "@/types";
 
 interface Props {

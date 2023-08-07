@@ -32,7 +32,7 @@ export default function useInspectorState(): InspectorState {
   const { data, error } = useQuery({
     queryKey: ["inspector", inspectorId],
     queryFn: async () => {
-      const res = await getInspector(inspectorId!);
+      const res = await getInspector(inspectorId as string);
       return res;
     },
     enabled: Boolean(inspectorId),
@@ -69,7 +69,7 @@ export default function useInspectorState(): InspectorState {
   }, [selectedRegion, locations?.results]);
 
   const mutationFn = async (formData: FormValues): Promise<void> => {
-    if (typeof inspectorId === "string") {
+    if (typeof inspectorId === "string" && inspectorId.length > 0) {
       await updateInspector(inspectorId, formData);
     } else {
       await createInspector(formData);
@@ -101,13 +101,16 @@ export default function useInspectorState(): InspectorState {
     navigate(-1);
   };
 
-  const submitHandler = (values: FormValues): void => {
-    const fields = clone(values);
+  const submitHandler = (
+    values: Omit<FormValues, "birth_date"> & { birth_date: { $d: Date } },
+  ): void => {
+    const fields: Record<string, unknown> = clone(values);
+
     if (values.birth_date !== undefined && values.birth_date !== null) {
       fields.birth_date = dayjs(values?.birth_date.$d).format("YYYY-MM-DD");
     }
 
-    mutate(fields);
+    mutate(fields as FormValues);
   };
 
   useEffect(() => {

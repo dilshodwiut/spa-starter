@@ -34,6 +34,7 @@ export default function Acts(): React.ReactElement {
     docs,
     violationTypes,
     selectedRegion,
+    searchParams,
     contextHolder,
     form,
     showDrawer,
@@ -67,6 +68,7 @@ export default function Acts(): React.ReactElement {
             ]}
             className="text-[#62738C]"
             onChange={onSegmentChange}
+            value={searchParams.get("status") ?? "created"}
           />
         </div>
 
@@ -76,6 +78,7 @@ export default function Acts(): React.ReactElement {
             placeholder={t("search-by-serial-number") ?? ""}
             suffix={<img src={SearchIcon} alt="search" />}
             onChange={onSearchChange}
+            defaultValue={searchParams.get("search") ?? ""}
           />
 
           <Button

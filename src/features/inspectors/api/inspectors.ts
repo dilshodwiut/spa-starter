@@ -1,6 +1,6 @@
 import request from "@/utils/axios";
 import type { BaseParams, ListResponse } from "@/types";
-import type { InspectorType } from "../types";
+import type { InspectorType, FormValues } from "../types";
 
 export async function getAllInspectors(
   params: BaseParams & { search?: string } = {},
@@ -23,10 +23,8 @@ export async function getInspector(id: string): Promise<InspectorType> {
   return result;
 }
 
-export async function createInspector(
-  data: Exclude<Partial<InspectorType>, "id">,
-): Promise<Exclude<Partial<InspectorType>, "id">> {
-  const result: Exclude<Partial<InspectorType>, "id"> = await request({
+export async function createInspector(data: FormValues): Promise<FormValues> {
+  const result: FormValues = await request({
     url: `/account/users/`,
     method: "post",
     data,
@@ -37,9 +35,9 @@ export async function createInspector(
 
 export async function updateInspector(
   id: string,
-  data: Exclude<Partial<InspectorType>, "id">,
-): Promise<Exclude<Partial<InspectorType>, "id">> {
-  const result: Exclude<Partial<InspectorType>, "id"> = await request({
+  data: FormValues,
+): Promise<FormValues> {
+  const result: FormValues = await request({
     url: `/account/users/${id}/`,
     method: "put",
     data,

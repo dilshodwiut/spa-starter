@@ -37,11 +37,13 @@ interface InspectorState {
   goBack: () => void;
   handleCancel: () => void;
   handleRegionChange: (value: number) => void;
-  submitHandler: (values: FormValues) => void;
+  submitHandler: (
+    values: Omit<FormValues, "birth_date"> & { birth_date: { $d: Date } },
+  ) => void;
   t: TFunction;
 }
 
-type FormValues = Partial<InspectorType>;
+type FormValues = Exclude<Partial<InspectorType>, "id">;
 
 interface InspectorType {
   id: number;
