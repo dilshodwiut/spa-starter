@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { Card } from "antd";
-import type { CustomCardProps } from "../types";
+import type { CustomCardProps } from "../features/acts-list/types";
 
 export default function CustomCard(props: CustomCardProps): React.ReactElement {
   const { children, className, title } = props;

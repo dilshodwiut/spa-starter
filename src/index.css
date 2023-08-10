@@ -6,3 +6,7 @@
 .ant-carousel .slick-dots-bottom {
   bottom: 0;
 }
+
+.ant-list-item-meta-title {
+  margin: 0 !important;
+}

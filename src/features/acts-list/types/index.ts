@@ -95,6 +95,8 @@ interface ActState {
   note: string;
   reason: number | undefined;
   reasons: SelectProps["options"];
+  infringementArticle: string;
+  articles: Array<{ label: string; value: number }>;
   handleOk: () => void;
   handleCancel: () => void;
   handleCarouselModalCancel: () => void;

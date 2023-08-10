@@ -8,6 +8,8 @@ import { actsListRoutes } from "@/features/acts-list";
 import { statsRoutes } from "@/features/stats";
 import { notificationRoutes } from "@/features/notification";
 import { inspectorsRoutes } from "@/features/inspectors";
+import PdfGen from "@/views/pdf-gen";
+import PdfGen2 from "@/views/pdf-gen-2";
 
 // Global Pages
 const Root = lazy(() => import("@/views/root"));
@@ -31,6 +33,18 @@ const routes: CustomRoute[] = [
     ],
   },
   authRoutes,
+  {
+    id: "temporary",
+    title: "Temporary",
+    path: "temporary",
+    element: <PdfGen />,
+  },
+  {
+    id: "temporary2",
+    title: "Temporary 2",
+    path: "temporary-2",
+    element: <PdfGen2 />,
+  },
   {
     id: "global-not-found",
     title: "Not found",

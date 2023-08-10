@@ -7,16 +7,18 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import clsx from "clsx";
+import formatAmount from "@/helpers/format-amount";
 import CustomModal from "@/components/modal";
+import CustomCard from "@/components/custom-card";
 import backIcon from "@/assets/arrow-left.svg";
+import folderIcon from "@/assets/folder.svg";
 import formatDate from "../../helpers/format-date";
-import formatAmount from "../../helpers/format-amount";
-import CustomCard from "../../components/custom-card";
+import formatPhoneNumber from "../../helpers/format-phone-number";
 import ActionBox from "../../components/action-box";
 import Info from "../../components/info";
 import SendIcon from "../../components/send-icon";
 import useActState from "./state";
-import formatPhoneNumber from "../../helpers/format-phone-number";
+import renderArticlesById from "../../helpers/render-articles-by-id";
 
 const statusMap = {
   created: "non-processed",
@@ -48,6 +50,8 @@ export default function Act(): React.ReactElement {
     note,
     reason,
     reasons,
+    infringementArticle,
+    articles,
     handleOk,
     handleCancel,
     handleCarouselModalCancel,
@@ -215,28 +219,26 @@ export default function Act(): React.ReactElement {
           <Col span={12}>
             <CustomCard title={t("violator-details")}>
               <Row gutter={24}>
-                {data?.violation_person?.avatar !== undefined &&
-                data?.violation_person?.avatar !== "" ? (
-                  <Col span={5}>
+                <Col
+                  span={5}
+                  className="flex justify-center items-center border"
+                >
+                  {data?.violation_person?.avatar !== undefined &&
+                  data?.violation_person?.avatar !== "" ? (
                     <img
-                      src={`${import.meta.env.VITE_CDN_URL}${
+                      src={`${import.meta.env.VITE_MEDIA_URL}/${
                         data?.violation_person?.avatar
                       }`}
                       alt="violator"
                     />
-                  </Col>
-                ) : (
-                  <Col
-                    span={5}
-                    className="flex justify-center items-center border"
-                  >
+                  ) : (
                     <UserOutlined
                       style={{
                         fontSize: "3rem",
                       }}
                     />
-                  </Col>
-                )}
+                  )}
+                </Col>
                 <Col span={19}>
                   <Row gutter={24}>
                     <Col span={24}>
@@ -389,12 +391,19 @@ export default function Act(): React.ReactElement {
               <div className="flex gap-8">
                 <Info
                   of={t("infringement-article")}
-                  value="133 Band 1, Qism 3, Kichik band"
+                  value={infringementArticle}
                   valueClassName="font-semibold text-xl"
                 />
                 <Info
                   of={t("additional-article")}
-                  value={t("no")}
+                  value={
+                    data?.violation?.additional_articles.length === 0
+                      ? t("no")
+                      : renderArticlesById(
+                          articles,
+                          data?.violation?.additional_articles ?? [],
+                        )
+                  }
                   valueClassName="font-semibold text-xl"
                 />
               </div>
@@ -405,20 +414,34 @@ export default function Act(): React.ReactElement {
                 of={t("violation-files")}
                 value={
                   <div className="flex flex-wrap gap-4 mt-4">
-                    {data?.files
-                      ?.filter((file) => file.type === "image")
-                      .map((file, index) => (
-                        <img
-                          key={file.file}
-                          src={`${import.meta.env.VITE_MEDIA_URL}/${file.file}`}
-                          alt="violation"
-                          className="2xl:w-[180px] lg:w-32 sm:w-20 cursor-pointer"
-                          onClick={() => {
-                            onImgClick(index);
-                          }}
-                          aria-hidden
-                        />
-                      ))}
+                    {typeof data?.files?.length === "number" &&
+                    data?.files?.length > 0 ? (
+                      data?.files
+                        ?.filter((file) => file.type === "image")
+                        .map((file, index) => (
+                          <img
+                            key={file.file}
+                            src={`${import.meta.env.VITE_MEDIA_URL}/${
+                              file.file
+                            }`}
+                            alt="violation"
+                            className="2xl:w-[180px] lg:w-32 sm:w-20 cursor-pointer"
+                            onClick={() => {
+                              onImgClick(index);
+                            }}
+                            aria-hidden
+                          />
+                        ))
+                    ) : (
+                      <div className="w-full flex items-center justify-center border p-4 rounded-xl">
+                        <div className="flex flex-col items-center gap-2">
+                          <img src={folderIcon} alt="folder" width={24} />
+                          <span className="text-[#62738C] font-normal text-xs w-28 text-center">
+                            {t("no-files-up")}
+                          </span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 }
               />

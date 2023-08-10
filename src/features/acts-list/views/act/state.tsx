@@ -16,6 +16,7 @@ import getFileData from "../../helpers/get-file-data";
 import {
   getAct,
   getAllActs,
+  getArticles,
   getReasons,
   getViolationTypes,
   updateViolationStatus,
@@ -125,6 +126,48 @@ export default function useActState(): ActState {
     },
     enabled: Boolean(actId),
   });
+
+  const { data: articlesData } = useQuery({
+    queryKey: ["articles"],
+    queryFn: async () => {
+      const res = await getArticles();
+      return res;
+    },
+    placeholderData: { count: 0, next: null, previous: null, results: [] },
+  });
+
+  let articles = articlesData?.results.map(({ id, clause, ...rest }) => ({
+    label: clause,
+    value: id,
+    id,
+    clause,
+    ...rest,
+  }));
+  articles ??= [];
+
+  const article = articles.find(
+    (artcl) => artcl.id === data?.violation?.law_article_id,
+  );
+
+  const infringementArticle = (() => {
+    let result = "";
+
+    if (typeof article !== "undefined") {
+      if (article.clause !== "-") {
+        result += `${article.clause} Band`;
+      }
+
+      if (article.part !== "-") {
+        result += `, ${article.part} Qism`;
+      }
+
+      if (article.small_clause !== "-") {
+        result += `, ${article.small_clause} Kichik Band`;
+      }
+    }
+
+    return result;
+  })();
 
   const { data: reasonsData } = useQuery({
     queryKey: ["reasons"],
@@ -347,8 +390,10 @@ export default function useActState(): ActState {
     actionInProcess,
     violTypeMutation,
     note,
-    reasons,
     reason,
+    reasons,
+    infringementArticle,
+    articles,
     handleOk,
     handleCancel,
     handleCarouselModalCancel,

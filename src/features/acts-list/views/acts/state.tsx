@@ -7,13 +7,13 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import dayjs from "dayjs";
 import qs from "query-string";
 import { Layout, Tag, Form, message, theme, Tooltip } from "antd";
+import formatAmount from "@/helpers/format-amount";
 import ShowTotal from "@/components/show-total";
+import placeholderIcon from "@/assets/image-placeholder.svg";
 import type { SegmentedProps } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
-import placeholderIcon from "@/assets/image-placeholder.svg";
 import getColor from "../../helpers/get-color";
 import formatDate from "../../helpers/format-date";
-import formatAmount from "../../helpers/format-amount";
 import {
   getAllActs,
   getArticles,
@@ -29,7 +29,7 @@ import type {
   FilterForm,
 } from "../../types";
 import secondsToDate from "../../helpers/seconds-to-date";
-import renderOptions from "../../helpers/render-options";
+import renderArticlesById from "../../helpers/render-articles-by-id";
 import displayDeadline from "../../helpers/display-deadline";
 
 const { Header, Content } = Layout;
@@ -359,7 +359,7 @@ export default function useActsState(): ActsState {
           law_article_id: number;
           additional_articles: Array<{ law_article_id: number }>;
         }) {
-          return renderOptions(articles, [
+          return renderArticlesById(articles, [
             { law_article_id: value.law_article_id },
             ...value.additional_articles,
           ]);
