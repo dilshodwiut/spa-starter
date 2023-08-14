@@ -135,7 +135,8 @@ export default function Inspector(): React.ReactElement {
                 {
                   required: true,
                   type: "string",
-                  min: 5,
+                  min: 16,
+                  max: 16,
                   whitespace: true,
                 },
               ]}
@@ -267,9 +268,6 @@ export default function Inspector(): React.ReactElement {
               rules={[
                 {
                   required: true,
-                  type: "string",
-                  min: 5,
-                  whitespace: true,
                 },
               ]}
             >

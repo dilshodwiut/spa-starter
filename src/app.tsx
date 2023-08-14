@@ -1,3 +1,4 @@
+import { App as AntAppContextProvider } from "antd";
 import {
   QueryProvider,
   AuthProvider,
@@ -11,9 +12,11 @@ export default function App(): React.ReactElement {
     <QueryProvider>
       <LangProvider>
         <ThemeProvider>
-          <AuthProvider>
-            <Routes />
-          </AuthProvider>
+          <AntAppContextProvider>
+            <AuthProvider>
+              <Routes />
+            </AuthProvider>
+          </AntAppContextProvider>
         </ThemeProvider>
       </LangProvider>
     </QueryProvider>

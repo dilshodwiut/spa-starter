@@ -260,6 +260,18 @@ interface ActsState {
   t: TFunction;
 }
 
+export interface DateObj {
+  days?: number;
+  hours?: number;
+  minutes?: number;
+  seconds?: number;
+}
+
+export interface Option {
+  label: string;
+  value: number;
+}
+
 export type {
   ActStatus,
   getColorFn,

@@ -3,7 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuthContext, useLangContext } from "@/contexts";
 import { compose, split, tail, take } from "ramda";
-import { Layout, Typography } from "antd";
+import { App, Layout, Typography } from "antd";
+import { ExclamationCircleFilled } from "@ant-design/icons";
 import { colors } from "@/config/theme";
 import settings from "@/config/settings";
 import clsx from "clsx";
@@ -11,6 +12,7 @@ import ruIcon from "@/assets/RU.svg";
 import uzIcon from "@/assets/UZ.png";
 import type { ThemeConfig, MenuProps, SiderProps } from "antd";
 import type { ItemType } from "antd/es/menu/hooks/useItems";
+import type { TFunction } from "i18next";
 import type { AppLang, CustomRoute, User } from "@/types";
 
 const { Sider } = Layout;
@@ -43,6 +45,8 @@ interface DefaultLayoutState {
   user: User;
   handleLanguageChange: (value: AppLang) => void;
   onToggleSider: () => void;
+  showDeleteConfirm: () => void;
+  t: TFunction;
 }
 
 export default function useDefaultLayoutState(
@@ -53,10 +57,38 @@ export default function useDefaultLayoutState(
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { user } = useAuthContext();
+  const { modal } = App.useApp();
   const { t } = useTranslation();
+  const { setUser } = useAuthContext();
   const { changeLang } = useLangContext();
 
   const handleLanguageChange = changeLang;
+
+  const logout = (): void => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("user");
+    setUser({
+      isAuth: false,
+      first_name: "",
+      last_name: "",
+      middle_name: "",
+      is_superuser: false,
+    });
+  };
+
+  const showDeleteConfirm = (): void => {
+    modal.confirm({
+      title: t("sure-quit"),
+      icon: <ExclamationCircleFilled />,
+      okButtonProps: { className: "text-[#40916C]" },
+      okText: t("yes"),
+      cancelText: t("no"),
+      onOk() {
+        setTimeout(logout, 500);
+      },
+    });
+  };
 
   const onToggleSider = (): void => {
     setCollapsed(!collapsed);
@@ -78,7 +110,7 @@ export default function useDefaultLayoutState(
             {collapsed ? "" : t(title ?? "")}
           </span>
         ),
-        title: t(title!) ?? "",
+        title: t(title as string) ?? "",
         onClick: () => {
           navigate(path as string);
         },
@@ -151,5 +183,7 @@ export default function useDefaultLayoutState(
     user,
     handleLanguageChange,
     onToggleSider,
+    showDeleteConfirm,
+    t,
   };
 }

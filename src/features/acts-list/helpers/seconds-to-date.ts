@@ -1,41 +1,38 @@
+import { T, always, cond, curry } from "ramda";
+import type { DateObj } from "../types";
+
+type DurationType = "days" | "hours" | "minutes";
+type ToDuration = (
+  durationType: DurationType,
+  durationInSec: number,
+  sec: number,
+) => DateObj;
+
 const dayInSeconds = 86400;
 const hourInSeconds = 3600;
 const minInSeconds = 60;
 
-export interface DateObj {
-  days?: number;
-  hours?: number;
-  minutes?: number;
-  seconds?: number;
-}
-
-export default function secondsToDate(
-  seconds: number,
-  initialObj: DateObj = {},
-): DateObj {
-  if (seconds >= dayInSeconds) {
-    const fullDays = Math.floor(seconds / dayInSeconds);
+const secondsToDate = (seconds: number, initialObj: DateObj = {}): DateObj => {
+  const toDuration: ToDuration = (durationType, durationInSec, sec) => {
+    const fullDurations = Math.floor(sec / durationInSec);
     const { ...obj } = initialObj;
-    obj.days = fullDays;
-    return secondsToDate(seconds - fullDays * dayInSeconds, obj);
-  }
+    obj[durationType] = fullDurations;
+    return secondsToDate(sec - fullDurations * durationInSec, obj);
+  };
 
-  if (seconds >= hourInSeconds) {
-    const fullHours = Math.floor(seconds / hourInSeconds);
-    const { ...obj } = initialObj;
-    obj.hours = fullHours;
-    return secondsToDate(seconds - fullHours * hourInSeconds, obj);
-  }
+  const toDays = curry(toDuration)("days", dayInSeconds);
+  const toHours = curry(toDuration)("hours", hourInSeconds);
+  const toMinutes = curry(toDuration)("minutes", minInSeconds);
 
-  if (seconds >= minInSeconds) {
-    const fullMins = Math.floor(seconds / minInSeconds);
-    const { ...obj } = initialObj;
-    return secondsToDate(seconds - fullMins * minInSeconds, obj);
-  }
+  const toDate = cond([
+    [(a: number) => a >= dayInSeconds, toDays],
+    [(a: number) => a >= hourInSeconds, toHours],
+    [(a: number) => a >= minInSeconds, toMinutes],
+    [(a: number) => a === 0, always({})],
+    [T, always(initialObj)],
+  ]);
 
-  if (seconds === 0) {
-    return {};
-  }
+  return toDate(seconds);
+};
 
-  return initialObj;
-}
+export default secondsToDate;

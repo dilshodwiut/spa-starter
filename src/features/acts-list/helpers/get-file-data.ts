@@ -1,19 +1,19 @@
+import { always, compose, equals, ifElse, last, split } from "ramda";
+
 type DataType = "ext" | "filename";
+type TakePortion = (list: readonly string[]) => string;
 
-export default function getFileData(dataType: DataType, fileUrl = ""): string {
-  let separator = "/";
+const getSeparator = ifElse(equals("ext"), always("."), always("/"));
+const isEmpty = compose(equals(undefined), last);
+const takePortion = ifElse(isEmpty, always(""), last) as TakePortion;
 
-  if (dataType === "ext") {
-    separator = ".";
-  }
+const getFileData = (dataType: DataType, fileUrl = ""): string => {
+  // const toPieces = compose(split, getSeparator);
+  const toPieces = split(getSeparator(dataType));
 
-  const pieces = fileUrl.split(separator);
+  const getData = compose(takePortion, toPieces);
 
-  const lastItem = pieces.at(-1);
+  return getData(fileUrl);
+};
 
-  if (lastItem !== undefined) {
-    return pieces.length > 1 ? lastItem : "";
-  }
-
-  return "";
-}
+export default getFileData;

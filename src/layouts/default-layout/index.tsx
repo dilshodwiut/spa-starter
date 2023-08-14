@@ -1,32 +1,13 @@
-import {
-  Layout,
-  Menu,
-  Button,
-  Select,
-  ConfigProvider,
-  Popover,
-  Modal,
-} from "antd";
-import {
-  ExclamationCircleFilled,
-  LogoutOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
-import { useAuthContext } from "@/contexts";
+import { Layout, Menu, Button, Select, ConfigProvider, Popover } from "antd";
 import { colors } from "@/config/theme";
-import { useTranslation } from "react-i18next";
-import clsx from "clsx";
 import brandLogo from "@/assets/enjin-coin-(enj).svg";
 import downIcon from "@/assets/arrow-down.svg";
 import arrowLeftIcon from "@/assets/arrow-left.svg";
-import moreIcon from "@/assets/more.svg";
-import personIcon from "@/assets/person.svg";
+import quitIcon from "@/assets/quit.svg";
 import ruIcon from "@/assets/RU.svg";
 import uzIcon from "@/assets/UZ.png";
 import type { CustomRoute } from "@/types";
 import useDefaultLayoutState from "./state";
-
-const { confirm } = Modal;
 
 interface Props {
   children: React.ReactElement;
@@ -49,9 +30,9 @@ export default function DefaultLayout(props: Props): React.ReactElement {
     user,
     handleLanguageChange,
     onToggleSider,
+    showDeleteConfirm,
+    t,
   } = useDefaultLayoutState(sidebarRoutes);
-
-  const { t } = useTranslation();
 
   return (
     <Layout hasSider>
@@ -183,21 +164,17 @@ export default function DefaultLayout(props: Props): React.ReactElement {
             )}
 
             {collapsed ? (
-              <Popover
-                arrow={false}
-                content={<PopoverContent />}
-                title=""
-                trigger="click"
-              >
-                <div
-                  className={clsx(
-                    "flex justify-between items-center bg-white rounded-xl p-[11px] border border-[#f5f5f5] cursor-pointer",
-                    profileCollapseClasses,
-                  )}
-                >
-                  <img src={personIcon} alt="profile" />
-                </div>
-              </Popover>
+              <div className="flex justify-between items-center bg-white rounded-xl p-[11px] border border-[#f5f5f5] cursor-pointer w-12 m-auto">
+                <img
+                  src={quitIcon}
+                  alt="logout"
+                  className="cursor-pointer"
+                  onClick={showDeleteConfirm}
+                  width={48}
+                  height={48}
+                  aria-hidden
+                />
+              </div>
             ) : null}
 
             {!collapsed ? (
@@ -211,14 +188,13 @@ export default function DefaultLayout(props: Props): React.ReactElement {
                   </span>
                 </div>
 
-                <Popover
-                  arrow={false}
-                  content={<PopoverContent />}
-                  title=""
-                  trigger="click"
-                >
-                  <img src={moreIcon} alt="more" className="cursor-pointer" />
-                </Popover>
+                <img
+                  src={quitIcon}
+                  alt="logout"
+                  className="cursor-pointer"
+                  onClick={showDeleteConfirm}
+                  aria-hidden
+                />
               </div>
             ) : null}
           </div>
@@ -226,48 +202,5 @@ export default function DefaultLayout(props: Props): React.ReactElement {
       </Sider>
       <Layout>{children}</Layout>
     </Layout>
-  );
-}
-
-const profileCollapseClasses = "w-12 m-auto";
-
-function PopoverContent(): React.ReactElement {
-  const { t } = useTranslation();
-  const { setUser } = useAuthContext();
-
-  const logout = (): void => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    localStorage.removeItem("user");
-    setUser({
-      isAuth: false,
-      first_name: "",
-      last_name: "",
-      middle_name: "",
-      is_superuser: false,
-    });
-  };
-
-  const showDeleteConfirm = (): void => {
-    confirm({
-      title: t("sure-quit"),
-      icon: <ExclamationCircleFilled />,
-      okButtonProps: { className: "text-[#40916C]" },
-      okText: t("yes"),
-      cancelText: t("no"),
-      onOk() {
-        setTimeout(logout, 500);
-      },
-    });
-  };
-
-  return (
-    <div className="flex flex-col gap-2">
-      <Button icon={<UserOutlined />}>{t("profile")}</Button>
-
-      <Button icon={<LogoutOutlined />} onClick={showDeleteConfirm}>
-        {t("logout")}
-      </Button>
-    </div>
   );
 }

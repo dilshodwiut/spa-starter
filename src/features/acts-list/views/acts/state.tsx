@@ -27,10 +27,11 @@ import type {
   ActsStatus,
   FormFilters,
   FilterForm,
+  DateObj,
+  Option,
 } from "../../types";
 import secondsToDate from "../../helpers/seconds-to-date";
 import renderArticlesById from "../../helpers/render-articles-by-id";
-import displayDeadline from "../../helpers/display-deadline";
 
 const { Header, Content } = Layout;
 
@@ -251,6 +252,25 @@ export default function useActsState(): ActsState {
     closeDrawer();
   };
 
+  const displayDeadline = (dateObj: DateObj, hasPassed = false): string => {
+    const orderedKeys = ["days", "hours"] as const;
+    let output = "";
+
+    orderedKeys.forEach((key) => {
+      if (typeof dateObj[key] !== "undefined") {
+        output += `${dateObj[key] ?? ""} ${t(key)} `;
+      }
+    });
+
+    if (output === "") {
+      output += t("no time remained");
+    } else {
+      output += hasPassed ? t("passed") : t("remained");
+    }
+
+    return output;
+  };
+
   const paginationProps = {
     defaultCurrent: +(searchParams.get("page") ?? 1),
     defaultPageSize: +(searchParams.get("page_size") ?? 20),
@@ -359,7 +379,7 @@ export default function useActsState(): ActsState {
           law_article_id: number;
           additional_articles: Array<{ law_article_id: number }>;
         }) {
-          return renderArticlesById(articles, [
+          return renderArticlesById(articles as Option[], [
             { law_article_id: value.law_article_id },
             ...value.additional_articles,
           ]);
@@ -411,13 +431,12 @@ export default function useActsState(): ActsState {
           const diff = Math.round(value - record.status_update_time);
           const hasPassed = diff < 0;
           const dateObj = secondsToDate(Math.abs(diff));
+          const days = dateObj.days ?? 1;
 
           return (
             <Tag
               bordered={false}
-              color={getColor(
-                hasPassed ? -(dateObj.days ?? 0) : dateObj.days ?? 0,
-              )}
+              color={getColor(hasPassed ? -days : days)}
               className="p-1 w-full text-center"
             >
               {displayDeadline(dateObj, hasPassed)}

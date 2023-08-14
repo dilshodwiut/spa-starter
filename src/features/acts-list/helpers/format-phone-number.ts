@@ -1,31 +1,23 @@
-export default function formatPhoneNumber(
-  phone: string,
-  format: string,
-): string {
-  const numberPlaceholder = "#";
-  const countryCode = "998";
-  const result = [];
+const numberPlaceholder = "#";
+const countryCode = "998";
 
-  let fullPhone = phone;
-
+const formatPhoneNumber = (phone: string, format: string): string => {
   if (phone.length === 0) return "";
-  if (phone.length < 12) {
-    fullPhone = `${countryCode}${phone}`;
-  }
 
-  let phoneTokenIdx = 0;
-  let formatTokenIdx = 0;
+  const fullPhone = phone.length < 12 ? `${countryCode}${phone}` : phone;
 
   if (fullPhone[0] !== "+") {
     // which means, if not formatted
-    const phoneTokens = fullPhone.split("");
-    const formatTokens = format.split("");
+    const result = [];
 
-    while (result.length < formatTokens.length) {
-      const currChar = formatTokens[formatTokenIdx];
+    let phoneTokenIdx = 0;
+    let formatTokenIdx = 0;
+
+    while (result.length < format.length) {
+      const currChar = format[formatTokenIdx];
 
       if (currChar === numberPlaceholder) {
-        result.push(phoneTokens[phoneTokenIdx]);
+        result.push(fullPhone[phoneTokenIdx]);
         phoneTokenIdx += 1;
       } else {
         result.push(currChar);
@@ -43,4 +35,6 @@ export default function formatPhoneNumber(
   }
 
   return fullPhone;
-}
+};
+
+export default formatPhoneNumber;
