@@ -3,6 +3,7 @@ import type {
   NonIndexRouteObject,
   RouteObject,
 } from "react-router-dom";
+import type { QueryFunction, QueryKey } from "@tanstack/react-query";
 import type { CustomIconComponentProps } from "@ant-design/icons/lib/components/Icon";
 
 type AppLang = "ru" | "uzLatin" | "uzCryllic";
@@ -69,6 +70,11 @@ interface User {
 
 type UserWithAuth = User & { isAuth: boolean };
 
+interface CacheQuery<T> {
+  queryKey: QueryKey;
+  queryFn: QueryFunction<T>;
+}
+
 export type {
   CustomRoute,
   Region,
@@ -80,4 +86,5 @@ export type {
   AppLang,
   User,
   UserWithAuth,
+  CacheQuery,
 };

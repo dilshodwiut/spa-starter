@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/promise-function-async */
+import { lazy } from "react";
 import type { CustomRoute } from "@/types";
-import NotificationIcon from "./components/notification-icon";
-import Notification from "./views/notification";
+
+const NotificationIcon = lazy(() => import("./components/notification-icon"));
+const Notification = lazy(() => import("./views/notification"));
 
 const notificationRoutes: CustomRoute = {
   id: "notification",

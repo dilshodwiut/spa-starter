@@ -32,6 +32,12 @@ import type {
 } from "../../types";
 import secondsToDate from "../../helpers/seconds-to-date";
 import renderArticlesById from "../../helpers/render-articles-by-id";
+import {
+  articlesQuery,
+  regionsQuery,
+  violationDocsQuery,
+  violationTypesQuery,
+} from "../../queries";
 
 const { Header, Content } = Layout;
 
@@ -87,11 +93,7 @@ export default function useActsState(): ActsState {
   });
 
   const { data: locations } = useQuery({
-    queryKey: ["regions"],
-    queryFn: async () => {
-      const res = await getRegions();
-      return res;
-    },
+    ...regionsQuery(),
     placeholderData: { count: 0, next: null, previous: null, results: [] },
   });
 
@@ -117,11 +119,7 @@ export default function useActsState(): ActsState {
   }, [selectedRegion, locations?.results]);
 
   const { data: articlesData } = useQuery({
-    queryKey: ["articles"],
-    queryFn: async () => {
-      const res = await getArticles();
-      return res;
-    },
+    ...articlesQuery(),
     placeholderData: { count: 0, next: null, previous: null, results: [] },
   });
 
@@ -132,11 +130,7 @@ export default function useActsState(): ActsState {
   articles ??= [];
 
   const { data: violationDocs } = useQuery({
-    queryKey: ["violation-docs"],
-    queryFn: async () => {
-      const res = await getDocTypes();
-      return res;
-    },
+    ...violationDocsQuery(),
     placeholderData: { count: 0, next: null, previous: null, results: [] },
   });
 
@@ -147,11 +141,7 @@ export default function useActsState(): ActsState {
   docs ??= [];
 
   const { data: violationsData } = useQuery({
-    queryKey: ["violation-types"],
-    queryFn: async () => {
-      const res = await getViolationTypes();
-      return res;
-    },
+    ...violationTypesQuery(),
     placeholderData: { count: 0, next: null, previous: null, results: [] },
   });
 

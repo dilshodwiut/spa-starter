@@ -1,5 +1,5 @@
 import statsRoutes from "./routes";
 
-const somethingElse = null;
+export { statsRoutes };
 
-export { statsRoutes, somethingElse };
+export default null;

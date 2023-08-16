@@ -18,7 +18,7 @@ export default function MiniCard(props: Props): React.ReactElement {
       <div className="text-[#62738C]">{text}</div>
       <br />
       <div className="flex gap-4">
-        <span className="font-bold text-xl">
+        <span className="font-bold text-xl tabular-nums">
           <CountUp end={count} separator=" " />
         </span>
         <Tag

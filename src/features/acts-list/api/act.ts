@@ -16,7 +16,7 @@ export async function getAllActs(
 
 export async function getAct(id: string): Promise<ActType> {
   const result: ActType = await request({
-    url: `/violations/${id}`,
+    url: `/violations/${id}/`,
     method: "get",
   });
 

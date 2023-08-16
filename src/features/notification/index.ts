@@ -1,5 +1,5 @@
 import notificationRoutes from "./routes";
 
-const somethingElse = null;
+export { notificationRoutes };
 
-export { notificationRoutes, somethingElse };
+export default null;

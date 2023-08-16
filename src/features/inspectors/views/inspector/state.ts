@@ -6,10 +6,11 @@ import { clone } from "ramda";
 import dayjs from "dayjs";
 import { Layout, Form, Input, theme, message } from "antd";
 import { useLangContext } from "@/contexts";
-import { getRegions } from "@/features/acts-list";
+import { regionsQuery } from "@/features/acts-list";
 import type { PickerLocale } from "antd/es/date-picker/generatePicker";
 import type { FormValues, InspectorState } from "../../types";
 import { createInspector, getInspector, updateInspector } from "../../api";
+import { inspectorQuery } from "../../queries";
 
 const { Header, Content } = Layout;
 
@@ -30,20 +31,12 @@ export default function useInspectorState(): InspectorState {
   } = theme.useToken();
 
   const { data, error } = useQuery({
-    queryKey: ["inspector", inspectorId],
-    queryFn: async () => {
-      const res = await getInspector(inspectorId as string);
-      return res;
-    },
+    ...inspectorQuery(inspectorId as string),
     enabled: Boolean(inspectorId),
   });
 
   const { data: locations, error: locationsError } = useQuery({
-    queryKey: ["regions"],
-    queryFn: async () => {
-      const res = await getRegions();
-      return res;
-    },
+    ...regionsQuery(),
     placeholderData: { count: 0, next: null, previous: null, results: [] },
   });
 

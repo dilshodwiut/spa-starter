@@ -13,15 +13,14 @@ import type { MediaFile } from "@/types";
 import type { ActState } from "../../types";
 import downloadFile from "../../helpers/download-file";
 import getFileData from "../../helpers/get-file-data";
+import { updateViolationStatus, updateViolationType } from "../../api";
 import {
-  getAct,
-  getAllActs,
-  getArticles,
-  getReasons,
-  getViolationTypes,
-  updateViolationStatus,
-  updateViolationType,
-} from "../../api";
+  actQuery,
+  actsQuery,
+  articlesQuery,
+  reasonsQuery,
+  violationTypesQuery,
+} from "../../queries";
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
@@ -119,20 +118,12 @@ export default function useActState(): ActState {
   const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["act", actId],
-    queryFn: async () => {
-      const res = await getAct(actId as string);
-      return res;
-    },
+    ...actQuery(actId as string),
     enabled: Boolean(actId),
   });
 
   const { data: articlesData } = useQuery({
-    queryKey: ["articles"],
-    queryFn: async () => {
-      const res = await getArticles();
-      return res;
-    },
+    ...articlesQuery(),
     placeholderData: { count: 0, next: null, previous: null, results: [] },
   });
 
@@ -154,28 +145,22 @@ export default function useActState(): ActState {
 
     if (typeof article !== "undefined") {
       if (article.clause !== "-") {
-        result += `${article.clause} Band`;
+        result += `${article.clause} ${t("clause")}`;
       }
 
       if (article.part !== "-") {
-        result += `, ${article.part} Qism`;
+        result += `, ${article.part} ${t("part")}`;
       }
 
       if (article.small_clause !== "-") {
-        result += `, ${article.small_clause} Kichik Band`;
+        result += `, ${article.small_clause} ${t("sub-clause")}`;
       }
     }
 
     return result;
   })();
 
-  const { data: reasonsData } = useQuery({
-    queryKey: ["reasons"],
-    queryFn: async () => {
-      const res = await getReasons();
-      return res;
-    },
-  });
+  const { data: reasonsData } = useQuery(reasonsQuery());
 
   const reasons = reasonsData?.results?.map(({ id, name }) => ({
     label: name,
@@ -187,14 +172,7 @@ export default function useActState(): ActState {
     isLoading: isActsDataLoading,
     error: actsListError,
   } = useQuery({
-    queryKey: ["acts", { series: data?.series, number: data?.number }],
-    queryFn: async () => {
-      const res = await getAllActs({
-        series: data?.series,
-        number: data?.number,
-      });
-      return res;
-    },
+    ...actsQuery(data),
     placeholderData: { count: 0, next: null, previous: null, results: [] },
     enabled: Number.isInteger(data?.parent_id),
   });
@@ -208,11 +186,7 @@ export default function useActState(): ActState {
 
   const { data: violationsData, isLoading: isViolationsDataLoading } = useQuery(
     {
-      queryKey: ["violation-types"],
-      queryFn: async () => {
-        const res = await getViolationTypes();
-        return res;
-      },
+      ...violationTypesQuery(),
       placeholderData: { count: 0, next: null, previous: null, results: [] },
     },
   );

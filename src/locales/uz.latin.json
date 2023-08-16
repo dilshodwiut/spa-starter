@@ -115,6 +115,9 @@
   "legal-address": "Yuridik manzil",
   "director's-fullname": "Direktorning to'liq ismi",
   "additional-article": "Qo'shimcha maqola",
+  "clause": "Band",
+  "sub-clause": "Kichik Band",
+  "part": "Qism",
   "violation-files": "Huquqbuzarlik fayllari",
   "no-files-up": "Fayllar yuklanmagan",
   "files": "Fayllar",
@@ -134,6 +137,11 @@
   "error-fetching-data": "Maʼlumotlarni olishda xatolik yuz berdi",
   "success": "Muvaffaqiyat!",
   "user-added": "Tizimga yangi foydalanuvchi qo'shildi",
+
+  "page-load-error": "Sahifani yuklashda xato",
+  "report-to-me": "Iltimos,  Dilshodga bu haqida xabar bering",
+  "go-home": "Bosh sahifaga o‘ting",
+  "refresh": "Yangilash",
 
   "see": "Ko'rish",
   "delete": "Oʻchirish",

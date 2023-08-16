@@ -1,14 +1,25 @@
-import { useNavigate } from "react-router-dom";
+import {
+  isRouteErrorResponse,
+  useNavigate,
+  useRouteError,
+} from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Button, Result } from "antd";
 
 export default function Error(): React.ReactElement {
   const navigate = useNavigate();
+  const error = useRouteError();
+
+  const { t } = useTranslation();
+
+  console.error("isRouterError: ", isRouteErrorResponse(error));
+  console.error(error);
 
   return (
     <Result
       status="error"
-      title="Error Loading the Page"
-      subTitle="Please report this issue to Dilshod."
+      title={t("page-load-error")}
+      subTitle={t("report-to-me")}
       extra={[
         <Button
           type="primary"
@@ -18,7 +29,7 @@ export default function Error(): React.ReactElement {
             navigate("/");
           }}
         >
-          Go home
+          {t("go-home")}
         </Button>,
         <Button
           key="buy"
@@ -26,7 +37,7 @@ export default function Error(): React.ReactElement {
             window.location.reload();
           }}
         >
-          Refresh
+          {t("refresh")}
         </Button>,
       ]}
     />

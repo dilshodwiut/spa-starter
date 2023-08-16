@@ -1,5 +1,5 @@
 import inspectorsRoutes from "./routes";
 
-const somethingElse = null;
+export { inspectorsRoutes };
 
-export { inspectorsRoutes, somethingElse };
+export default null;

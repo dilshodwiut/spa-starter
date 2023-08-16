@@ -1,5 +1,5 @@
 import authRoutes from "./routes";
 
-const somethingElse = null;
+export { authRoutes };
 
-export { authRoutes, somethingElse };
+export default null;
