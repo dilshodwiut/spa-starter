@@ -97,6 +97,7 @@ interface ActState {
   reasons: SelectProps["options"];
   infringementArticle: string;
   articles: Array<{ label: string; value: number }>;
+  statusMap: Record<string, string>;
   handleOk: () => void;
   handleCancel: () => void;
   handleCarouselModalCancel: () => void;
@@ -135,6 +136,9 @@ interface ActType {
   amount: number;
 
   files: MediaFile[];
+
+  fabula: string;
+  explanatoryText: string;
 
   logo: string;
   is_juridic: boolean;

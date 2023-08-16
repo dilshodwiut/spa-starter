@@ -91,6 +91,14 @@ const renderFile = (file: MediaFile): React.ReactNode => {
   );
 };
 
+const statusMap = {
+  created: "non-processed",
+  defined: "processed",
+  sent: "sent",
+  rejected: "cancelled",
+  performed: "overdued",
+};
+
 export default function useActState(): ActState {
   const { actId } = useParams();
   const { t } = useTranslation();
@@ -368,6 +376,7 @@ export default function useActState(): ActState {
     reasons,
     infringementArticle,
     articles,
+    statusMap,
     handleOk,
     handleCancel,
     handleCarouselModalCancel,
