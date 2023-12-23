@@ -5,7 +5,7 @@ import type {
 } from "react-router-dom";
 import type { CustomIconComponentProps } from "@ant-design/icons/lib/components/Icon";
 
-type AppLang = "ru" | "uzLatin" | "uzCryllic";
+type AppLang = "en" | "es" | "ru";
 
 interface RouteExtensions {
   title?: string;

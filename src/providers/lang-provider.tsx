@@ -1,5 +1,4 @@
 import "@/utils/i18n";
-import "@/lib/to-capital-case";
 
 interface Props {
   children: React.ReactElement;

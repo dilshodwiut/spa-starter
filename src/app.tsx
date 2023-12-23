@@ -2,13 +2,13 @@ import {
   QueryProvider,
   AuthProvider,
   RouteProvider as Routes,
-  ThemeProvider,
   LangProvider,
+  PrototypeExtensionsProvider,
 } from "./providers";
 
 export default function App(): React.ReactElement {
   return (
-    <ThemeProvider>
+    <PrototypeExtensionsProvider>
       <LangProvider>
         <QueryProvider>
           <AuthProvider>
@@ -16,6 +16,6 @@ export default function App(): React.ReactElement {
           </AuthProvider>
         </QueryProvider>
       </LangProvider>
-    </ThemeProvider>
+    </PrototypeExtensionsProvider>
   );
 }
