@@ -2,7 +2,7 @@
 import { lazy } from "react";
 import type { CustomRoute } from "@/types";
 
-const Container = lazy(() => import("./views/container"));
+const Container = lazy(() => import("@/components/container"));
 const Acts = lazy(() => import("./views/acts"));
 const Act = lazy(() => import("./views/act"));
 const NoteIcon = lazy(() => import("./components/note-icon"));

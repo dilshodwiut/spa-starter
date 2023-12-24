@@ -5,13 +5,13 @@ import { useTranslation } from "react-i18next";
 import { isInt } from "radash";
 import { useDebounce } from "usehooks-ts";
 import { compareAsc, lightFormat } from "date-fns";
-import formatDate from "@/helpers/formatDate";
-import formatAmount from "@/helpers/formatAmount";
+import formatDate from "@/helpers/format-date";
+import formatAmount from "@/helpers/format-amount";
 import ShowTotal from "@/components/show-total";
 import { Layout, Tag, message, theme } from "antd";
 import type { SegmentedProps } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
-import getColor from "../../helpers/getColor";
+import getColor from "../../helpers/get-color";
 import { getAllActs, getArticles, getDocTypes, getRegions } from "../../api";
 import type {
   ActStatus,

@@ -5,8 +5,8 @@ import {
   FileTextFilled,
   RightCircleFilled,
 } from "@ant-design/icons";
-import formatDate from "@/helpers/formatDate";
-import formatAmount from "@/helpers/formatAmount";
+import formatDate from "@/helpers/format-date";
+import formatAmount from "@/helpers/format-amount";
 import CustomModal from "@/components/modal";
 import img1 from "@/assets/img_1.png";
 import img2 from "@/assets/img_2.png";

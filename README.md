@@ -35,11 +35,9 @@ By all means, you can tweak the eslint rules in `eslintrc.json` to fit your or y
 
 ## Current limitations or bugs of this template
 
-1. You need to install `jsdoc` globally on your machine and remove from local dependencies list to use it. Because of new approach of yarn (plug'n'play) locally installed jsdoc binary couldn't be found.
-2. The script `stylelint-check` in `package.json` throws an error.
-3. The plopfile.cjs is not configured correctly to only have node environment in IDE, e.g. you can type `window` and the editor shows some type data
+1. The script `stylelint-check` in `package.json` throws an error.
 
-## core
+## topfin_web
 
 ## Getting started
 
