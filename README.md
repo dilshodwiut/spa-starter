@@ -37,7 +37,7 @@ By all means, you can tweak the eslint rules in `eslintrc.json` to fit your or y
 
 1. The script `stylelint-check` in `package.json` throws an error.
 
-## topfin_web
+## spa-starter
 
 ## Getting started
 

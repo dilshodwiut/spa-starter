@@ -1,5 +1,4 @@
-import authRoutes from "./routes";
+import routes from "./routes";
+import { refreshToken } from "./api";
 
-const somethingElse = null;
-
-export { authRoutes, somethingElse };
+export { routes, refreshToken };

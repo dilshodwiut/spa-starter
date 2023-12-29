@@ -3,11 +3,7 @@ import { lazy } from "react";
 import type { CustomRoute } from "@/types";
 
 // ROUTE IMPORTS
-import { authRoutes } from "@/features/auth";
-import { actsListRoutes } from "@/features/acts-list";
-import { statsRoutes } from "@/features/stats";
-import { notificationRoutes } from "@/features/notification";
-import { inspectorsRoutes } from "@/features/inspectors";
+import { routes as authRoutes } from "@/features/auth";
 
 // Global Pages
 const Root = lazy(() => import("@/views/root"));
@@ -17,17 +13,13 @@ const Error = lazy(() => import("@/views/error"));
 const routes: CustomRoute[] = [
   {
     id: "root",
-    title: "E-Dalolatnoma",
+    title: "Spa Starter",
     path: "/",
     element: <Root getRoutes={() => routes} />,
     loader: async () => null,
     errorElement: <Error />,
     children: [
       // ROUTES
-      statsRoutes,
-      actsListRoutes,
-      notificationRoutes,
-      inspectorsRoutes,
     ],
   },
   authRoutes,

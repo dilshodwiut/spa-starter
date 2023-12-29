@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { AxiosError } from "axios";
 import settings from "@/config/settings";
-import { refreshToken } from "@/features/auth/api";
+import { refreshToken } from "@/features/auth";
 
 const request = axios.create({
   baseURL: settings.baseURL,
@@ -23,38 +23,33 @@ request.interceptors.request.use((config) => {
 
 request.interceptors.response.use((response) => response.data, errorHandler);
 
-export async function errorHandler(
-  error: AxiosError,
-): Promise<PromiseRejectedResult> {
+export async function errorHandler(error: AxiosError): Promise<void> {
   if (error.response !== null) {
     // server responded with a status code that falls out of the range of 2xx
     if (error.response?.status === 403) {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const refresh_token = localStorage.getItem("refresh_token");
+      const rToken = localStorage.getItem("refresh_token");
 
-      if (refresh_token !== null) {
+      if (rToken !== null) {
         try {
-          const res = await refreshToken({ refresh: refresh_token });
+          const res = await refreshToken({ refresh: rToken });
           const { refresh, access } = res.data;
           localStorage.setItem("refresh_token", refresh);
           localStorage.setItem("access_token", access);
-          window.location.reload();
         } catch (err) {
           localStorage.setItem("refresh_token_error", JSON.stringify(err));
           localStorage.removeItem("refresh_token");
           localStorage.removeItem("access_token");
-          window.location.replace("/auth/login");
+        } finally {
+          window.location.reload();
         }
       }
     }
 
-    const rejectedRes = await Promise.reject(error.response);
-    return rejectedRes;
+    await Promise.reject(error.response);
   }
   if (error.request !== null) {
     // no response received from server
-    const rejectedReq = await Promise.reject(error.request);
-    return rejectedReq;
+    await Promise.reject(error.request);
   }
 
   // something happened in setting up the request
@@ -65,8 +60,7 @@ export async function errorHandler(
   // Using toJSON you get an object with more information about the HTTP error
   console.log("\nError object as json:", error.toJSON());
 
-  const rejectedErr = await Promise.reject(error);
-  return rejectedErr;
+  await Promise.reject(error);
 }
 
 export default request;
