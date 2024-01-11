@@ -6,11 +6,11 @@ import translations from "@/locales";
 import type { AppLang } from "@/types";
 
 const resources: { [T in AppLang]: { translation: object } } = {
-  en: {
-    translation: translations.en,
+  uzLatin: {
+    translation: translations.uzLatin,
   },
-  es: {
-    translation: translations.es,
+  uzCryllic: {
+    translation: translations.uzCryllic,
   },
   ru: {
     translation: translations.ru,

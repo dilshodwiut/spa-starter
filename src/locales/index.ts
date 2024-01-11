@@ -1,5 +1,5 @@
-import en from "./en.json";
-import es from "./es.json";
+import uzLatin from "./uz.latin.json";
+import uzCryllic from "./uz.cryllic.json";
 import ru from "./ru.json";
 
-export default { en, es, ru };
+export default { uzLatin, uzCryllic, ru };

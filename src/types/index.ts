@@ -3,15 +3,12 @@ import type {
   NonIndexRouteObject,
   RouteObject,
 } from "react-router-dom";
-import type { CustomIconComponentProps } from "@ant-design/icons/lib/components/Icon";
 
-type AppLang = "en" | "es" | "ru";
+type AppLang = "uzLatin" | "uzCryllic" | "ru";
 
 interface RouteExtensions {
   title?: string;
-  Icon?: (
-    props: Partial<CustomIconComponentProps>,
-  ) => React.ReactElement | null;
+  Icon?: (props: Partial<{}>) => React.ReactElement | null;
 }
 
 interface CustomNonIndexRouteObject extends NonIndexRouteObject {
